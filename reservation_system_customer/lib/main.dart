@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: StartPage(title: 'Reservierungssystem'),
+      home: StartPage(),
     );
   }
 }
