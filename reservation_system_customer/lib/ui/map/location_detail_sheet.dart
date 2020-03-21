@@ -177,12 +177,12 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               child: RaisedButton(
                 child: Text("Slot reservieren"),
                 onPressed: () {
-                  TimeSlot timeslot;
+                  DateTime selectedTime;
                   if (selectedBarIndex >= 0) {
-                    timeslot = widget.location.capacity_utilization
+                    selectedTime = widget.location.capacity_utilization
                         .get_utilization_by_date(barplotDate)
                         .timeslot_data[selectedBarIndex]
-                        .timeslot;
+                        .startTime;
                   }
                   // todo: reservierung implementieren
                 },

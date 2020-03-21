@@ -77,7 +77,7 @@ class Daily_Utilization {
   String get_bar_titles(double value, int scrollIndexOffset) {
     if (value.toInt() + scrollIndexOffset < timeslot_data.length) {
       Timeslot_Data slot = timeslot_data[value.toInt() + scrollIndexOffset];
-      return (new DateFormat.Hm()).format(slot.timeslot.startTime);
+      return (new DateFormat.Hm()).format(slot.startTime);
     }
     return "";
   }
@@ -85,7 +85,7 @@ class Daily_Utilization {
 
 class Timeslot_Data {
   /// Timeslot
-  TimeSlot timeslot;
+  DateTime startTime;
 
   /// Number Of booked slots
   int bookings;
@@ -94,7 +94,7 @@ class Timeslot_Data {
   double utilization;
 
   Timeslot_Data({
-    @required this.timeslot,
+    @required this.startTime,
     @required this.bookings,
     @required this.utilization,
   });
