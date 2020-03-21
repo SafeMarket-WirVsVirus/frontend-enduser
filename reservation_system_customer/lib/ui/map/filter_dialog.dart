@@ -25,40 +25,37 @@ class _FilterDialogState extends State<FilterDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15)
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Text("Auslastungsniveau",
-            style: Theme.of(context).textTheme.headline,),
-          ),
-
-          Slider(
-            onChanged: (double value) {setState(() {
-              if (value > 0)
-                sliderValue = value;
-            });},
-            value: sliderValue,
-            min: 0.0,
-            max: 3.0,
-            divisions: 3,
-            activeColor: sliderColor[(sliderValue - 1).round()],
-          ),
-
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Text(sliderTips[(sliderValue - 1).round()]),
-          ),
-
-          SizedBox(
-            height: 20,
-          )
-        ],
-      )
-    );
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                "Auslastungsniveau",
+                style: Theme.of(context).textTheme.headline,
+              ),
+            ),
+            Slider(
+              onChanged: (double value) {
+                setState(() {
+                  if (value > 0) sliderValue = value;
+                });
+              },
+              value: sliderValue,
+              min: 0.0,
+              max: 3.0,
+              divisions: 3,
+              activeColor: sliderColor[(sliderValue - 1).round()],
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Text(sliderTips[(sliderValue - 1).round()]),
+            ),
+            SizedBox(
+              height: 20,
+            )
+          ],
+        ));
   }
 }
