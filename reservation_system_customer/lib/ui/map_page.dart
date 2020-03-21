@@ -51,7 +51,10 @@ class _MapPageState extends State<MapPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   reservation.name,
-                                  style: Theme.of(context).textTheme.headline5,
+                                  style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .headline,
                                 ),
                               ),
                             ],

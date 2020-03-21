@@ -7,26 +7,13 @@ import 'package:reservation_system_customer/repository/data/data.dart';
 import 'location.dart';
 
 class Capacity_utilization {
-  /// the location
-  final Location location;
-
   /// list of daily utilizations
   final List<Daily_Utilization> daily_utilization = new List();
 
   /// general utilization
   final Float utilization = 0.0 as Float;
 
-  Capacity_utilization({@required this.location});
-
-  void fetch_detailed_utilization() {
-    //TODO: implement
-  }
-
-  void fetch_general_utilization() {
-    // TODO: implement
-  }
-
-
+  Capacity_utilization();
 }
 
 class Daily_Utilization {
@@ -50,7 +37,6 @@ class Daily_Utilization {
       }
     }
   }
-
 }
 
 class Timeslot_Data {
