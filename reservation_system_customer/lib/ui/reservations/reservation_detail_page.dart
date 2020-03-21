@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -52,8 +53,18 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   final Reservation reservation;
   bool reminder = false;
   Widget reminderIcon = Icon(Icons.notifications_off);
+  GoogleMapController mapController;
+  final Set<Marker> markers = new Set();
 
-//  TODO actually remind the user
+  @override
+  void initState() {
+    markers.add(Marker(
+      markerId: MarkerId(reservation.location.id),
+      position: reservation.location.position,
+    ));
+  }
+
+  //  TODO actually remind the user
   SnackBar reminderSnackBar = SnackBar(
     content: Text("Erinnerung 30 Minuten vor deinem Termin"),
     duration: Duration(seconds: 3),
@@ -97,13 +108,30 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               Text("${timeFormat.format(reservation.timeSlot.startTime)}",
                 style: Theme.of(context).textTheme.headline,),
 
-              Padding(
-                padding: EdgeInsets.all(30),
-                child: RaisedButton(
-                  child: Icon(Icons.navigation),
-                  onPressed: _navigate,
+              SizedBox(
+                height: 20,
+              ),
+
+              Container(
+                height: 300,
+                child: GoogleMap(
+                  myLocationButtonEnabled: false,
+                  myLocationEnabled: true,
+                  mapType: MapType.normal,
+                  scrollGesturesEnabled: false,
+                  zoomGesturesEnabled: false,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                      reservation.location.position.latitude,
+                      reservation.location.position.longitude,
+                    ),
+                    zoom: 15,
+                  ),
+                  onMapCreated: _onMapCreated,
+                  markers: markers,
                 ),
-              )
+              ),
+
             ],
           ),
         )
@@ -115,6 +143,10 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
         },
       ),
     );
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
   }
 
   void _reminderSwitch() {
