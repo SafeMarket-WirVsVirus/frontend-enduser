@@ -35,11 +35,36 @@ class _MapPageState extends State<MapPage> {
             infoWindow: InfoWindow(
                 title: reservation.name, snippet: "A Short description"),
             onTap: () {
-              showBottomSheet(context: context,
+              showBottomSheet(
+                  context: context,
                   builder: (context) =>
                       Container(
-                        color: Colors.grey,
+                        color: Theme
+                            .of(context)
+                            .primaryColor,
                         height: 250,
+                        child: Stack(children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: DefaultTextStyle(
+                                  textAlign: TextAlign.center,
+                                  child: Text(reservation.name),
+                                  style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .title,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+
+                          )
+                        ]),
                       ));
             },
           );
