@@ -7,13 +7,17 @@ import 'data/data.dart';
 class LocationsRepository {
   var locations = [
     Location(
-        id: 'id1',
-        position: LatLng(48.160490, 11.555184),
-        name: 'Supermarkt A'),
+      id: 'id1',
+      position: LatLng(48.160490, 11.555184),
+      name: 'Supermarkt A',
+      fillStatus: FillStatus.green,
+    ),
     Location(
-        id: 'id2',
-        position: LatLng(47.960490, 11.355184),
-        name: 'Supermarkt B'),
+      id: 'id2',
+      position: LatLng(47.960490, 11.355184),
+      name: 'Supermarkt B',
+      fillStatus: FillStatus.red,
+    ),
   ];
 
   Future<List<Location>> getStores(LatLng position) async {
