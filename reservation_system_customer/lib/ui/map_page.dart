@@ -12,12 +12,12 @@ class MapPage extends StatelessWidget {
     return BlocBuilder<MapBloc, MapState>(builder: (context, state) {
       Map<MarkerId, Marker> markers = {};
       if (state is MapLocationsLoaded) {
-        state.locations.forEach((reservation) {
-          markers[MarkerId(reservation.id)] = Marker(
-            markerId: MarkerId(reservation.id),
-            position: reservation.position,
+        state.locations.forEach((location) {
+          markers[MarkerId(location.id)] = Marker(
+            markerId: MarkerId(location.id),
+            position: location.position,
             infoWindow: InfoWindow(
-                title: reservation.name, snippet: "A Short description"),
+                title: location.name, snippet: "A Short description"),
             onTap: () {
               showBottomSheet(
                   context: context,
@@ -35,7 +35,7 @@ class MapPage extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  reservation.name,
+                                  location.name,
                                   style: Theme
                                       .of(context)
                                       .textTheme
@@ -47,7 +47,7 @@ class MapPage extends StatelessWidget {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: BarChart(reservation
+                              child: BarChart(location
                                   .capacity_utilization.daily_utilization[0]
                                   .get_bar_data(
                                   DateTime.now(), //starttime
@@ -76,7 +76,7 @@ class MapPage extends StatelessWidget {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 10),
                                           getTitles: (double value) {
-                                            return reservation
+                                            return location
                                                 .capacity_utilization
                                                 .daily_utilization[0]
                                                 .get_bar_titles(value);
