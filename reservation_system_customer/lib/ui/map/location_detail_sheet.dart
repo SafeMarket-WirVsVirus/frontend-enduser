@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
+import 'reservation_confirmation_dialog.dart';
 
 class LocationDetailSheet extends StatefulWidget {
   final Location location;
@@ -117,7 +118,12 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               child: FlatButton(
                 child: Text("Slot reservieren"),
                 onPressed: () {
-                  // todo: reservierung implementieren
+                  return showDialog<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ReservationConfirmationDialog(widget.location.name);
+                    },
+                  );
                 },
               ),
             )
