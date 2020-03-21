@@ -34,7 +34,14 @@ class _MapPageState extends State<MapPage> {
             position: reservation.position,
             infoWindow: InfoWindow(
                 title: reservation.name, snippet: "A Short description"),
-            onTap: () {},
+            onTap: () {
+              showBottomSheet(context: context,
+                  builder: (context) =>
+                      Container(
+                        color: Colors.grey,
+                        height: 250,
+                      ));
+            },
           );
         });
 
@@ -42,6 +49,7 @@ class _MapPageState extends State<MapPage> {
           markers: markers,
         );
       }
+
       return Container();
     });
   }
@@ -118,7 +126,6 @@ class MapViewState extends State<MapView> {
 
   void _getCurrentLocation() async {
     Position ref = await Geolocator().getCurrentPosition();
-
     setState(() {
       position = ref;
     });
