@@ -19,6 +19,7 @@ class _StartPageState extends State<StartPage> {
         title: Text('Reservation System'),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.black,
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() {
           _selectedIndex = index;

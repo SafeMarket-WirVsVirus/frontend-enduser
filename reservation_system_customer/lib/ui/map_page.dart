@@ -29,23 +29,21 @@ class MapSample extends StatefulWidget {
 
 class MapSampleState extends State<MapSample> {
   Map<MarkerId, Marker> markers =
-      <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
+  <MarkerId, Marker>{}; // CLASS MEMBER, MAP OF MARKS
   Completer<GoogleMapController> _controller = Completer();
 
   Future<Map<MarkerId, Marker>> _getMarkers() async {
     final List<Reservation> reservations =
-        await ReservationsRepository().getReservations();
+    await ReservationsRepository().getReservations();
     Map<MarkerId, Marker> markers = {};
 
-    int i = 0;
     reservations.forEach((reservation) {
-      i++;
-      markers[MarkerId("A id$i")] = Marker(
-        markerId: MarkerId("A id$i"),
-        position: reservation.location,
-        infoWindow:
-            InfoWindow(title: reservation.locationName, snippet: "A Short description"),
-        onTap: () {},
+      markers[MarkerId(reservation.id)] = Marker(
+      markerId: MarkerId(reservation.id),
+      position: reservation.location,
+      infoWindow:
+      InfoWindow(title: reservation.locationName, snippet: "A Short description"),
+      onTap: () {},
       );
     });
 
