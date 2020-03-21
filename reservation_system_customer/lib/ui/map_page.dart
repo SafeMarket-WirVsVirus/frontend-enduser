@@ -33,8 +33,7 @@ class _MapPageState extends State<MapPage> {
             markerId: MarkerId(reservation.id),
             position: reservation.position,
             infoWindow: InfoWindow(
-                title: reservation.name,
-                snippet: "A Short description"),
+                title: reservation.name, snippet: "A Short description"),
             onTap: () {},
           );
         });
@@ -86,21 +85,33 @@ class MapViewState extends State<MapView> {
     super.initState();
   }
 
+  Future<void> _goToLocation() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(position.latitude, position.longitude), zoom: 15)));
+  }
+
   @override
   Widget build(BuildContext context) {
     if (position == null) {
       return Center(child: CircularProgressIndicator());
     } else {
-      return GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: LatLng(position.latitude, position.longitude),
-          zoom: 14,
+      return Scaffold(
+        body: GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 14,
+          ),
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+          },
+          markers: Set<Marker>.of(widget.markers.values),
         ),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        markers: Set<Marker>.of(widget.markers.values),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: _goToLocation,
+          label: Text("Go to location"),
+        ),
       );
     }
   }
