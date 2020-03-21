@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../repository/data/data.dart';
 
@@ -14,25 +12,23 @@ Future<void> _ackAlert(BuildContext context, String id) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15)
         ),
-        child: Container(
-        height: 400,
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(10),
-                child: Text('Dein Ticket:',
-                style: Theme.of(context).textTheme.headline,),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text('Dein Ticket:',
+              style: Theme.of(context).textTheme.headline,),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child:  QrImage(
+                data: id,
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
               ),
-              Padding(
-                padding: EdgeInsets.all(10),
-                child:  QrImage(
-                  data: id,
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       );
     },
