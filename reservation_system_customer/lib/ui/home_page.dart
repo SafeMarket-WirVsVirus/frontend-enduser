@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:intl/intl.dart';
 
+import 'reservation_detail_page.dart';
+
 class HomePage extends StatelessWidget {
   final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -58,6 +60,9 @@ class HomePage extends StatelessWidget {
                   title: Text(item.location.name),
                   subtitle: Text(
                       'Start: ${dateFormat.format(item.timeSlot.startTime)}'),
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationDetailPage(reservation: item)));
+                  },
                 ),
               );
             });

@@ -17,6 +17,7 @@ dependencies:
   equatable: ^1.1.1
   provider: ^4.0.4
   fl_chart: ^0.8.6
+  qr_flutter: ^3.0.1
 
 dev_dependencies:
   flutter_test:

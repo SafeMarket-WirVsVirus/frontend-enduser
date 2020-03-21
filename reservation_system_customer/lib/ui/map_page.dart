@@ -6,18 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'dart:math';
 
-class MapPage extends StatefulWidget {
-  @override
-  _MapPageState createState() => _MapPageState();
-}
-
-class _MapPageState extends State<MapPage> {
-  @override
-  void initState() {
-    super.initState();
-    _fetchLocations();
-  }
-
+class MapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MapBloc, MapState>(builder: (context, state) {
@@ -30,10 +19,10 @@ class _MapPageState extends State<MapPage> {
       } else if (state is MapLocationsLoaded) {
         Map<MarkerId, Marker> markers = {};
 
-        state.locations.forEach((location) {
-          markers[MarkerId(location.id)] = Marker(
-            markerId: MarkerId(location.id),
-            position: location.position,
+        state.locations.forEach((reservation) {
+          markers[MarkerId(reservation.id)] = Marker(
+            markerId: MarkerId(reservation.id),
+            position: reservation.position,
             infoWindow: InfoWindow(
                 title: location.name, snippet: "A Short description"),
             onTap: () {
@@ -108,41 +97,36 @@ class _MapPageState extends State<MapPage> {
             },
           );
         });
-
-        return MapView(
-          markers: markers,
-        );
       }
-
-      return Container();
+      return MapView(
+        markers: markers,
+      );
     });
-  }
-
-  _fetchLocations() async {
-    if (BlocProvider.of<MapBloc>(context).state is MapLocationsLoaded) {
-      return;
-    }
-
-    Position position = await Geolocator().getCurrentPosition();
-    if (position != null) {
-      final location = LatLng(position.latitude, position.longitude);
-      BlocProvider.of<MapBloc>(context).add(MapLoadLocations(location));
-    }
   }
 }
 
 class MapView extends StatefulWidget {
   final Map<MarkerId, Marker> markers;
 
-  const MapView({Key key, this.markers}) : super(key: key);
+  const MapView({
+    Key key,
+    this.markers,
+  }) : super(key: key);
 
   @override
   State<MapView> createState() => MapViewState();
 }
 
 class MapViewState extends State<MapView> {
-  Position position;
   Completer<GoogleMapController> _controller = Completer();
+  final positionTimeout = Duration(seconds: 3);
+  LatLng userPosition = LatLng(48.160490, 11.555184); // default position
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 0)).then((_) => _fetchLocations(context));
+  }
 
   @override
   void setState(fn) {
@@ -152,54 +136,83 @@ class MapViewState extends State<MapView> {
   }
 
   @override
-  void initState() {
-    _getCurrentLocation();
-    super.initState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: GoogleMap(
+        myLocationButtonEnabled: true,
+        myLocationEnabled: true,
+        mapType: MapType.normal,
+        initialCameraPosition: CameraPosition(
+          target: LatLng(
+            userPosition.latitude,
+            userPosition.longitude,
+          ),
+          zoom: 14,
+        ),
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+        markers: Set<Marker>.of(widget.markers.values),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _goToLocation,
+        label: Text("Go to location"),
+      ),
+    );
   }
 
   Future<void> _goToLocation() async {
     final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target: LatLng(position.latitude, position.longitude), zoom: 15)));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (position == null) {
-      return Center(child: CircularProgressIndicator());
-    } else {
-      return Scaffold(
-        body: GoogleMap(
-          myLocationButtonEnabled: false,
-          myLocationEnabled: true,
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(position.latitude, position.longitude),
-            zoom: 14,
-          ),
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-          },
-          markers: Set<Marker>.of(widget.markers.values),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: _goToLocation,
-          label: Text("Go to location"),
-        ),
-      );
-    }
-  }
-
-  void _getCurrentLocation() async {
-    Position ref = await Geolocator().getCurrentPosition();
-    setState(() {
-      position = ref;
-    });
+    controller.animateCamera(
+      CameraUpdate.newCameraPosition(
+        CameraPosition(
+            target: LatLng(
+              userPosition.latitude,
+              userPosition.longitude,
+            ),
+            zoom: 15),
+      ),
+    );
   }
 
   void _moveCameraToNewPosition(LatLng position, {double zoom = 14.0}) async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: position, zoom: zoom)));
+  }
+
+  _fetchLocations(context) async {
+    await Future.delayed(Duration.zero);
+    if (BlocProvider.of<MapBloc>(context).state is MapLocationsLoaded) {
+      return;
+    }
+
+    LatLng location = await _getUserPosition();
+    if (location != null) {
+      userPosition = location;
+      _moveCameraToNewPosition(userPosition);
+    }
+    BlocProvider.of<MapBloc>(context).add(MapLoadLocations(location));
+  }
+
+  Future<LatLng> _getUserPosition() async {
+    LatLng location;
+
+    try {
+      Position position =
+          await Geolocator().getCurrentPosition().timeout(positionTimeout);
+      if (position != null) {
+        return LatLng(position.latitude, position.longitude);
+      }
+    } catch (_) {
+      try {
+        Position position =
+            await Geolocator().getLastKnownPosition().timeout(positionTimeout);
+        if (position != null) {
+          return LatLng(position.latitude, position.longitude);
+        }
+      } catch (_) {}
+    }
+    return location;
   }
 }
