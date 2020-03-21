@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:reservation_system_customer/ui/home_page.dart';
 
-import '../repository/data/data.dart';
+import '../../repository/data/data.dart';
 
 Future<void> _ackAlert(BuildContext context, String id) {
   return showDialog<void>(
