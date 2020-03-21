@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 
 import 'reservation_detail_page.dart';
 
-class HomePage extends StatelessWidget {
+class ReservationsListPage extends StatelessWidget {
   final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
   @override
