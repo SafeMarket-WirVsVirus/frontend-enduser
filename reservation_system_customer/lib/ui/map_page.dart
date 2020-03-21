@@ -4,7 +4,6 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
-import 'dart:math';
 
 class MapPage extends StatelessWidget {
   @override
@@ -24,7 +23,7 @@ class MapPage extends StatelessWidget {
                   isScrollControlled: true,
                   builder: (context) => Container(
                         color: Theme.of(context).primaryColor,
-                    height: 300,
+                    height: 400,
                     child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -52,7 +51,15 @@ class MapPage extends StatelessWidget {
                               MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Center(
-                                  child: Icon(Icons.arrow_back_ios),
+                                  widthFactor: 0.25,
+                                  child: FlatButton(
+                                      onPressed: () {
+                                        //TODO: Implement backwards scroll
+                                      },
+                                      splashColor: Theme
+                                          .of(context)
+                                          .accentColor,
+                                      child: Icon(Icons.arrow_back_ios)),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(4.0),
@@ -106,9 +113,26 @@ class MapPage extends StatelessWidget {
                                       FlBorderData(show: false))),
                                 ),
                                 Center(
-                                  child: Icon(Icons.arrow_forward_ios),
+                                  widthFactor: 0.25,
+                                  child: FlatButton(
+                                    splashColor: Theme
+                                        .of(context)
+                                        .accentColor,
+                                    child: Icon(Icons.arrow_forward_ios),
+                                    onPressed: () {
+                                      //TODO: Implement forward scroll
+                                    },
+                                  ),
                                 )
                               ],
+                            ),
+                          ),
+                          Center(
+                            child: FlatButton(
+                              child: Text("Zeitfenster reswervieren"),
+                              onPressed: () {
+                                // todo: reservierung implementieren
+                              },
                             ),
                           )
                         ]),
