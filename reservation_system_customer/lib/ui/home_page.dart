@@ -22,7 +22,13 @@ class HomePage extends StatelessWidget {
               final item = state.reservations[index];
               return Dismissible(
                 key: Key(item.id),
-                background: Container(color: Theme.of(context).accentColor),
+                background: Container(
+                  color: Colors.red,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[Icon(Icons.delete, size: 40,)]),
+                ),
+                direction: DismissDirection.startToEnd,
                 confirmDismiss: (direction) async {
                   return await showDialog(
                     context: context,
