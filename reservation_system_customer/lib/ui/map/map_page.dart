@@ -15,13 +15,14 @@ class MapPage extends StatelessWidget {
           markers[MarkerId(location.id)] = Marker(
             markerId: MarkerId(location.id),
             position: location.position,
+            icon: state.markerIcons[location.fillStatus],
             infoWindow: InfoWindow(
                 title: location.name, snippet: "A Short description"),
             onTap: () {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
-                builder: (context) => LocationDetailSheet(),
+                builder: (context) => LocationDetailSheet(location: location),
               );
             },
           );
