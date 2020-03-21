@@ -7,7 +7,7 @@ class LocationDetailSheet extends StatelessWidget {
 
   const LocationDetailSheet({
     Key key,
-    this.location,
+    @required this.location,
   }) : super(key: key);
 
   @override

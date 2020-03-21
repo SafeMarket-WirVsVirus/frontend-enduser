@@ -21,7 +21,7 @@ class MapPage extends StatelessWidget {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
-                builder: (context) => LocationDetailSheet(),
+                builder: (context) => LocationDetailSheet(location: location),
               );
             },
           );
