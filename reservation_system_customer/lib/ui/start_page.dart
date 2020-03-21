@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
+import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/home_page.dart';
 import 'package:reservation_system_customer/ui/map_page.dart';
 
@@ -17,6 +19,7 @@ class _StartPageState extends State<StartPage> {
   void initState() {
     super.initState();
     BlocProvider.of<ReservationsBloc>(context).add(LoadReservations());
+    Provider.of<UserRepository>(context, listen: false)..loadUserPosition();
   }
 
   @override
