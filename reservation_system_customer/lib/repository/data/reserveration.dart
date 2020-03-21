@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TimeSlot {
@@ -11,6 +12,9 @@ class TimeSlot {
 }
 
 class Reservation {
+  /// The reservation id
+  final String id;
+
   /// The GPS location of the reservation
   final LatLng location;
 
@@ -21,8 +25,9 @@ class Reservation {
   final TimeSlot timeSlot;
 
   Reservation({
-    this.location,
-    this.locationName,
-    this.timeSlot,
+    @required this.id,
+    @required this.location,
+    @required this.locationName,
+    @required this.timeSlot,
   });
 }
