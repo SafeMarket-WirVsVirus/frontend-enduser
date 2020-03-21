@@ -16,6 +16,7 @@ dependencies:
   hydrated_bloc: ^3.0.0
   equatable: ^1.1.1
   provider: ^4.0.4
+  qr_flutter: ^3.0.1
 
 dev_dependencies:
   flutter_test:
