@@ -13,9 +13,14 @@ class FilterDialog extends StatefulWidget {
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  int _selectedIndex = 0;
-
-  List<bool> traffic = [true, true, true];
+  double sliderValue = 3;
+  List<Color> sliderColor = [Colors.green, Colors.orange, Colors.red];
+  List<String> sliderTips = [
+    "Nur die Läden mit sehr geringer Auslastung werden angezeigt "
+        "(optimal für besonders gefährdete Personen)",
+    "Die Läden mit sehr hoher Auslastung werden nicht angezeigt",
+    "Alle Läden werden angezeigt, auch wenn gerade viel los ist"
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -23,74 +28,37 @@ class _FilterDialogState extends State<FilterDialog> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15)
       ),
-      child:Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.black,
-          currentIndex: _selectedIndex,
-          onTap: (index) => setState(() {
-            _selectedIndex = index;
-          }),
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.traffic),
-                title: Text("Auslastung")
-            ),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart),
-                title: Text("Geschäfte")
-            ),
-          ],
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(10),
+            child: Text("Auslastungsniveau",
+            style: Theme.of(context).textTheme.headline,),
+          ),
 
-        body: _page(_selectedIndex),
+          Slider(
+            onChanged: (double value) {setState(() {
+              if (value > 0)
+                sliderValue = value;
+            });},
+            value: sliderValue,
+            min: 0.0,
+            max: 3.0,
+            divisions: 3,
+            activeColor: sliderColor[(sliderValue - 1).round()],
+          ),
+
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text(sliderTips[(sliderValue - 1).round()]),
+          ),
+
+          SizedBox(
+            height: 20,
+          )
+        ],
       )
     );
-  }
-
-  Widget _page(int index) {
-    switch (index) {
-      case 0:
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: Text("Zeige Geschäfte mit:",
-              style: Theme.of(context).textTheme.headline,),
-            ),
-            SwitchListTile(
-              value: traffic[0],
-              title: Text("hoher Auslastung"),
-              onChanged: (bool value) {
-                setState(() {
-                  traffic[0] = value;
-                });
-              },
-            ),
-            SwitchListTile(
-              value: traffic[1],
-              title: Text("mittlerer Auslastung"),
-              onChanged: (bool value) {
-                setState(() {
-                  traffic[1] = value;
-                });
-              },
-            ),
-            SwitchListTile(
-              value: traffic[2],
-              title: Text("geringer Auslastung"),
-              onChanged: (bool value) {
-                setState(() {
-                  traffic[2] = value;
-                });
-              },
-            ),
-          ],
-        );
-      case 1:
-        return Container();
-      default:
-        return Container();
-    }
   }
 }
