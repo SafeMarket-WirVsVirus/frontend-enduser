@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
                     context: context,
                     builder: (context) => AlertDialog(
                       title: Text(
-                          'Do you really want to delete the reservation for ${item.locationName}?'),
+                          'Do you really want to delete the reservation for ${item.location.name}?'),
                       actions: <Widget>[
                         FlatButton(
                           child: Text('Cancel'),
@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                       .add(CancelReservation(item.id));
                 },
                 child: ListTile(
-                  title: Text(item.locationName),
+                  title: Text(item.location.name),
                   subtitle: Text(
                       'Start: ${dateFormat.format(item.timeSlot.startTime)}'),
                 ),

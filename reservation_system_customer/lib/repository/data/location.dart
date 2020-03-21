@@ -6,14 +6,14 @@ class Location {
   final String id;
 
   /// The GPS location
-  final LatLng location;
+  final LatLng position;
 
   /// The user friendly location name
-  final String locationName;
+  final String name;
 
   Location({
     @required this.id,
-    @required this.location,
-    @required this.locationName,
+    @required this.position,
+    @required this.name,
   });
 }

@@ -5,8 +5,11 @@ class ReservationsRepository {
   var reservations = [
     Reservation(
       id: 'id1',
-      locationName: 'Supermarkt A',
-      location: LatLng(48.160490, 11.555184),
+      location: Location(
+        id: 'reservation1',
+        name: 'Supermarkt A',
+        position: LatLng(48.160490, 11.555184),
+      ),
       timeSlot: TimeSlot(
         startTime: DateTime.now().add(Duration(hours: 3)),
         endTime: DateTime.now().add(Duration(hours: 4)),
@@ -14,8 +17,11 @@ class ReservationsRepository {
     ),
     Reservation(
       id: 'id2',
-      locationName: 'Supermarkt B',
-      location: LatLng(47.960490, 11.355184),
+      location: Location(
+        id: 'reservation2',
+        name: 'Supermarkt B',
+        position: LatLng(47.960490, 11.355184),
+      ),
       timeSlot: TimeSlot(
         startTime: DateTime.now().add(Duration(hours: 5)),
         endTime: DateTime.now().add(Duration(hours: 6)),

@@ -31,9 +31,9 @@ class _MapPageState extends State<MapPage> {
         state.locations.forEach((reservation) {
           markers[MarkerId(reservation.id)] = Marker(
             markerId: MarkerId(reservation.id),
-            position: reservation.location,
+            position: reservation.position,
             infoWindow: InfoWindow(
-                title: reservation.locationName,
+                title: reservation.name,
                 snippet: "A Short description"),
             onTap: () {},
           );
