@@ -12,8 +12,9 @@ class MapPage extends StatelessWidget {
       Map<MarkerId, Marker> markers = {};
       if (state is MapLocationsLoaded) {
         state.locations.forEach((location) {
-          markers[MarkerId(location.id)] = Marker(
-            markerId: MarkerId(location.id),
+          final id = '${location.id}';
+          markers[MarkerId(id)] = Marker(
+            markerId: MarkerId(id),
             position: location.position,
             icon: state.markerIcons[location.fillStatus],
             infoWindow: InfoWindow(
