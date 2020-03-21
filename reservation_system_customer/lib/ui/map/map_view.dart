@@ -46,7 +46,7 @@ class MapViewState extends State<MapView> {
 
     return Scaffold(
       body: GoogleMap(
-        myLocationButtonEnabled: true,
+        myLocationButtonEnabled: false,
         myLocationEnabled: true,
         mapType: MapType.normal,
         initialCameraPosition: CameraPosition(
@@ -61,9 +61,10 @@ class MapViewState extends State<MapView> {
         },
         markers: Set<Marker>.of(widget.markers.values),
       ),
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: _goToLocation,
-        label: Text("Go to location"),
+        child: Icon(Icons.gps_fixed),
+        backgroundColor: Theme.of(context).accentColor,
       ),
     );
   }
