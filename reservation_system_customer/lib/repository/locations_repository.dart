@@ -7,15 +7,17 @@ import 'data/data.dart';
 class LocationsRepository {
   var locations = [
     Location(
-        id: 'id1',
-        position: LatLng(48.160490, 11.555184),
-        name: 'Supermarkt A',
-        slot_duration: Duration(minutes: 10)),
+      id: 'id1',
+      position: LatLng(48.160490, 11.555184),
+      name: 'Supermarkt A',
+      fillStatus: FillStatus.green,
+    ),
     Location(
-        id: 'id2',
-        position: LatLng(47.960490, 11.355184),
-        name: 'Supermarkt B',
-        slot_duration: Duration(minutes: 10)),
+      id: 'id2',
+      position: LatLng(47.960490, 11.355184),
+      name: 'Supermarkt B',
+      fillStatus: FillStatus.red,
+    ),
   ];
 
   Future<List<Location>> getStores(LatLng position) async {
@@ -33,7 +35,7 @@ class LocationsRepository {
             endTime: DateTime.now().add(new Duration(minutes: (i + 1) * 10)),
           ),
           bookings: i,
-          utilization: i / 20));
+          utilization: i / 10));
     }
     cu1.daily_utilization.add(du);
     Capacity_utilization cu2 = cu1;
