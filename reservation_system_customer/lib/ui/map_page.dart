@@ -21,6 +21,7 @@ class MapPage extends StatelessWidget {
             onTap: () {
               showModalBottomSheet(
                   context: context,
+                  isScrollControlled: true,
                   builder: (context) => Container(
                         color: Theme.of(context).primaryColor,
                     height: 300,
@@ -47,9 +48,14 @@ class MapPage extends StatelessWidget {
                           ),
                           Expanded(
                             child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
+                                Center(
+                                  child: Icon(Icons.arrow_back_ios),
+                                ),
                                 Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(4.0),
                                   child: BarChart(location
                                       .capacity_utilization
                                       .daily_utilization[0]
@@ -100,7 +106,7 @@ class MapPage extends StatelessWidget {
                                       FlBorderData(show: false))),
                                 ),
                                 Center(
-                                  child: Icon(Icons.arrow_right),
+                                  child: Icon(Icons.arrow_forward_ios),
                                 )
                               ],
                             ),
