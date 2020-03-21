@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/ui/home_page.dart';
 import 'package:reservation_system_customer/ui/map_page.dart';
 
@@ -11,6 +12,12 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<ReservationsBloc>(context).add(LoadReservations());
+  }
 
   @override
   Widget build(BuildContext context) {

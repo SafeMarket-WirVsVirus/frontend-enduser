@@ -23,10 +23,10 @@ class ReservationsRepository {
     ),
   ];
 
-  Future<List<Reservation>> cancelReservation(Reservation reservation) async {
+  Future<List<Reservation>> cancelReservation(String id) async {
     //TODO: Cancel the reservation
     await Future.delayed(Duration(seconds: 1));
-    reservations.remove(reservation);
+    reservations.removeWhere((item) => item.id == id);
     return reservations;
   }
 
