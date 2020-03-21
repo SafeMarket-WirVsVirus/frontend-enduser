@@ -62,14 +62,6 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   GoogleMapController mapController;
   final Set<Marker> markers = new Set();
 
-  @override
-  void initState() {
-    markers.add(Marker(
-      markerId: MarkerId(reservation.location.id),
-      position: reservation.location.position,
-    ));
-  }
-
   //  TODO actually remind the user
   SnackBar reminderSnackBar = SnackBar(
     content: Text("Erinnerung 30 Minuten vor deinem Termin"),
@@ -80,6 +72,10 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
 
   @override
   void initState() {
+    markers.add(Marker(
+      markerId: MarkerId(reservation.location.id),
+      position: reservation.location.position,
+    ));
     _getReminderState();
     super.initState();
   }
@@ -294,9 +290,5 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
         ],
       ),
     );
-  }
-
-  void _navigate() {
-//    TODO navigate
   }
 }
