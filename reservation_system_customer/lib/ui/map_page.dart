@@ -10,21 +10,14 @@ class MapPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MapBloc, MapState>(builder: (context, state) {
-      if (state is ReservationsInitial) {
-        return Container();
-      } else if (state is ReservationsLoading) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      } else if (state is MapLocationsLoaded) {
-        Map<MarkerId, Marker> markers = {};
-
+      Map<MarkerId, Marker> markers = {};
+      if (state is MapLocationsLoaded) {
         state.locations.forEach((reservation) {
           markers[MarkerId(reservation.id)] = Marker(
             markerId: MarkerId(reservation.id),
             position: reservation.position,
             infoWindow: InfoWindow(
-                title: location.name, snippet: "A Short description"),
+                title: reservation.name, snippet: "A Short description"),
             onTap: () {
               showBottomSheet(
                   context: context,
@@ -42,7 +35,7 @@ class MapPage extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  location.name,
+                                  reservation.name,
                                   style: Theme
                                       .of(context)
                                       .textTheme
@@ -54,7 +47,7 @@ class MapPage extends StatelessWidget {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: BarChart(location
+                              child: BarChart(reservation
                                   .capacity_utilization.daily_utilization[0]
                                   .get_bar_data(
                                   DateTime.now(), //starttime
@@ -83,12 +76,15 @@ class MapPage extends StatelessWidget {
                                               fontWeight: FontWeight.bold,
                                               fontSize: 10),
                                           getTitles: (double value) {
-                                            return location.capacity_utilization
+                                            return reservation
+                                                .capacity_utilization
                                                 .daily_utilization[0]
                                                 .get_bar_titles(value);
                                           }
-                                      )
-                                  )
+                                      ),
+                                      leftTitles: SideTitles(showTitles: false)
+                                  ),
+                                  borderData: FlBorderData(show: false)
                               )),
                             ),
                           )
