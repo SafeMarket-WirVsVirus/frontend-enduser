@@ -21,6 +21,7 @@ class _FilterDialogState extends State<FilterDialog> {
     "Die Läden mit sehr hoher Auslastung werden nicht angezeigt",
     "Alle Läden werden angezeigt, auch wenn gerade viel los ist"
   ];
+  bool nonGrocery = false;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +53,18 @@ class _FilterDialogState extends State<FilterDialog> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Text(sliderTips[(sliderValue - 1).round()]),
             ),
+            SizedBox(
+              height: 20,
+            ),
+
+            CheckboxListTile(
+              value: nonGrocery,
+              title: Text("Nicht-Lebensmittelläden anzeigen"),
+              onChanged: (value) {setState(() {
+                nonGrocery = value;
+              });},
+            ),
+
             SizedBox(
               height: 20,
             )

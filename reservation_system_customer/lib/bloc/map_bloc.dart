@@ -23,6 +23,16 @@ class MapLoadLocations extends MapEvent {
   List<Object> get props => [position];
 }
 
+class MapSettingsChanged extends MapEvent{
+  final int fillStatusPreference;
+  final bool nonGrocery;
+
+  MapSettingsChanged(this.fillStatusPreference, this.nonGrocery);
+
+  @override
+  List<Object> get props => [fillStatusPreference, nonGrocery];
+}
+
 /// STATES
 
 abstract class MapState extends Equatable {
@@ -72,6 +82,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         locations: locations,
         markerIcons: markerIcons,
       );
+    } else if (event is MapSettingsChanged) {
+      
     }
   }
 
