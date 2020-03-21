@@ -22,7 +22,12 @@ class MyApp extends StatelessWidget {
             create: (context) => ReservationsBloc(
               reservationsRepository: ReservationsRepository(),
             ),
-          )
+          ),
+          BlocProvider(
+            create: (context) => MapBloc(
+              locationsRepository: LocationsRepository(),
+            ),
+          ),
         ],
         child: StartPage(),
       ),
