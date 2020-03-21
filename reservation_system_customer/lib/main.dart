@@ -28,6 +28,9 @@ class MyApp extends StatelessWidget {
               locationsRepository: LocationsRepository(),
             ),
           ),
+          Provider(
+            create: (context) => UserRepository(),
+          )
         ],
         child: StartPage(),
       ),

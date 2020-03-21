@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'dart:math';
+import 'package:reservation_system_customer/repository/repository.dart';
 
 class MapPage extends StatelessWidget {
   @override
@@ -116,7 +118,8 @@ class MapView extends StatefulWidget {
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
   final positionTimeout = Duration(seconds: 3);
-  LatLng userPosition = LatLng(48.160490, 11.555184); // default position
+  final defaultPosition = LatLng(48.160490, 11.555184);
+  LatLng userPosition;
 
   @override
   void initState() {
@@ -133,6 +136,10 @@ class MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
+    userPosition =
+        Provider.of<UserRepository>(context, listen: false).userPosition ??
+            defaultPosition;
+
     return Scaffold(
       body: GoogleMap(
         myLocationButtonEnabled: true,
@@ -186,6 +193,8 @@ class MapViewState extends State<MapView> {
     LatLng location = await _getUserPosition();
     if (location != null) {
       userPosition = location;
+      Provider.of<UserRepository>(context, listen: false)
+          .setUserPosition(userPosition);
       _moveCameraToNewPosition(userPosition);
     }
     BlocProvider.of<MapBloc>(context).add(MapLoadLocations(location));

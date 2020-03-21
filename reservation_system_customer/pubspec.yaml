@@ -18,6 +18,7 @@ dependencies:
   provider: ^4.0.4
   fl_chart: ^0.8.6
   qr_flutter: ^3.0.1
+  shared_preferences: ^0.5.6+3
 
 dev_dependencies:
   flutter_test:
