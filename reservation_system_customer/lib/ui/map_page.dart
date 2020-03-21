@@ -41,7 +41,7 @@ class _MapPageState extends State<MapPage> {
                   context: context,
                   builder: (context) => Container(
                         color: Theme.of(context).primaryColor,
-                        height: 200,
+                        height: 250,
                         child: Column(children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -49,24 +49,27 @@ class _MapPageState extends State<MapPage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: DefaultTextStyle(
-                                  textAlign: TextAlign.center,
-                                  child: Text(reservation.name),
-                                  style: Theme.of(context).textTheme.title,
+                                child: Text(
+                                  reservation.name,
+                                  style: Theme.of(context).textTheme.headline5,
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(
-                            height: 200,
-                            child: Expanded(
-                              child: BarChart(BarChartData(maxY: 1, barGroups: [
-                                BarChartGroupData(x: 0, barRods: [
-                                  BarChartRodData(y: 1, color: Colors.purple),
-                                  BarChartRodData(y: 3, color: Colors.yellow)
-                                ]),
-                              ])),
-                            ),
+                          Expanded(
+                            child: BarChart(BarChartData(barGroups: [
+                              BarChartGroupData(barsSpace: 16, x: 0, barRods: [
+                                BarChartRodData(y: 1, color: Colors.purple),
+                                BarChartRodData(y: 3, color: Colors.yellow),
+                                BarChartRodData(y: 3, color: Colors.yellow),
+                                BarChartRodData(y: 3, color: Colors.yellow),
+                                BarChartRodData(y: 3, color: Colors.yellow),
+                                BarChartRodData(y: 3, color: Colors.yellow),
+                                BarChartRodData(y: 3, color: Colors.yellow),
+                                BarChartRodData(y: 3, color: Colors.yellow),
+                                BarChartRodData(y: 3, color: Colors.yellow),
+                              ]),
+                            ])),
                           )
                         ]),
                       ));
