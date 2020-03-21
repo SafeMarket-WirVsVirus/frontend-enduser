@@ -19,7 +19,7 @@ class MapPage extends StatelessWidget {
             infoWindow: InfoWindow(
                 title: location.name, snippet: "A Short description"),
             onTap: () {
-              showBottomSheet(
+              showModalBottomSheet(
                   context: context,
                   builder: (context) => Container(
                         color: Theme.of(context).primaryColor,
@@ -36,7 +36,8 @@ class MapPage extends StatelessWidget {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
                                   location.name,
-                                  style: Theme
+                                  style:
+                                  Theme
                                       .of(context)
                                       .textTheme
                                       .headline,
@@ -45,47 +46,63 @@ class MapPage extends StatelessWidget {
                             ],
                           ),
                           Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: BarChart(location
-                                  .capacity_utilization.daily_utilization[0]
-                                  .get_bar_data(
-                                  DateTime.now(), //starttime
-                                  8, // datacount
-                                  BarChartGroupData(
-                                    // Config
-                                      x: 0,
-                                      barRods: [
-                                        BarChartRodData(
-                                            y: 0,
-                                            width: 20,
-                                            color: Colors.blue,
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5.0),
-                                                topRight: Radius.circular(5.0)))
-                                      ],
-                                      barsSpace: 5
-                                  ))
-                                  .copyWith(
-                                  alignment: BarChartAlignment.spaceEvenly,
-                                  titlesData: FlTitlesData(
-                                      show: true,
-                                      bottomTitles: SideTitles(
-                                          showTitles: true,
-                                          textStyle: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 10),
-                                          getTitles: (double value) {
-                                            return location
-                                                .capacity_utilization
-                                                .daily_utilization[0]
-                                                .get_bar_titles(value);
-                                          }
-                                      ),
-                                      leftTitles: SideTitles(showTitles: false)
-                                  ),
-                                  borderData: FlBorderData(show: false)
-                              )),
+                            child: Row(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: BarChart(location
+                                      .capacity_utilization
+                                      .daily_utilization[0]
+                                      .get_bar_data(
+                                      DateTime.now(), //starttime
+                                      8, // datacount
+                                      BarChartGroupData(
+                                        // Config
+                                          x: 0,
+                                          barRods: [
+                                            BarChartRodData(
+                                                y: 0,
+                                                width: 20,
+                                                color: Colors.blue,
+                                                borderRadius:
+                                                BorderRadius.only(
+                                                    topLeft: Radius
+                                                        .circular(
+                                                        5.0),
+                                                    topRight: Radius
+                                                        .circular(
+                                                        5.0)))
+                                          ],
+                                          barsSpace: 5))
+                                      .copyWith(
+                                      alignment:
+                                      BarChartAlignment.spaceEvenly,
+                                      titlesData: FlTitlesData(
+                                          show: true,
+                                          bottomTitles: SideTitles(
+                                              showTitles: true,
+                                              textStyle: TextStyle(
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                  fontSize: 10),
+                                              getTitles:
+                                                  (double value) {
+                                                return location
+                                                    .capacity_utilization
+                                                    .daily_utilization[
+                                                0]
+                                                    .get_bar_titles(
+                                                    value);
+                                              }),
+                                          leftTitles: SideTitles(
+                                              showTitles: false)),
+                                      borderData:
+                                      FlBorderData(show: false))),
+                                ),
+                                Center(
+                                  child: Icon(Icons.arrow_right),
+                                )
+                              ],
                             ),
                           )
                         ]),
