@@ -3,9 +3,7 @@ import 'package:reservation_system_customer/ui/home_page.dart';
 import 'package:reservation_system_customer/ui/map_page.dart';
 
 class StartPage extends StatefulWidget {
-  StartPage({Key key, this.title}) : super(key: key);
-
-  final String title;
+  StartPage({Key key}) : super(key: key);
 
   @override
   _StartPageState createState() => _StartPageState();
@@ -18,7 +16,7 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('Reservation System'),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -28,7 +26,7 @@ class _StartPageState extends State<StartPage> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            title: Text('Home'),
+            title: Text('Reservations'),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.map),
