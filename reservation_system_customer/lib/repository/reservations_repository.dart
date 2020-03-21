@@ -11,7 +11,7 @@ class ReservationsRepository {
         position: LatLng(48.160490, 11.555184),
       ),
       timeSlot: TimeSlot(
-        startTime: DateTime.now().add(Duration(hours: 3)),
+        startTime: DateTime.now().add(Duration(minutes: 3)),
         endTime: DateTime.now().add(Duration(hours: 4)),
       ),
     ),

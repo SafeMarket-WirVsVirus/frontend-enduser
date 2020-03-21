@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:reservation_system_customer/ui/home_page.dart';
+import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
 
 import '../../repository/data/data.dart';
 
@@ -175,7 +175,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     }
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => ReservationsListPage()),
     );
   }
 
@@ -197,7 +197,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               await Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => HomePage(),
+                  builder: (context) => ReservationsListPage(),
                 ),
               );
             },
