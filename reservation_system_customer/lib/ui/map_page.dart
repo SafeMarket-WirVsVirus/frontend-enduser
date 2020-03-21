@@ -1,8 +1,10 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
+import 'dart:math';
 
 class MapPage extends StatefulWidget {
   @override
@@ -61,8 +63,20 @@ class _MapPageState extends State<MapPage> {
                               ),
                             ],
                           ),
-                          Container(
-
+                          BarChart(
+                              BarChartData(
+                                  barGroups: [BarChartGroupData(x: 0, barRods: [
+                                    BarChartRodData(
+                                        y: 1,
+                                        color: Colors.purple
+                                    ),
+                                    BarChartRodData(
+                                        y: 3,
+                                        color: Colors.yellow
+                                    )
+                                  ]),
+                                  ]
+                              )
                           )
                         ]),
                       ));
