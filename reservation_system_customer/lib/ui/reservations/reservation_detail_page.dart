@@ -5,7 +5,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../repository/data/data.dart';
 
-Future<void> _ackAlert(BuildContext context, String id) {
+Future<void> _ticketDialog(BuildContext context, String id) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
@@ -93,54 +93,67 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
           ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.all(30),
-          child: Column(
-            children: <Widget>[
-              Text("Du hast einen Shopping-Slot bei"),
-              Text("${reservation.location.name}",
-                style: Theme.of(context).textTheme.headline,),
-              Text("am"),
-              Text("${dateFormat.format(reservation.timeSlot.startTime)}",
-                style: Theme.of(context).textTheme.headline,),
-              Text("um"),
-              Text("${timeFormat.format(reservation.timeSlot.startTime)}",
-                style: Theme.of(context).textTheme.headline,),
-
-              SizedBox(
-                height: 20,
-              ),
-
-              Container(
-                height: 300,
-                child: GoogleMap(
-                  myLocationButtonEnabled: false,
-                  myLocationEnabled: true,
-                  mapType: MapType.normal,
-                  scrollGesturesEnabled: false,
-                  zoomGesturesEnabled: false,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      reservation.location.position.latitude,
-                      reservation.location.position.longitude,
-                    ),
-                    zoom: 15,
-                  ),
-                  onMapCreated: _onMapCreated,
-                  markers: markers,
-                ),
-              ),
-
-            ],
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(30),
+            child: Column(
+              children: <Widget>[
+                Text("Du hast einen Shopping-Slot bei"),
+                Text("${reservation.location.name}",
+                  style: Theme.of(context).textTheme.headline,),
+                Text("am"),
+                Text("${dateFormat.format(reservation.timeSlot.startTime)}",
+                  style: Theme.of(context).textTheme.headline,),
+                Text("um"),
+                Text("${timeFormat.format(reservation.timeSlot.startTime)}",
+                  style: Theme.of(context).textTheme.headline,),
+              ],
+            ),
           ),
-        )
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.confirmation_number),
-        onPressed: () {
-          _ackAlert(context, reservation.id);
-        },
+
+          SizedBox(
+            height: 10,
+          ),
+
+          Expanded(
+            child: Container(
+              constraints: BoxConstraints.expand(),
+              child: GoogleMap(
+                myLocationButtonEnabled: false,
+                myLocationEnabled: true,
+                mapType: MapType.normal,
+                scrollGesturesEnabled: false,
+                zoomGesturesEnabled: false,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                    reservation.location.position.latitude,
+                    reservation.location.position.longitude,
+                  ),
+                  zoom: 15,
+                ),
+                onMapCreated: _onMapCreated,
+                markers: markers,
+              ),
+            ),
+          ),
+
+          SizedBox(
+            height: 10,
+          ),
+
+          FlatButton(
+            child: Text("Ticket",
+              style: Theme.of(context).textTheme.headline,),
+            onPressed: () {
+              _ticketDialog(context, reservation.id);
+            },
+          ),
+
+          SizedBox(
+            height: 10,
+          ),
+        ],
       ),
     );
   }
