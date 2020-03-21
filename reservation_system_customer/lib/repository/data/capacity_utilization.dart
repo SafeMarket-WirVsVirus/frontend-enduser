@@ -54,8 +54,6 @@ class Daily_Utilization {
     }
     if (value.toInt() + start < timeslot_data.length) {
       Timeslot_Data slot = timeslot_data[value.toInt() + start];
-      String hour = slot.timeslot.startTime.hour.toString();
-      String minute = slot.timeslot.startTime.minute.toString();
       return (new DateFormat.Hm()).format(slot.timeslot.startTime);
     }
     return "";
