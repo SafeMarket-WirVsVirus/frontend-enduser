@@ -18,6 +18,8 @@ class Location {
   /// The user friendly location name
   final String name;
 
+  Duration slot_duration;
+
   Capacity_utilization capacity_utilization = Capacity_utilization();
 
   void fetch_detailed_utilization() {
@@ -35,5 +37,6 @@ class Location {
     @required this.position,
     @required this.name,
     @required this.fillStatus,
+    @required this.slot_duration
   });
 }
