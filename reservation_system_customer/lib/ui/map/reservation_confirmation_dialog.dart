@@ -25,6 +25,7 @@ class ReservationConfirmationDialog extends StatelessWidget {
                 child: Text('Ok'),
                 onPressed: () {
                   Navigator.of(context).pop();
+                  Navigator.of(context).pop();
                 },
               ),
             ],
