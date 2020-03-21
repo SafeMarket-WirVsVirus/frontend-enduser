@@ -13,12 +13,23 @@ abstract class ReservationsEvent extends Equatable {
 class LoadReservations extends ReservationsEvent {}
 
 class CancelReservation extends ReservationsEvent {
-  final String reservationId;
+  final int reservationId;
+  final int locationId;
 
-  CancelReservation(this.reservationId);
+  CancelReservation({
+    @required this.reservationId,
+    @required this.locationId,
+  });
 
   @override
-  List<Object> get props => [reservationId];
+  List<Object> get props => [reservationId, locationId];
+}
+
+class MakeReservation extends ReservationsEvent {
+  final int locationId;
+  final DateTime startTime;
+
+  MakeReservation({this.locationId, this.startTime});
 }
 
 /// STATES
@@ -44,23 +55,43 @@ class ReservationsLoaded extends ReservationsState {
 
 class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
   final ReservationsRepository _reservationsRepository;
+  final UserRepository _userRepository;
 
   ReservationsBloc({
     @required ReservationsRepository reservationsRepository,
-  }) : _reservationsRepository = reservationsRepository;
+    @required UserRepository userRepository,
+  })  : _reservationsRepository = reservationsRepository,
+        _userRepository = userRepository;
 
   @override
   ReservationsState get initialState => ReservationsInitial();
 
   @override
   Stream<ReservationsState> mapEventToState(ReservationsEvent event) async* {
+    final deviceId = await _userRepository.deviceId();
     if (event is LoadReservations) {
       yield ReservationsLoading();
-      final reservations = await _reservationsRepository.getReservations();
+      final reservations =
+          await _reservationsRepository.getReservations(deviceId: deviceId);
       yield ReservationsLoaded(reservations);
     } else if (event is CancelReservation) {
       yield ReservationsLoading();
-      final reservations = await _reservationsRepository.cancelReservation(event.reservationId);
+      final reservations = await _reservationsRepository.cancelReservation(
+        reservationId: event.reservationId,
+        deviceId: deviceId,
+        locationId: event.locationId,
+      );
+      yield ReservationsLoaded(reservations);
+    } else if (event is MakeReservation) {
+      await _reservationsRepository.createReservation(
+        deviceId: deviceId,
+        locationId: event.locationId,
+        startTime: event.startTime,
+      );
+      yield ReservationsLoading();
+      final reservations = await _reservationsRepository.getReservations(
+        deviceId: deviceId,
+      );
       yield ReservationsLoaded(reservations);
     }
   }

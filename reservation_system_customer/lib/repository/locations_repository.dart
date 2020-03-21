@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/repository/data/capacity_utilization.dart';
@@ -7,10 +8,16 @@ import 'package:reservation_system_customer/repository/data/capacity_utilization
 import 'data/data.dart';
 
 class LocationsRepository {
-  final String baseURL = 'https://wirvsvirusretail.azurewebsites.net/api/';
+  final String baseUrl;
+
+  LocationsRepository({@required this.baseUrl});
 
   Future<Location> getStore(int id) async {
-    final response = await http.get('${baseURL}Location?id=$id');
+    var queryParameters = {
+      'id': '$id',
+    };
+    final uri = Uri.https(baseUrl, '/api/Location', queryParameters);
+    final response = await http.get(uri);
     if (response.statusCode == 200) {
       var tmpLocation = Location.fromJson(json.decode(response.body));
 
