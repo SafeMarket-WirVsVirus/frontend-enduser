@@ -4,6 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../repository/data/data.dart';
 
@@ -54,7 +55,8 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final Reservation reservation;
   bool reminder = false;
-  Widget reminderIcon = Icon(Icons.notifications_off);
+  int notificationId = 0;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
 //  TODO actually remind the user
   SnackBar reminderSnackBar = SnackBar(
@@ -65,6 +67,12 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   _ReservationDetailPageState(this.reservation);
 
   @override
+  void initState() {
+    _getReminderState();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
@@ -72,7 +80,9 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
         title: Text(widget.reservation.location.name),
         actions: <Widget>[
           IconButton(
-            icon: reminderIcon,
+            icon: reminder
+                ? Icon(Icons.notifications_active)
+                : Icon(Icons.notifications_off),
             onPressed: () {
               _reminderSwitch();
             },
@@ -87,34 +97,34 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
       ),
       body: Center(
           child: Padding(
-        padding: EdgeInsets.all(30),
-        child: Column(
-          children: <Widget>[
-            Text("Du hast einen Shopping-Slot bei"),
-            Text(
-              "${reservation.location.name}",
-              style: Theme.of(context).textTheme.headline,
+            padding: EdgeInsets.all(30),
+            child: Column(
+              children: <Widget>[
+                Text("Du hast einen Shopping-Slot bei"),
+                Text(
+                  "${reservation.location.name}",
+                  style: Theme.of(context).textTheme.headline,
+                ),
+                Text("am"),
+                Text(
+                  "${dateFormat.format(reservation.timeSlot.startTime)}",
+                  style: Theme.of(context).textTheme.headline,
+                ),
+                Text("um"),
+                Text(
+                  "${timeFormat.format(reservation.timeSlot.startTime)}",
+                  style: Theme.of(context).textTheme.headline,
+                ),
+                Padding(
+                  padding: EdgeInsets.all(30),
+                  child: RaisedButton(
+                    child: Icon(Icons.navigation),
+                    onPressed: _navigate,
+                  ),
+                )
+              ],
             ),
-            Text("am"),
-            Text(
-              "${dateFormat.format(reservation.timeSlot.startTime)}",
-              style: Theme.of(context).textTheme.headline,
-            ),
-            Text("um"),
-            Text(
-              "${timeFormat.format(reservation.timeSlot.startTime)}",
-              style: Theme.of(context).textTheme.headline,
-            ),
-            Padding(
-              padding: EdgeInsets.all(30),
-              child: RaisedButton(
-                child: Icon(Icons.navigation),
-                onPressed: _navigate,
-              ),
-            )
-          ],
-        ),
-      )),
+          )),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.confirmation_number),
         onPressed: () {
@@ -124,34 +134,65 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     );
   }
 
+  void _getReminderState() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool reminderSet = prefs.getInt(reservation.id) == null ? false : true;
+
+    print("Saved state: Remider set = $reminderSet");
+
+    setState(() {
+      reminder = reminderSet;
+    });
+  }
+
   void _reminderSwitch() {
     setState(() {
       reminder = !reminder;
       if (reminder) {
-        reminderIcon = Icon(Icons.notifications_active);
         _scaffoldKey.currentState.showSnackBar(reminderSnackBar);
         _setReminder();
       } else {
-        reminderIcon = Icon(Icons.notifications_off);
+        _cancelReminder();
       }
     });
   }
 
-  void _setReminder() async {
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+  void _setUpLocalNotificationsPlugin() async {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+    AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings = InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
+  }
+
+  void _cancelReminder() async {
+    if (flutterLocalNotificationsPlugin == null) {
+      _setUpLocalNotificationsPlugin();
+    }
+
+    //cancel the notification
+    await flutterLocalNotificationsPlugin.cancel(notificationId);
+
+    //remove the savedId
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('${reservation.id}');
+  }
+
+  void _setReminder() async {
+    if (flutterLocalNotificationsPlugin == null) {
+      _setUpLocalNotificationsPlugin();
+    }
+
+    //use the current system time in seconds (cannot handle milliseconds) as a notificationId
+    notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     var scheduledNotificationDateTime =
-        reservation.timeSlot.startTime.add(Duration(seconds: 5));
+    reservation.timeSlot.startTime.subtract(Duration(minutes: 30));
     //TODO: add actual androidPlatformChannelSpecifics information here
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your other channel id',
@@ -161,11 +202,17 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     NotificationDetails platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
-        DateTime.now().millisecond,
+        notificationId,
         'Zeit einzukaufen: ${reservation.location.name} - ${timeFormat.format(reservation.timeSlot.startTime)} h',
         '- Navigation?',
         scheduledNotificationDateTime,
         platformChannelSpecifics);
+
+    //save notificationId with sharedPreferences so we can cancel it later if needed
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('${reservation.id}', notificationId);
+    print(
+        "Saved notificationId=$notificationId for reservationId=${reservation.id}");
   }
 
   //android
