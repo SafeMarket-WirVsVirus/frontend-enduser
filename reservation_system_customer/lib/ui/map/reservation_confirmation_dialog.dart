@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ReservationConfirmationDialog extends StatelessWidget {
   final name;
@@ -7,7 +8,16 @@ class ReservationConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Reservation successful'),
+      //title: Text('Reservation successful'),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Flexible(
+            child: Text('Reservation successfull'),
+          ),
+          Icon(Icons.check),
+            ],
+          ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
