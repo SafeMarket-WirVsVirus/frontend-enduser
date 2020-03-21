@@ -25,10 +25,12 @@ class HomePage extends StatelessWidget {
                 background: Container(
                   color: Colors.red,
                   child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[Icon(Icons.delete, size: 40,)]),
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[Padding(padding: EdgeInsets.all(10.0),
+                          child: Icon(Icons.delete, size: 40))
+                      ]),
                 ),
-                direction: DismissDirection.startToEnd,
+                direction: DismissDirection.endToStart,
                 confirmDismiss: (direction) async {
                   return await showDialog(
                     context: context,
