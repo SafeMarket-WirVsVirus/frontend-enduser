@@ -5,7 +5,7 @@ import 'package:reservation_system_customer/repository/repository.dart';
 
 class LocationDetailSheet extends StatefulWidget {
   final Location location;
-  DateTime barplotStartTime = DateTime.now();
+  DateTime barplotDate = DateTime.now();
 
   LocationDetailSheet({
     Key key,
@@ -17,7 +17,9 @@ class LocationDetailSheet extends StatefulWidget {
 }
 
 class _LocationDetailSheetState extends State<LocationDetailSheet> {
-  DateTime barplotStartTime = DateTime.now();
+  DateTime barplotDate = DateTime.now();
+  int selectedBarIndex = -1;
+  int scrollIndexOffset = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +51,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
                     child: Text("Optionen auswählen (" +
-                        (new DateFormat("dd'.' MMM yyyy"))
-                            .format(barplotStartTime) +
+                        (new DateFormat("dd'.' MMM yyyy")).format(barplotDate) +
                         ")"),
                   ),
                 )
@@ -65,11 +66,8 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                     child: FlatButton(
                         onPressed: () {
                           setState(() {
-                            if (barplotStartTime.isAfter(DateTime.now())) {
-                              barplotStartTime = barplotStartTime
-                                  .subtract(widget.location.slot_duration);
-                            } else {
-                              barplotStartTime = DateTime.now();
+                            if (scrollIndexOffset > 0) {
+                              scrollIndexOffset -= 1;
                             }
                           });
                         },
@@ -77,9 +75,10 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                         child: Icon(Icons.arrow_back_ios)),
                   ),
                   BarChart(widget
-                      .location.capacity_utilization.daily_utilization[0]
+                      .location.capacity_utilization.get_utilization_by_date(
+                      barplotDate)
                       .get_bar_data(
-                      barplotStartTime, //starttime
+                      scrollIndexOffset, //startpoint
                       7, // datacount
                       BarChartGroupData(
                         // Config
@@ -93,7 +92,8 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                                     topLeft: Radius.circular(5.0),
                                     topRight: Radius.circular(5.0)))
                           ],
-                          barsSpace: 3))
+                          barsSpace: 3),
+                      selectedBarIndex)
                       .copyWith(
                       alignment: BarChartAlignment.spaceEvenly,
                       titlesData: FlTitlesData(
@@ -105,12 +105,21 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                                   fontSize: 10),
                               getTitles: (double value) {
                                 return widget.location.capacity_utilization
-                                    .daily_utilization[0]
+                                    .get_utilization_by_date(barplotDate)
                                     .get_bar_titles(
-                                    value, barplotStartTime);
+                                    value, scrollIndexOffset);
                               }),
                           leftTitles: SideTitles(showTitles: false)),
-                      borderData: FlBorderData(show: false))),
+                      borderData: FlBorderData(show: false),
+                      barTouchData: BarTouchData(
+                          touchCallback: (BarTouchResponse touchResponse) {
+                            setState(() {
+                              selectedBarIndex =
+                                  touchResponse.spot.touchedBarGroupIndex +
+                                      scrollIndexOffset;
+                              print(selectedBarIndex);
+                            });
+                          }))),
                   Center(
                     widthFactor: 0.25,
                     child: FlatButton(
@@ -118,8 +127,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       child: Icon(Icons.arrow_forward_ios),
                       onPressed: () {
                         setState(() {
-                          barplotStartTime = barplotStartTime
-                              .add(widget.location.slot_duration);
+                          scrollIndexOffset += 1;
                         });
                       },
                     ),
@@ -138,8 +146,8 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                     Future<DateTime> selectedDate = showDatePicker(
                       context: context,
                       initialDate: DateTime.now(),
-                      firstDate: DateTime(2020),
-                      lastDate: DateTime(2030),
+                      firstDate: DateTime.now().subtract(Duration(hours: 1)),
+                      lastDate: DateTime.now().add(Duration(days: 2)),
                       builder: (BuildContext context, Widget child) {
                         return Theme(
                           data: ThemeData.dark(),
@@ -149,7 +157,12 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                     );
                     DateTime timepoint = await selectedDate;
                     setState(() {
-                      barplotStartTime = timepoint;
+                      if (timepoint != null &&
+                          timepoint.isAfter(DateTime.now())) {
+                        setState(() {
+                          barplotDate = timepoint;
+                        });
+                      }
                     });
                   },
                   child: Text("Anderes Datum auswählen",
@@ -164,6 +177,13 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               child: RaisedButton(
                 child: Text("Slot reservieren"),
                 onPressed: () {
+                  TimeSlot timeslot;
+                  if (selectedBarIndex >= 0) {
+                    timeslot = widget.location.capacity_utilization
+                        .get_utilization_by_date(barplotDate)
+                        .timeslot_data[selectedBarIndex]
+                        .timeslot;
+                  }
                   // todo: reservierung implementieren
                 },
               ),
