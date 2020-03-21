@@ -1,5 +1,6 @@
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:device_identifier/device_identifier.dart';
 
 class _PersistenceKeys {
   static const userPositionLatKey = 'positionLat';
@@ -8,6 +9,7 @@ class _PersistenceKeys {
 
 class UserRepository {
   LatLng _userPosition;
+  String _deviceId;
 
   LatLng get userPosition => _userPosition;
 
@@ -29,5 +31,12 @@ class UserRepository {
     if (lat != null && lng != null) {
       _userPosition = LatLng(lat, lng);
     }
+  }
+
+  Future<String> deviceId() async {
+    if (_deviceId == null) {
+      _deviceId = await DeviceIdentifier.deviceId;
+    }
+    return _deviceId;
   }
 }
