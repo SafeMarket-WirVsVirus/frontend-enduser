@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:reservation_system_customer/repository/data/data.dart';
 
@@ -24,6 +25,8 @@ class Capacity_utilization {
   void fetch_general_utilization() {
     // TODO: implement
   }
+
+
 }
 
 class Daily_Utilization {
@@ -31,9 +34,23 @@ class Daily_Utilization {
   final DateTime date;
 
   /// List with Timeslot data
-  final List<Timeslot_Data> timeslots = new List();
+  final List<Timeslot_Data> timeslot_data = new List();
 
   Daily_Utilization({@required this.date});
+
+  BarChartData get_bar_data(DateTime startTime, int datacount) {
+    for (var slot in timeslot_data) {
+      List<BarChartGroupData> data = new List();
+      if (slot.timeslot.startTime.isBefore(startTime)) {
+        data.add(BarChartGroupData(
+            x: data.length, barRods: [BarChartRodData(y: slot.utilization)]));
+        if (data.length > datacount) {
+          return BarChartData(barGroups: data);
+        }
+      }
+    }
+  }
+
 }
 
 class Timeslot_Data {
@@ -44,7 +61,7 @@ class Timeslot_Data {
   final int bookings;
 
   /// Capacity utilization [0,1]
-  final Float utilization;
+  final double utilization;
 
   Timeslot_Data({
     @required this.timeslot,
