@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
+import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
 
 class MapView extends StatefulWidget {
   final Map<MarkerId, Marker> markers;
@@ -61,10 +63,32 @@ class MapViewState extends State<MapView> {
         },
         markers: Set<Marker>.of(widget.markers.values),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToLocation,
-        label: Text("Go to location"),
-      ),
+
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          FloatingActionButton(
+            mini: true,
+            onPressed: _setfilters,
+            child: Icon(Icons.filter_list),
+            backgroundColor: Theme
+                .of(context)
+                .accentColor,
+          ),
+
+          SizedBox(
+            height: 10,
+          ),
+
+          FloatingActionButton(
+            onPressed: _goToLocation,
+            child: Icon(Icons.gps_fixed),
+            backgroundColor: Theme
+                .of(context)
+                .accentColor,
+          ),
+        ],
+      )
     );
   }
 
@@ -81,6 +105,14 @@ class MapViewState extends State<MapView> {
       ),
     );
   }
+
+  void _setfilters() {
+    showDialog(context: context,
+    builder: (BuildContext context) {
+      return FilterDialog();
+    });
+  }
+
 
   void _moveCameraToNewPosition(LatLng position, {double zoom = 14.0}) async {
     final GoogleMapController controller = await _controller.future;
