@@ -1,16 +1,10 @@
 import 'package:flutter/foundation.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'location.dart';
 
-class TimeSlot {
-  final DateTime startTime;
-  final DateTime endTime;
+part 'reservation.g.dart';
 
-  TimeSlot({
-    this.startTime,
-    this.endTime,
-  });
-}
-
+@JsonSerializable(createToJson: false)
 class Reservation {
   /// The reservation id
   final String id;
@@ -19,11 +13,14 @@ class Reservation {
   final Location location;
 
   /// The reserved time slot
-  final TimeSlot timeSlot;
+  final DateTime startTime;
 
   Reservation({
     @required this.id,
     @required this.location,
-    @required this.timeSlot,
+    @required this.startTime,
   });
+
+  factory Reservation.fromJson(Map<String, dynamic> json) =>
+      _$ReservationFromJson(json);
 }

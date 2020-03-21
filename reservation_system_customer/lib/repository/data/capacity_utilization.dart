@@ -31,7 +31,7 @@ class Daily_Utilization {
     List<BarChartGroupData> data = new List();
     for (int i = 0; i < timeslot_data.length; i++) {
       Timeslot_Data slot = timeslot_data[i];
-      if (slot.timeslot.startTime.isAfter(startTime)) {
+      if (slot.startTime.isAfter(startTime)) {
         data.add(cfg.copyWith(
             x: data.length,
             barRods: [cfg.barRods[0].copyWith(y: slot.utilization * 100)]));
@@ -47,22 +47,22 @@ class Daily_Utilization {
     int start;
     for (int i = 0; i < timeslot_data.length; i++) {
       Timeslot_Data slot = timeslot_data[i];
-      if (slot.timeslot.startTime.isAfter(startTime)) {
+      if (slot.startTime.isAfter(startTime)) {
         start = i;
         break;
       }
     }
     if (value.toInt() + start < timeslot_data.length) {
       Timeslot_Data slot = timeslot_data[value.toInt() + start];
-      return (new DateFormat.Hm()).format(slot.timeslot.startTime);
+      return (new DateFormat.Hm()).format(slot.startTime);
     }
     return "";
   }
 }
 
 class Timeslot_Data {
-  /// Timeslot
-  TimeSlot timeslot;
+  /// Start Time
+  DateTime startTime;
 
   /// Number Of booked slots
   int bookings;
@@ -71,7 +71,7 @@ class Timeslot_Data {
   double utilization;
 
   Timeslot_Data({
-    @required this.timeslot,
+    @required this.startTime,
     @required this.bookings,
     @required this.utilization,
   });

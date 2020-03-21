@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'capacity_utilization.dart';
+
+part 'location.g.dart';
 
 enum FillStatus {
   green,
@@ -8,28 +11,25 @@ enum FillStatus {
   red,
 }
 
+@JsonSerializable(createToJson: false)
 class Location {
   /// The location id
-  final String id;
+  final int id;
 
   /// The GPS location
+  @JsonKey(ignore: true)
   final LatLng position;
 
   /// The user friendly location name
   final String name;
 
-  Duration slot_duration;
+  final Duration slot_duration;
 
-  Capacity_utilization capacity_utilization = Capacity_utilization();
+  @JsonKey(ignore: true)
+  final Capacity_utilization capacity_utilization;
 
-  void fetch_detailed_utilization() {
-    //TODO: implement
-  }
-
-  void fetch_general_utilization() {
-    // TODO: implement
-  }
   /// The fill status of a location
+  @JsonKey(fromJson: _fillStatusFromInt)
   final FillStatus fillStatus;
 
   Location({
@@ -37,6 +37,22 @@ class Location {
     @required this.position,
     @required this.name,
     @required this.fillStatus,
-    @required this.slot_duration
+    @required this.slot_duration,
+    @required this.capacity_utilization,
   });
+
+  factory Location.fromJson(Map<String, dynamic> json) =>
+      _$LocationFromJson(json);
+}
+
+FillStatus _fillStatusFromInt(int i) {
+  switch (i) {
+    case 0:
+      return FillStatus.red;
+    case 1:
+      return FillStatus.yellow;
+    case 2:
+      return FillStatus.green;
+  }
+  return FillStatus.green;
 }

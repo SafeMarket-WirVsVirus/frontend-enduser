@@ -73,7 +73,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   @override
   void initState() {
     markers.add(Marker(
-      markerId: MarkerId(reservation.location.id),
+      markerId: MarkerId('{reservation.location.id}'),
       position: reservation.location.position,
     ));
     _getReminderState();
@@ -113,10 +113,10 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
                 Text("${reservation.location.name}",
                   style: Theme.of(context).textTheme.headline,),
                 Text("am"),
-                Text("${dateFormat.format(reservation.timeSlot.startTime)}",
+                Text("${dateFormat.format(reservation.startTime)}",
                   style: Theme.of(context).textTheme.headline,),
                 Text("um"),
-                Text("${timeFormat.format(reservation.timeSlot.startTime)}",
+                Text("${timeFormat.format(reservation.startTime)}",
                   style: Theme.of(context).textTheme.headline,),
               ],
             ),
@@ -230,7 +230,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     var scheduledNotificationDateTime =
-    reservation.timeSlot.startTime.subtract(Duration(minutes: 30));
+    reservation.startTime.subtract(Duration(minutes: 30));
     //TODO: add actual androidPlatformChannelSpecifics information here
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your other channel id',
@@ -241,7 +241,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
         notificationId,
-        'Zeit einzukaufen: ${reservation.location.name} - ${timeFormat.format(reservation.timeSlot.startTime)} h',
+        'Zeit einzukaufen: ${reservation.location.name} - ${timeFormat.format(reservation.startTime)} h',
         '- Navigation?',
         scheduledNotificationDateTime,
         platformChannelSpecifics);
