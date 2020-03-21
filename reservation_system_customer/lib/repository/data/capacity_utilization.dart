@@ -1,10 +1,8 @@
-import 'dart:ffi';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/repository/data/data.dart';
-import 'package:intl/date_symbol_data_local.dart';
 
 import 'location.dart';
 
@@ -16,6 +14,18 @@ class Capacity_utilization {
   double utilization = 0.0;
 
   Capacity_utilization();
+
+  Daily_Utilization get_utilization_by_date(DateTime date) {
+    for (int i = 0; i < daily_utilization.length; i++) {
+      // compare if its the same date (time not important)
+      if (date.day == daily_utilization[i].date.day &&
+          date.month == daily_utilization[i].date.month &&
+          date.year == daily_utilization[i].date.year) {
+        return daily_utilization[i];
+      }
+    }
+    return daily_utilization[daily_utilization.length - 1 ];
+  }
 }
 
 class Daily_Utilization {
@@ -27,44 +37,46 @@ class Daily_Utilization {
 
   Daily_Utilization({@required this.date});
 
-  BarChartData get_bar_data(DateTime startTime, int datacount,
-      BarChartGroupData cfg) {
+  BarChartData get_bar_data(int scrollIndexOffset, int datacount,
+      BarChartGroupData cfg, int selectedIndex) {
     List<BarChartGroupData> data = new List();
-    for (int i = 0; i < timeslot_data.length; i++) {
+    for (int i = scrollIndexOffset; i < timeslot_data.length; i++) {
       Timeslot_Data slot = timeslot_data[i];
       Color color;
-      if (slot.timeslot.startTime.isAfter(startTime)) {
-        if (slot.utilization < 0.33) {
+
+      if (slot.utilization < 0.33) {
+        if (i == selectedIndex) {
+          color = Colors.green[100];
+        } else {
           color = Colors.green;
-        } else if (slot.utilization < 0.66) {
+        }
+      } else if (slot.utilization < 0.66) {
+        if (i == selectedIndex) {
+          color = Colors.orange[100];
+        } else {
           color = Colors.orange;
+        }
+      } else {
+        if (i == selectedIndex) {
+          color = Colors.red[100];
         } else {
           color = Colors.red;
         }
-        data.add(cfg.copyWith(
-            x: data.length,
-            barRods: [
-              cfg.barRods[0].copyWith(y: slot.utilization * 100, color: color)
-            ]));
-        if (data.length >= datacount) {
-          return BarChartData(barGroups: data);
-        }
+      }
+
+      data.add(cfg.copyWith(x: data.length, barRods: [
+        cfg.barRods[0].copyWith(y: slot.utilization * 100, color: color)
+      ]));
+      if (data.length >= datacount) {
+        return BarChartData(barGroups: data);
       }
     }
     return BarChartData(barGroups: data);
   }
 
-  String get_bar_titles(double value, DateTime startTime) {
-    int start;
-    for (int i = 0; i < timeslot_data.length; i++) {
-      Timeslot_Data slot = timeslot_data[i];
-      if (slot.timeslot.startTime.isAfter(startTime)) {
-        start = i;
-        break;
-      }
-    }
-    if (value.toInt() + start < timeslot_data.length) {
-      Timeslot_Data slot = timeslot_data[value.toInt() + start];
+  String get_bar_titles(double value, int scrollIndexOffset) {
+    if (value.toInt() + scrollIndexOffset < timeslot_data.length) {
+      Timeslot_Data slot = timeslot_data[value.toInt() + scrollIndexOffset];
       return (new DateFormat.Hm()).format(slot.timeslot.startTime);
     }
     return "";

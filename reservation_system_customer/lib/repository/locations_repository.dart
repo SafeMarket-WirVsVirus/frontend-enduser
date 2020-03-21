@@ -37,7 +37,7 @@ class LocationsRepository {
             endTime: DateTime.now().add(new Duration(minutes: (i + 1) * 10)),
           ),
           bookings: i,
-          utilization: i / 10));
+          utilization: i / 20));
     }
     cu1.daily_utilization.add(du);
     Capacity_utilization cu2 = cu1;
