@@ -18,7 +18,14 @@ class ReservationsListPage extends StatelessWidget {
           child: CircularProgressIndicator(),
         );
       } else if (state is ReservationsLoaded) {
-        return ListView.builder(
+
+
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Reservation System'),
+          ),
+
+          body: ListView.builder(
             itemCount: state.reservations.length,
             itemBuilder: (_, int index) {
               final item = state.reservations[index];
@@ -65,7 +72,8 @@ class ReservationsListPage extends StatelessWidget {
                   },
                 ),
               );
-            });
+            }),
+          );
       }
       return Container();
     });
