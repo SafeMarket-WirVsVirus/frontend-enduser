@@ -30,12 +30,12 @@ class _MapPageState extends State<MapPage> {
       } else if (state is MapLocationsLoaded) {
         Map<MarkerId, Marker> markers = {};
 
-        state.locations.forEach((reservation) {
-          markers[MarkerId(reservation.id)] = Marker(
-            markerId: MarkerId(reservation.id),
-            position: reservation.position,
+        state.locations.forEach((location) {
+          markers[MarkerId(location.id)] = Marker(
+            markerId: MarkerId(location.id),
+            position: location.position,
             infoWindow: InfoWindow(
-                title: reservation.name, snippet: "A Short description"),
+                title: location.name, snippet: "A Short description"),
             onTap: () {
               showBottomSheet(
                   context: context,
@@ -50,7 +50,7 @@ class _MapPageState extends State<MapPage> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  reservation.name,
+                                  location.name,
                                   style: Theme
                                       .of(context)
                                       .textTheme
@@ -60,19 +60,18 @@ class _MapPageState extends State<MapPage> {
                             ],
                           ),
                           Expanded(
-                            child: BarChart(BarChartData(barGroups: [
-                              BarChartGroupData(barsSpace: 16, x: 0, barRods: [
-                                BarChartRodData(y: 1, color: Colors.purple),
-                                BarChartRodData(y: 3, color: Colors.yellow),
-                                BarChartRodData(y: 3, color: Colors.yellow),
-                                BarChartRodData(y: 3, color: Colors.yellow),
-                                BarChartRodData(y: 3, color: Colors.yellow),
-                                BarChartRodData(y: 3, color: Colors.yellow),
-                                BarChartRodData(y: 3, color: Colors.yellow),
-                                BarChartRodData(y: 3, color: Colors.yellow),
-                                BarChartRodData(y: 3, color: Colors.yellow),
-                              ]),
-                            ])),
+                            child: BarChart(
+                              location.capacity_utilization.daily_utilization[0]
+                                  .get_bar_data(
+                                  DateTime.now(), //starttime
+                                  8, // datacount
+                                  BarChartGroupData( // Config
+                                    x: 0,
+                                    barRods: [BarChartRodData(y: 0)],
+                                    barsSpace: 5,
+                                  )
+                              ),
+                            ),
                           )
                         ]),
                       ));

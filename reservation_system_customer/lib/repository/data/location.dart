@@ -12,7 +12,7 @@ class Location {
   /// The user friendly location name
   final String name;
 
-  final Capacity_utilization capacity_utilization = Capacity_utilization();
+  Capacity_utilization capacity_utilization = Capacity_utilization();
 
   void fetch_detailed_utilization() {
     //TODO: implement

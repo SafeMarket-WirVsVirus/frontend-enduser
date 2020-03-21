@@ -8,46 +8,49 @@ import 'location.dart';
 
 class Capacity_utilization {
   /// list of daily utilizations
-  final List<Daily_Utilization> daily_utilization = new List();
+  List<Daily_Utilization> daily_utilization = new List();
 
   /// general utilization
-  final Float utilization = 0.0 as Float;
+  double utilization = 0.0;
 
   Capacity_utilization();
 }
 
 class Daily_Utilization {
   /// Date of utilization data
-  final DateTime date;
+  DateTime date;
 
   /// List with Timeslot data
-  final List<Timeslot_Data> timeslot_data = new List();
+  List<Timeslot_Data> timeslot_data = [];
 
   Daily_Utilization({@required this.date});
 
-  BarChartData get_bar_data(DateTime startTime, int datacount) {
-    for (var slot in timeslot_data) {
-      List<BarChartGroupData> data = new List();
-      if (slot.timeslot.startTime.isBefore(startTime)) {
-        data.add(BarChartGroupData(
+  BarChartData get_bar_data(DateTime startTime, int datacount,
+      BarChartGroupData cfg) {
+    List<BarChartGroupData> data = new List();
+    for (int i = 0; i < timeslot_data.length; i++) {
+      Timeslot_Data slot = timeslot_data[i];
+      if (slot.timeslot.startTime.isAfter(startTime)) {
+        data.add(cfg.copyWith(
             x: data.length, barRods: [BarChartRodData(y: slot.utilization)]));
-        if (data.length > datacount) {
+        if (data.length >= datacount) {
           return BarChartData(barGroups: data);
         }
       }
     }
+    return BarChartData(barGroups: data);
   }
 }
 
 class Timeslot_Data {
   /// Timeslot
-  final TimeSlot timeslot;
+  TimeSlot timeslot;
 
   /// Number Of booked slots
-  final int bookings;
+  int bookings;
 
   /// Capacity utilization [0,1]
-  final double utilization;
+  double utilization;
 
   Timeslot_Data({
     @required this.timeslot,
