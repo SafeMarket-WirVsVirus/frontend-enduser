@@ -41,8 +41,11 @@ class _MapPageState extends State<MapPage> {
                   context: context,
                   builder: (context) => Container(
                         color: Theme.of(context).primaryColor,
-                        height: 250,
-                        child: Column(children: [
+                    height: 300,
+                    child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,17 +63,44 @@ class _MapPageState extends State<MapPage> {
                             ],
                           ),
                           Expanded(
-                            child: BarChart(
-                              location.capacity_utilization.daily_utilization[0]
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: BarChart(location
+                                  .capacity_utilization.daily_utilization[0]
                                   .get_bar_data(
                                   DateTime.now(), //starttime
                                   8, // datacount
-                                  BarChartGroupData( // Config
-                                    x: 0,
-                                    barRods: [BarChartRodData(y: 0)],
-                                    barsSpace: 5,
+                                  BarChartGroupData(
+                                    // Config
+                                      x: 0,
+                                      barRods: [
+                                        BarChartRodData(
+                                            y: 0,
+                                            width: 20,
+                                            color: Colors.blue,
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(5.0),
+                                                topRight: Radius.circular(5.0)))
+                                      ],
+                                      barsSpace: 5
+                                  ))
+                                  .copyWith(
+                                  alignment: BarChartAlignment.spaceEvenly,
+                                  titlesData: FlTitlesData(
+                                      show: true,
+                                      bottomTitles: SideTitles(
+                                          showTitles: true,
+                                          textStyle: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10),
+                                          getTitles: (double value) {
+                                            return location.capacity_utilization
+                                                .daily_utilization[0]
+                                                .get_bar_titles(value);
+                                          }
+                                      )
                                   )
-                              ),
+                              )),
                             ),
                           )
                         ]),
