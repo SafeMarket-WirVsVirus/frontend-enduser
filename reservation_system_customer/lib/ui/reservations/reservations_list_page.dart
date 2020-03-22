@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/repository/data/reservation.dart';
@@ -58,7 +59,6 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                         expansionCallback: (int index, bool isExpanded) {
                           setState(() {
                             _data[index].isExpanded = !isExpanded;
-                            print("Tap " + (!isExpanded).toString());
                           });
                         },
                         children: _data.map<ExpansionPanel>((Item item) {
@@ -68,12 +68,14 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                                 (BuildContext context, bool isExpanded) {
                               return ReservationListEntry(item: item.reservation);
                             },
-                            body: ListTile(
-                                title: Text("Testcity"),
-//                            title: Text(item.reservation.location.address_city),
-                                subtitle:
-                                Text("Testaddress")
-//                                Text(item.reservation.location.address_street),
+                            body: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                              child: QrImage(
+                                data: item.reservation.id.toString(),
+                                backgroundColor: Colors.white,
+                                foregroundColor: Colors.black,
+                                embeddedImage: AssetImage('assets/AppIcon.png'),
+                              ),
                             ),
                             isExpanded: item.isExpanded,
                           );
