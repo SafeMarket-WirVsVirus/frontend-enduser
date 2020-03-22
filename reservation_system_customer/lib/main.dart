@@ -16,8 +16,13 @@ class MyApp extends StatelessWidget {
     final userRepository = UserRepository();
     return MaterialApp(
       title: 'Reservierungssystem',
-      theme: ThemeData.dark().copyWith(
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        accentColor: Colors.deepOrange
+      ),
+      theme: ThemeData(
         accentColor: Colors.orange,
+        brightness: Brightness.light
       ),
       home: MultiProvider(
         providers: [

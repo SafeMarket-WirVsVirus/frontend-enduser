@@ -26,7 +26,6 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() {
           _selectedIndex = index;
