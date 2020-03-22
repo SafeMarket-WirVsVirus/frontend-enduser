@@ -54,7 +54,7 @@ class ReservationsListPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  "Du hast aktuell keine offenen Reservationen.",
+                  AppLocalizations.of(context).translate("no_reservations"),
                   style: Theme
                       .of(context)
                       .textTheme
@@ -98,15 +98,18 @@ class ReservationListEntry extends StatelessWidget {
             builder: (context) =>
                 AlertDialog(
                   title: Text(
-                      'Do you really want to delete the reservation for ${item
-                          .location?.name}?'),
+                    AppLocalizations.of(context).translate("delete_res_1") +
+                        '${item.location?.name}' +
+                        AppLocalizations.of(context).translate("delete_res_2"),
+                  ),
                   actions: <Widget>[
                     FlatButton(
-                      child: Text('Cancel'),
+                      child: Text(
+                          AppLocalizations.of(context).translate("cancel")),
                       onPressed: () => Navigator.of(context).pop(false),
                     ),
                     FlatButton(
-                      child: Text('OK'),
+                      child: Text(AppLocalizations.of(context).translate("ok")),
                       onPressed: () => Navigator.of(context).pop(true),
                     ),
                   ],
@@ -134,65 +137,56 @@ class ReservationListEntry extends StatelessWidget {
                       fit: BoxFit.fitWidth,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          item.location.name,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .headline,
-                        ),
-                        Text(
-                          item.location.address_street,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .subtitle,
-                        ),
-                        Text(
-                          item.location.address_city,
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .subtitle,
-                        )
-                      ],
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            item.location.name,
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .headline,
+                            softWrap: true,
+                          ),
+                          Text(
+                            item.location.address ?? "",
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .subtitle,
+                            maxLines: 2,
+                            softWrap: true,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    width: 75,
+                  Container(
+                    width: 70,
                     child: FlatButton(
                       child: Image(
-                        image: AssetImage('assets/004-bell.png',),
+                        image: AssetImage(
+                          'assets/004-bell.png',
+                        ),
                         fit: BoxFit.fitWidth,
                       ),
                       onPressed: () {},
                     ),
                   ),
-                  SizedBox(
-                    width: 75,
+                  Container(
+                    width: 70,
                     child: FlatButton(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          width: 30,
-                          child: Image(
-                              image: AssetImage('assets/school-material.png'),
-                              fit: BoxFit.fitWidth
-                          ),
-                        ),
-                      ),
+                      child: Image(
+                          image: AssetImage('assets/school-material.png'),
+                          fit: BoxFit.fitWidth),
                       onPressed: () {},
                     ),
                   )
                 ],
               ),
-              Text(
-                  DateFormat.yMMMMd("de_DE").add_jm().format(item.startTime)
-              )
+              Text(DateFormat.yMMMMd("de_DE").add_jm().format(item.startTime))
             ],
           ),
         ));

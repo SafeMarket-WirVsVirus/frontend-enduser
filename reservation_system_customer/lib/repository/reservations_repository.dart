@@ -14,8 +14,7 @@ class ReservationsRepository {
       location: Location(
           id: 3,
           name: 'REWE',
-          address_street: "Neustädter Straße 1",
-          address_city: "80331 München"),
+        address: "Neustädter Straße 1,80331 München",
         latitude: 48.135124,
         longitude: 11.581981,
       ),
@@ -26,9 +25,7 @@ class ReservationsRepository {
       location: Location(
           id: 10,
           name: 'LIDL',
-          address_street: "Neustädter Straße 1",
-          address_city: "80331 München"),
-
+        address: null,
         latitude: 47.960490,
         longitude: 11.355184,
       ),
