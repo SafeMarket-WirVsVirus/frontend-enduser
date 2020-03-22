@@ -4,12 +4,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:reservation_system_customer/app_localizations.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../repository/data/data.dart';
 
-Future<void> _ticketDialog(BuildContext context, String id) {
+Future<void> _ticketDialog(BuildContext context, String id, String title) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
@@ -21,7 +22,7 @@ Future<void> _ticketDialog(BuildContext context, String id) {
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                'Dein Ticket:',
+                title,
                 style: Theme.of(context).textTheme.headline,
               ),
             ),
@@ -61,12 +62,6 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   GoogleMapController mapController;
   final Set<Marker> markers = new Set();
-
-  //  TODO actually remind the user
-  SnackBar reminderSnackBar = SnackBar(
-    content: Text("Erinnerung 30 Minuten vor deinem Termin"),
-    duration: Duration(seconds: 3),
-  );
 
   _ReservationDetailPageState(this.reservation);
 
@@ -111,17 +106,17 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
             padding: EdgeInsets.all(30),
             child: Column(
               children: <Widget>[
-                Text("Du hast einen Shopping-Slot bei"),
+                Text(AppLocalizations.of(context).translate("res_detail_1")),
                 Text(
                   reservation.location?.name ?? '',
                   style: Theme.of(context).textTheme.headline,
                 ),
-                Text("am"),
+                Text(AppLocalizations.of(context).translate("res_detail_2")),
                 Text(
                   "${dateFormat.format(reservation.startTime)}",
                   style: Theme.of(context).textTheme.headline,
                 ),
-                Text("um"),
+                Text(AppLocalizations.of(context).translate("res_detail_3")),
                 Text(
                   "${timeFormat.format(reservation.startTime)}",
                   style: Theme.of(context).textTheme.headline,
@@ -155,11 +150,13 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
           ),
           FlatButton(
             child: Text(
-              "Ticket",
+              AppLocalizations.of(context).translate("ticket"),
               style: Theme.of(context).textTheme.headline,
             ),
             onPressed: () {
-              _ticketDialog(context, '${reservation.id}');
+              _ticketDialog(context,
+                  '${reservation.id}',
+                  AppLocalizations.of(context).translate("your_ticket"));
             },
           ),
           SizedBox(
@@ -186,6 +183,11 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   }
 
   void _reminderSwitch() {
+    SnackBar reminderSnackBar = SnackBar(
+      content: Text(AppLocalizations.of(context).translate("reminder_snack")),
+      duration: Duration(seconds: 3),
+    );
+    
     setState(() {
       reminder = !reminder;
       if (reminder) {
@@ -243,8 +245,9 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
         notificationId,
-        'Zeit einzukaufen: ${reservation.location?.name ?? ''} - ${timeFormat.format(reservation.startTime)} h',
-        '- Deine Reservierung beginnt in 30 Minuten',
+        AppLocalizations.of(context).translate("reminder_title_1") +
+        '${reservation.location?.name ?? ''} - ${timeFormat.format(reservation.startTime)} h',
+        AppLocalizations.of(context).translate("reminder_text"),
         scheduledNotificationDateTime,
         platformChannelSpecifics);
 
@@ -276,7 +279,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
         actions: [
           CupertinoDialogAction(
             isDefaultAction: true,
-            child: Text('Ok'),
+            child: Text(AppLocalizations.of(context).translate("ok")),
             onPressed: () async {
               Navigator.of(context, rootNavigator: true).pop();
 
