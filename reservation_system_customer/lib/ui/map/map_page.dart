@@ -19,10 +19,15 @@ class MapPage extends StatelessWidget {
             icon: state.markerIcons[location.fillStatus],
             infoWindow: InfoWindow(
                 title: location.name, snippet: "A Short description"),
+            // TODO remove
             onTap: () {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0))),
                 builder: (context) => LocationDetailSheet(location: location),
               );
             },
