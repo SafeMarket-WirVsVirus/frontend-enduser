@@ -46,6 +46,8 @@ class ReservationsInitial extends ReservationsState {}
 
 class ReservationsLoading extends ReservationsState {}
 
+class ReservationsLoadFail extends ReservationsState {}
+
 class ReservationsLoaded extends ReservationsState {
   final List<Reservation> reservations;
 
@@ -74,9 +76,17 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
     final deviceId = await _userRepository.deviceId();
     if (event is LoadReservations) {
       yield ReservationsLoading();
-      final reservations =
-          await _reservationsRepository.getReservations(deviceId: deviceId);
-      yield ReservationsLoaded(reservations);
+      try {
+        print("Loading reservations...");
+        final reservations = await _reservationsRepository.getReservations(
+          deviceId: deviceId,
+        ).timeout(Duration(seconds: 5));
+        if (reservations != null)
+          yield ReservationsLoaded(reservations);
+      } catch(_) {
+        print("Loading reservations failed");
+        yield ReservationsLoadFail();
+      }
     } else if (event is CancelReservation) {
       yield ReservationsLoading();
       final reservations = await _reservationsRepository.cancelReservation(

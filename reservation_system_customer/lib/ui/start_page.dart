@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
+import 'package:reservation_system_customer/ui/offline_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
 
 import '../app_localizations.dart';
@@ -31,6 +32,8 @@ class _StartPageState extends State<StartPage> {
         builder: (context, state) {
       if (state is ReservationsLoaded) {
         return _HomePage();
+      } else if (state is ReservationsLoadFail) {
+        return OfflinePage();
       }
       return LoadingPage();
     });
