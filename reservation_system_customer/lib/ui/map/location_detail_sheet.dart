@@ -197,6 +197,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                 child: RaisedButton(
                   child: Text("Slot reservieren"),
                   onPressed: () {
+                    print("clicked reserve slot with selectedBarIndex $selectedBarIndex");
                     BlocProvider.of<ReservationsBloc>(context)
                         .add(MakeReservation(
                       locationId: widget.location.id,
