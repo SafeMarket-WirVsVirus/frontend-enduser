@@ -210,7 +210,11 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       context: context,
                       builder: (BuildContext context) {
                         return ReservationConfirmationDialog(
-                            widget.location.name);
+                            widget.location.name,
+                            widget.location.capacity_utilization
+                                .get_utilization_by_date(barplotDate)
+                                .timeslot_data[selectedBarIndex].startTime
+                        );
                       },
                     );
                   },
