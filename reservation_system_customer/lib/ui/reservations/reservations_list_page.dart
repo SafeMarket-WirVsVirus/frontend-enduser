@@ -99,7 +99,7 @@ class ReservationListEntry extends StatelessWidget {
                 AlertDialog(
                   title: Text(
                     AppLocalizations.of(context).translate("delete_res_1") +
-                        '${item.location?.name}' +
+                        '${item.location?.name ?? ''}' +
                         AppLocalizations.of(context).translate("delete_res_2"),
                   ),
                   actions: <Widget>[
@@ -143,7 +143,7 @@ class ReservationListEntry extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            item.location.name,
+                            item.location?.name ?? '',
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -151,7 +151,7 @@ class ReservationListEntry extends StatelessWidget {
                             softWrap: true,
                           ),
                           Text(
-                            item.location.address ?? "",
+                            item.location?.address ?? "",
                             style: Theme
                                 .of(context)
                                 .textTheme
