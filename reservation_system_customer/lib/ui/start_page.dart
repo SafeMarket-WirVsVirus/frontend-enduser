@@ -46,13 +46,17 @@ class __HomePageState extends State<_HomePage> {
   int _selectedIndex = 1;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     var state = BlocProvider.of<ReservationsBloc>(context).state;
     if (state is ReservationsLoaded &&
         (state.reservations?.isNotEmpty ?? false)) {
       _selectedIndex = 0;
     }
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
