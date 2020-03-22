@@ -1,0 +1,22 @@
+{
+  "reservations": "Reservierungen",
+  "map": "Karte",
+  "appname": "SafeMarket",
+  "cancel": "Abbrechen",
+  "ok": "OK",
+  "start": "Start: ",
+
+  "delete_res_1": "Willst du die Reservierung für ",
+  "delete_res_2": " wirklich löschen?",
+
+  "res_detail_1": "Du hast einen Shopping-Slot bei",
+  "res_detail_2": "am",
+  "res_detail_3": "um",
+  "ticket": "Ticket",
+
+  "reminder_title_1": "Zeit einzukaufen: ",
+  "reminder_text": "- Deine Reservierung beginnt in 30 Minuten",
+  "reminder_snack": "Erinnerung 30 Minuten vor deinem Termin",
+
+  "fill_status": "Auslastungsniveau"
+}

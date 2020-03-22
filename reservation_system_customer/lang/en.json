@@ -1,0 +1,20 @@
+{
+  "reservations": "Reservations",
+  "map": "Map",
+  "appname": "SafeMarket",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "start": "Start: ",
+
+  "delete_res_1": "Do you really want to delete the reservation for ",
+  "delete_res_2": "?",
+
+  "res_detail_1": "You have a shopping slot at",
+  "res_detail_2": "on",
+  "res_detail_3": "at",
+  "ticket": "Ticket",
+
+  "reminder_title_1": "Time to go shopping: ",
+  "reminder_text": "- Your reservation begins in 30 minutes",
+  "reminder_snack": "Reminder set 30 minutes before your reservation",
+}

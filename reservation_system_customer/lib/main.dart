@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
 
+import 'app_localizations.dart';
 import 'bloc/bloc.dart';
 import 'repository/repository.dart';
 
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final userRepository = UserRepository();
     return MaterialApp(
-      title: 'Reservierungssystem',
+      title: AppLocalizations.of(context).translate("appname"),
       theme: ThemeData.dark().copyWith(
         accentColor: Colors.orange,
       ),
@@ -38,6 +40,27 @@ class MyApp extends StatelessWidget {
         ],
         child: StartPage(),
       ),
+//
+      supportedLocales: [
+        Locale('en', ''),
+        Locale('de', '')
+      ],
+
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+
+      localeListResolutionCallback: (locales, supportedLocales) {
+        for (var supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locales.first.languageCode &&
+              locales.first.countryCode.contains(supportedLocale.countryCode)) {
+            return supportedLocale;
+          }
+        }
+        return supportedLocales.first;
+      },
     );
   }
 }
