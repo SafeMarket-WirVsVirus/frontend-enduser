@@ -4,15 +4,15 @@ import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/repository/data/capacity_utilization.dart';
 
 class ReservationSlotSelection extends StatefulWidget {
-  final Capacity_utilization capacity_utilization;
-  final DateTime barplotDate;
   final ValueChanged<DateTime> selectedSlotChanged;
+  final List<Timeslot_Data> data;
+  final int slotSize;
 
   const ReservationSlotSelection({
     Key key,
-    @required this.capacity_utilization,
-    @required this.barplotDate,
     @required this.selectedSlotChanged,
+    @required this.data,
+    @required this.slotSize,
   }) : super(key: key);
 
   @override
@@ -39,60 +39,60 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
               onPressed: _navigate,
             ),
             _BarChartContainer(
-              child: BarChart(widget.capacity_utilization
-                  .get_utilization_by_date(widget.barplotDate)
-                  .get_bar_data(
-                      scrollIndexOffset, //startpoint
-                      barsShown, // datacount
+              child: BarChart(getBarData(
+                      widget.data,
+                      scrollIndexOffset,
+                      widget.slotSize,
+                      barsShown,
                       BarChartGroupData(
-                          x: 0,
-                          barRods: [
-                            BarChartRodData(
-                                y: 0,
-                                width: 25,
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5.0),
-                                    topRight: Radius.circular(5.0)))
-                          ],
-                          barsSpace: 3),
+                        x: 0,
+                        barRods: [
+                          BarChartRodData(
+                            y: 0,
+                            width: 25,
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(5.0),
+                              topRight: Radius.circular(5.0),
+                            ),
+                          )
+                        ],
+                        barsSpace: 3,
+                      ),
                       selectedBarIndex)
                   .copyWith(
-                    maxY: 100,
-                    alignment: BarChartAlignment.spaceEvenly,
-                    titlesData: FlTitlesData(
-                        show: true,
-                        bottomTitles: SideTitles(
-                            showTitles: true,
-                            textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                                color: Colors.black),
-                            getTitles: (double value) {
-                              return widget.capacity_utilization
-                                  .get_utilization_by_date(widget.barplotDate)
-                                  .get_bar_titles(value, scrollIndexOffset);
-                            }),
-                        leftTitles: SideTitles(showTitles: false)),
-                    borderData: FlBorderData(show: false),
-                    barTouchData: BarTouchData(
-                      touchCallback: (BarTouchResponse touchResponse) {
-                        setState(() {
-                          if (touchResponse.spot != null) {
-                            selectedBarIndex =
-                                touchResponse.spot.touchedBarGroupIndex +
-                                    scrollIndexOffset;
-                            var date = widget.capacity_utilization
-                                .get_utilization_by_date(widget.barplotDate)
-                                .timeslot_data[selectedBarIndex]
-                                .startTime;
-                            print('$selectedBarIndex $date');
-                            widget.selectedSlotChanged(date);
-                          }
-                        });
-                      },
-                    ),
-                  )),
+                maxY: 100,
+                alignment: BarChartAlignment.spaceEvenly,
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: SideTitles(
+                      showTitles: true,
+                      textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                          color: Colors.black),
+                      getTitles: (double value) {
+                        return getBarTitles(
+                            widget.data, value, scrollIndexOffset);
+                      }),
+                  leftTitles: SideTitles(showTitles: false),
+                ),
+                borderData: FlBorderData(show: false),
+                barTouchData: BarTouchData(
+                  touchCallback: (BarTouchResponse touchResponse) {
+                    setState(() {
+                      if (touchResponse.spot != null) {
+                        selectedBarIndex =
+                            touchResponse.spot.touchedBarGroupIndex +
+                                scrollIndexOffset;
+                        var date = widget.data[selectedBarIndex].startTime;
+                        print('$selectedBarIndex $date');
+                        widget.selectedSlotChanged(date);
+                      }
+                    });
+                  },
+                ),
+              )),
             ),
             _NavigationButton(
               navigationDirection: _NavigationDirection.forwards,
@@ -113,10 +113,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
         }
         break;
       case _NavigationDirection.forwards:
-        final dataPoints = widget.capacity_utilization
-            .get_utilization_by_date(widget.barplotDate)
-            .timeslot_data
-            .length;
+        final dataPoints = widget.data.length;
         if (dataPoints - scrollIndexOffset > barsShown) {
           newIndex += 1;
         }
@@ -128,6 +125,49 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
         scrollIndexOffset = newIndex;
       });
     }
+  }
+
+  BarChartData getBarData(
+      List<Timeslot_Data> timeSlotData,
+      int scrollIndexOffset,
+      int slotSize,
+      int dataCount,
+      BarChartGroupData cfg,
+      int selectedIndex) {
+    List<BarChartGroupData> data = new List();
+    for (int i = scrollIndexOffset; i < timeSlotData.length; i++) {
+      Timeslot_Data slot = timeSlotData[i];
+      Color color;
+      final percentageBookings = slot.bookings / (slotSize * 1);
+
+      if (percentageBookings < 0.33) {
+        color = Color(0xFF00F2A9);
+      } else if (percentageBookings < 0.66) {
+        color = Color(0xFFFEBE5F);
+      } else {
+        color = Color(0xFFFF5C66);
+      }
+      if (i == selectedIndex) {
+        color = color.withAlpha(100);
+      }
+
+      data.add(cfg.copyWith(x: data.length, barRods: [
+        cfg.barRods[0].copyWith(y: percentageBookings * 100, color: color)
+      ]));
+      if (data.length >= dataCount) {
+        return BarChartData(barGroups: data);
+      }
+    }
+    return BarChartData(barGroups: data);
+  }
+
+  String getBarTitles(
+      List<Timeslot_Data> data, double value, int scrollIndexOffset) {
+    if (value.toInt() + scrollIndexOffset < data.length) {
+      Timeslot_Data slot = data[value.toInt() + scrollIndexOffset];
+      return (new DateFormat.Hm()).format(slot.startTime);
+    }
+    return "";
   }
 }
 

@@ -59,6 +59,9 @@ class Location {
 
   final String address;
 
+  /// Amount of persons who are allowed to enter the location per slot
+  final int slotSize;
+
   final Duration slotDuration;
 
   @JsonKey(ignore: true)
@@ -74,6 +77,7 @@ class Location {
     @required this.longitude,
     @required this.name,
     @required this.fillStatus,
+    @required this.slotSize,
     @required this.slotDuration,
     @required this.address,
     @required this.openingHours,

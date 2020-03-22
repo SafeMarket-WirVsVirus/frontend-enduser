@@ -72,8 +72,10 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               ],
             ),
             ReservationSlotSelection(
-              capacity_utilization: widget.location.capacity_utilization,
-              barplotDate: barplotDate,
+              data: widget.location.capacity_utilization
+                  .get_utilization_by_date(barplotDate)
+                  .timeslot_data,
+              slotSize: widget.location.slotSize,
               selectedSlotChanged: (slot) {
                 setState(() {
                   selectedTime = slot;
@@ -93,7 +95,8 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
                   child: RaisedButton(
-                    child: Text(AppLocalizations.of(context).translate("reserve_slot")),
+                    child: Text(
+                        AppLocalizations.of(context).translate("reserve_slot")),
                     color: Color(0xFF00F2A9),
                     textColor: Color(0xFF322153),
                     shape: RoundedRectangleBorder(
@@ -150,12 +153,7 @@ class _ChangeDateButton extends StatelessWidget {
           initialDate: DateTime.now(),
           firstDate: DateTime.now().subtract(Duration(hours: 1)),
           lastDate: DateTime.now().add(Duration(days: 2)),
-          builder: (BuildContext context, Widget child) {
-            return Theme(
-              data: ThemeData.dark(),
-              child: child,
-            );
-          },
+          builder: (BuildContext context, Widget child)  => child,
         );
         DateTime date = await selectedDate;
 
