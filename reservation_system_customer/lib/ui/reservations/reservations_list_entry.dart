@@ -4,16 +4,21 @@ import 'package:intl/intl.dart';
 
 import '../../app_localizations.dart';
 
-class ReservationListEntry extends StatelessWidget {
+class ReservationListEntry extends StatefulWidget {
   final item;
 
   const ReservationListEntry({Key key, this.item}) : super(key: key);
 
   @override
+  _ReservationListEntryState createState() => _ReservationListEntryState();
+}
+
+class _ReservationListEntryState extends State<ReservationListEntry> {
+  @override
   Widget build(BuildContext context) {
     final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     return Dismissible(
-        key: Key('${item.id}'),
+        key: Key('${widget.item.id}'),
         background: Container(
           color: Colors.red,
           child: Row(
@@ -32,7 +37,7 @@ class ReservationListEntry extends StatelessWidget {
                 AlertDialog(
                   title: Text(
                     AppLocalizations.of(context).translate("delete_res_1") +
-                        '${item.location?.name ?? ''}' +
+                        '${widget.item.location?.name ?? ''}' +
                         AppLocalizations.of(context).translate("delete_res_2"),
                   ),
                   actions: <Widget>[
@@ -51,8 +56,8 @@ class ReservationListEntry extends StatelessWidget {
         },
         onDismissed: (direction) async {
           BlocProvider.of<ReservationsBloc>(context).add(CancelReservation(
-            reservationId: item.id,
-            locationId: item.location.id,
+            reservationId: widget.item.id,
+            locationId: widget.item.location.id,
           ));
         },
         child: Container(
@@ -76,7 +81,7 @@ class ReservationListEntry extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            item.location?.name ?? '',
+                            widget.item.location?.name ?? '',
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -84,7 +89,7 @@ class ReservationListEntry extends StatelessWidget {
                             softWrap: true,
                           ),
                           Text(
-                            item.location?.address ?? "",
+                            widget.item.location?.address ?? "",
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -119,7 +124,7 @@ class ReservationListEntry extends StatelessWidget {
                   )
                 ],
               ),
-              Text(DateFormat.yMMMMd("de_DE").add_jm().format(item.startTime))
+              Text(DateFormat.yMMMMd("de_DE").add_jm().format(widget.item.startTime))
             ],
           ),
         ));
