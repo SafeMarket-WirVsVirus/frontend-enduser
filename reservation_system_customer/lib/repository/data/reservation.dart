@@ -7,7 +7,7 @@ part 'reservation.g.dart';
 @JsonSerializable(createToJson: false)
 class Reservation {
   /// The reservation id
-  final String id;
+  final int id;
 
   /// The location for which the reservation was made
   final Location location;

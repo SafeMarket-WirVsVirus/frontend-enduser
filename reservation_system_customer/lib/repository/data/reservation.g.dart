@@ -8,7 +8,7 @@ part of 'reservation.dart';
 
 Reservation _$ReservationFromJson(Map<String, dynamic> json) {
   return Reservation(
-    id: json['id'] as String,
+    id: json['id'] as int,
     location: json['location'] == null
         ? null
         : Location.fromJson(json['location'] as Map<String, dynamic>),
