@@ -31,12 +31,6 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Optionen auswählen (" +
-              (DateFormat("dd'.' MMM yyyy")).format(widget.barplotDate) +
-              ")"),
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
@@ -53,76 +47,85 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                   splashColor: Theme.of(context).accentColor,
                   child: Icon(Icons.arrow_back_ios)),
             ),
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(18)),
-              color: Colors.grey[2000],
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: BarChart(widget.capacity_utilization
-                    .get_utilization_by_date(widget.barplotDate)
-                    .get_bar_data(
-                        scrollIndexOffset, //startpoint
-                        barsShown, // datacount
-                        BarChartGroupData(
+            Container(
+              height: 200,
+              child: Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18)),
+                color: Colors.grey[2000],
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: BarChart(widget.capacity_utilization
+                      .get_utilization_by_date(widget.barplotDate)
+                      .get_bar_data(
+                      scrollIndexOffset, //startpoint
+                      barsShown, // datacount
+                      BarChartGroupData(
 // Config
-                            x: 0,
-                            barRods: [
-                              BarChartRodData(
-                                  y: 0,
-                                  width: 25,
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(5.0),
-                                      topRight: Radius.circular(5.0)))
-                            ],
-                            barsSpace: 3),
-                        selectedBarIndex)
-                    .copyWith(
-                      maxY: 100,
-                      alignment: BarChartAlignment.spaceEvenly,
-                      titlesData: FlTitlesData(
-                          show: true,
-                          bottomTitles: SideTitles(
-                              showTitles: true,
-                              textStyle: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 10),
-                              getTitles: (double value) {
-                                return widget.capacity_utilization
-                                    .get_utilization_by_date(widget.barplotDate)
-                                    .get_bar_titles(value, scrollIndexOffset);
-                              }),
-                          leftTitles: SideTitles(showTitles: false)),
-                      borderData: FlBorderData(show: false),
-                      barTouchData: BarTouchData(
-                          touchCallback: (BarTouchResponse touchResponse) {
-                            setState(() {
-                              if (touchResponse.spot != null) {
-                                selectedBarIndex =
-                                    touchResponse.spot.touchedBarGroupIndex +
-                                        scrollIndexOffset;
-                                var date = widget.capacity_utilization
-                                    .get_utilization_by_date(widget.barplotDate)
-                                    .timeslot_data[selectedBarIndex]
-                                    .startTime;
-                                print('$selectedBarIndex $date');
-                                widget.selectedSlotChanged(date);
-                              }
-                            });
-                          },
-                          touchTooltipData: BarTouchTooltipData(
-                              tooltipBgColor: Colors.greenAccent,
-                              getTooltipItem:
-                                  (group, groupIndex, rod, rodIndex) {
-                                String text = widget.capacity_utilization
-                                    .get_utilization_by_date(widget.barplotDate)
-                                    .get_tooltip_text(selectedBarIndex);
-                                return BarTooltipItem(
-                                    text,
-                                    TextStyle(
-                                        color: Theme.of(context).primaryColor));
-                              })),
-                    )),
+                          x: 0,
+                          barRods: [
+                            BarChartRodData(
+                                y: 0,
+                                width: 25,
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(5.0),
+                                    topRight: Radius.circular(5.0)))
+                          ],
+                          barsSpace: 3),
+                      selectedBarIndex)
+                      .copyWith(
+                    maxY: 100,
+                    alignment: BarChartAlignment.spaceEvenly,
+                    titlesData: FlTitlesData(
+                        show: true,
+                        bottomTitles: SideTitles(
+                            showTitles: true,
+                            textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 10,
+                                color: Colors.black),
+                            getTitles: (double value) {
+                              return widget.capacity_utilization
+                                  .get_utilization_by_date(widget.barplotDate)
+                                  .get_bar_titles(value, scrollIndexOffset);
+                            }),
+                        leftTitles: SideTitles(showTitles: false)),
+                    borderData: FlBorderData(show: false),
+                    barTouchData: BarTouchData(
+                        touchCallback: (BarTouchResponse touchResponse) {
+                          setState(() {
+                            if (touchResponse.spot != null) {
+                              selectedBarIndex =
+                                  touchResponse.spot.touchedBarGroupIndex +
+                                      scrollIndexOffset;
+                              var date = widget.capacity_utilization
+                                  .get_utilization_by_date(widget.barplotDate)
+                                  .timeslot_data[selectedBarIndex]
+                                  .startTime;
+                              print('$selectedBarIndex $date');
+                              widget.selectedSlotChanged(date);
+                            }
+                          });
+                        },
+                        touchTooltipData: BarTouchTooltipData(
+                            tooltipBgColor: Colors.greenAccent,
+                            getTooltipItem:
+                                (group, groupIndex, rod, rodIndex) {
+                              String text = widget.capacity_utilization
+                                  .get_utilization_by_date(widget.barplotDate)
+                                  .get_tooltip_text(selectedBarIndex);
+                              return BarTooltipItem(
+                                  text,
+                                  TextStyle(
+                                      color: Theme
+                                          .of(context)
+                                          .primaryColor));
+                            },
+                            fitInsideVertically: true,
+                            fitInsideHorizontally: true)),
+                  )),
+                ),
               ),
             ),
             Center(

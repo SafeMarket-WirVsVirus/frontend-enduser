@@ -30,6 +30,10 @@ class Location {
   /// The user friendly location name
   final String name;
 
+  final String address_street;
+
+  final String address_city;
+
   final Duration slot_duration;
 
   @JsonKey(ignore: true)
@@ -46,6 +50,8 @@ class Location {
     @required this.fillStatus,
     @required this.slot_duration,
     @required this.capacity_utilization,
+    @required this.address_street,
+    @required this.address_city
   });
 
   factory Location.fromJson(Map<String, dynamic> json) =>
