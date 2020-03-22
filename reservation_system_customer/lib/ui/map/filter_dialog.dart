@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
+import 'package:reservation_system_customer/repository/repository.dart';
+
 
 class FilterDialog extends StatefulWidget {
   final MapBloc mapBloc;
@@ -14,7 +16,7 @@ class FilterDialog extends StatefulWidget {
 class _FilterDialogState extends State<FilterDialog> {
   final MapBloc _mapBloc;
   double sliderValue;
-  bool nonGrocery;
+  Place filterSelection;
   List<Color> sliderColor = [Colors.green, Colors.orange, Colors.red];
   List<String> sliderTips = [
     "Nur die Läden mit sehr geringer Auslastung werden angezeigt "
@@ -28,7 +30,7 @@ class _FilterDialogState extends State<FilterDialog> {
   @override
   void initState() {
     sliderValue = _mapBloc.fillStatusPreference.toDouble();
-    nonGrocery = _mapBloc.nonGrocery;
+
   }
 
   @override
@@ -66,20 +68,47 @@ class _FilterDialogState extends State<FilterDialog> {
             SizedBox(
               height: 20,
             ),
-            CheckboxListTile(
+            ListTile(
+                title: const Text('Supermarkt'),
+                leading: Radio(
               activeColor: Theme.of(context).accentColor,
-              value: nonGrocery,
-              title: Text("Nicht-Lebensmittelläden anzeigen"),
-              onChanged: (value) {
+                  value: FilterSelection.supermarket,
+                  onChanged: (FilterSelection value) {
                 setState(() {
-                  nonGrocery = value;
+                  filterSelection = value;
                 });
-              },
-            ),
+                  }, groupValue: filterSelection,
+                )),
+            ListTile(
+                title: const Text('Bäckerei'),
+                leading: Radio(
+                  activeColor: Theme
+                      .of(context)
+                      .accentColor,
+                  value: FilterSelection.bakery,
+                  onChanged: (FilterSelection value) {
+                    setState(() {
+                      filterSelection = value;
+                    });
+                  }, groupValue: filterSelection,
+                )),
+            ListTile(
+                title: const Text('Apotheke'),
+                leading: Radio(
+                  activeColor: Theme
+                      .of(context)
+                      .accentColor,
+                  value: FilterSelection.pharmacy,
+                  onChanged: (FilterSelection value) {
+                    setState(() {
+                      filterSelection = value;
+                    });
+                  }, groupValue: filterSelection,
+                )),
             FlatButton(
               onPressed: () {
-                _mapBloc
-                    .add(MapSettingsChanged(sliderValue.round(), nonGrocery));
+                _mapBloc.add(MapSettingsChanged(
+                    sliderValue.round(), filterSelection));
                 Navigator.of(context).pop();
               },
               child: Text("OK"),

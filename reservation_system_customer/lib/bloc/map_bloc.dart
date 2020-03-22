@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
+import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
 
 /// EVENTS
 
@@ -26,12 +27,12 @@ class MapLoadLocations extends MapEvent {
 
 class MapSettingsChanged extends MapEvent {
   final int fillStatusPreference;
-  final bool nonGrocery;
+  final FilterSelection filterSelection;
 
-  MapSettingsChanged(this.fillStatusPreference, this.nonGrocery);
+  MapSettingsChanged(this.fillStatusPreference, this.filterSelection);
 
   @override
-  List<Object> get props => [fillStatusPreference, nonGrocery];
+  List<Object> get props => [fillStatusPreference, filterSelection];
 }
 
 /// STATES
@@ -62,7 +63,7 @@ class MapLocationsLoaded extends MapState {
 class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationsRepository _locationsRepository;
   int fillStatusPreference = 3;
-  bool nonGrocery = false;
+  FilterSelection filterSelection = FilterSelection.supermarket;
   List<Location> locations = [];
   Map<FillStatus, BitmapDescriptor> markerIcons;
 
@@ -88,7 +89,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
     } else if (event is MapSettingsChanged) {
       fillStatusPreference = event.fillStatusPreference;
-      nonGrocery = event.nonGrocery;
+      filterSelection = event.filterSelection;
       yield MapLocationsLoaded(
         locations: _filteredLocations(locations),
         markerIcons: markerIcons,
