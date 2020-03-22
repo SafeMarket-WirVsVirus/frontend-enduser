@@ -65,15 +65,7 @@ class ReservationsRepository {
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       print('getReservations: success');
-
-      List j = json.decode(response.body) as List;
-      List<Reservation> reservations = [];
-      j.forEach((m) {
-        if (m is Map) {
-          reservations.add(Reservation.fromJson(m));
-        }
-      });
-      return reservations;
+      return Reservations.fromJson(json.decode(response.body)).reservations;
     }
     print('getReservations: error ${response.statusCode}');
     return [];
