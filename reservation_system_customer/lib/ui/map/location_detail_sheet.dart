@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:reservation_system_customer/app_localizations.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/reservation_slot_selection.dart';
@@ -91,7 +92,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
                   child: RaisedButton(
-                    child: Text("Slot reservieren"),
+                    child: Text(AppLocalizations.of(context).translate("reserve_slot")),
                     color: Color(0xFF00F2A9),
                     textColor: Color(0xFF322153),
                     shape: RoundedRectangleBorder(
