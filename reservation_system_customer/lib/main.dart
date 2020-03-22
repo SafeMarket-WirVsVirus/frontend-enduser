@@ -5,6 +5,9 @@ import 'package:reservation_system_customer/ui/start_page.dart';
 
 import 'bloc/bloc.dart';
 import 'repository/repository.dart';
+import 'ui/start_page.dart';
+import 'ui/start_page.dart';
+import 'ui/start_page.dart';
 
 void main() => runApp(MyApp());
 

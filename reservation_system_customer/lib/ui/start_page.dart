@@ -14,17 +14,18 @@ class StartPage extends StatefulWidget {
 
 class _StartPageState extends State<StartPage> {
   int _selectedIndex = 0;
+  bool isLoading = true;
+  Widget home;
+  Widget loading;
+  Widget child;
 
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ReservationsBloc>(context).add(LoadReservations());
     Provider.of<UserRepository>(context, listen: false)..loadUserPosition();
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+    home = Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() {
@@ -43,6 +44,23 @@ class _StartPageState extends State<StartPage> {
       ),
       body: _page(_selectedIndex),
     );
+
+    loading = Scaffold(
+      body: Text("loading..."),
+    );
+
+    child = loading;
+
+    Future.delayed(Duration(seconds: 2)).then((value) {
+      setState(() {
+        child = home;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
   }
 
   Widget _page(int index) {
