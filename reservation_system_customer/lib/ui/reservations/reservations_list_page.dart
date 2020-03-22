@@ -87,10 +87,13 @@ class ReservationsListPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
-              Text(
-                "Du hast aktuell keine offenen Reservationen.",
-                style: Theme.of(context).textTheme.headline5,
-                textAlign: TextAlign.center,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  "Du hast aktuell keine offenen Reservationen.",
+                  style: Theme.of(context).textTheme.title,
+                  textAlign: TextAlign.center,
+                ),
               )
             ],
           );

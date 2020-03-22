@@ -18,8 +18,12 @@ abstract class MapEvent extends Equatable {
 
 class MapLoadLocations extends MapEvent {
   final LatLng position;
+  final int radius;
 
-  MapLoadLocations(this.position);
+  MapLoadLocations({
+    @required this.position,
+    @required this.radius,
+  });
 
   @override
   List<Object> get props => [position];
@@ -81,7 +85,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
     if (event is MapLoadLocations) {
       yield MapLoading();
-      locations = await _locationsRepository.getStores(event.position);
+      // TODO: Update with correct value locationTypeFilterSelection
+      var locationTypeFilterSelection = LocationType.supermarket;
+      locations = await _locationsRepository.getStores(
+        position: event.position,
+        radius: event.radius,
+        type: locationTypeFilterSelection,
+      );
 
       yield MapLocationsLoaded(
         locations: _filteredLocations(locations),
