@@ -87,6 +87,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       );
     } else if (event is MapSettingsChanged) {
       MapSettingsChanged e = event;
+      fillStatusPreference = e.fillStatusPreference;
+      nonGrocery = e.nonGrocery;
+
       List<Location> locations;
       if (this.state is MapLocationsLoaded) {
         locations = ((this.state) as MapLocationsLoaded).locations;
