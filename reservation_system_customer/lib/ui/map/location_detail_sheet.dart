@@ -213,24 +213,35 @@ class _LocationInformation extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                name ?? '',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline
-                    .copyWith(fontWeight: FontWeight.bold),
-                textAlign: TextAlign.left,
-              ),
-              Text(
-                address ?? '',
-                style: Theme.of(context).textTheme.subtitle,
-                textAlign: TextAlign.left,
-              ),
-            ],
+          child: Container(
+            width: 200,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  name ?? '',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .headline
+                      .copyWith(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  maxLines: 3,
+                ),
+                Text(
+                  address ?? '',
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .caption,
+                  textAlign: TextAlign.left,
+                  softWrap: true,
+                  maxLines: 3,
+                ),
+              ],
+            ),
           ),
         ),
       ],
