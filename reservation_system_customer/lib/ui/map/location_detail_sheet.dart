@@ -177,7 +177,10 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                     BlocProvider.of<ReservationsBloc>(context)
                         .add(MakeReservation(
                       locationId: widget.location.id,
-                      startTime: barplotDate,
+                      startTime: widget.location.capacity_utilization
+                          .get_utilization_by_date(barplotDate)
+                          .timeslot_data[selectedBarIndex]
+                          .startTime,
                     ));
                     return showDialog<void>(
                       context: context,
