@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reservation_system_customer/bloc/bloc.dart';
 
 class FilterDialog extends StatefulWidget {
+  final MapBloc mapBloc;
+
+  const FilterDialog({Key key, this.mapBloc}) : super(key: key);
   @override
-  _FilterDialogState createState() => _FilterDialogState();
+  _FilterDialogState createState() => _FilterDialogState(mapBloc);
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  double sliderValue = 3;
+  final MapBloc _mapBloc;
+  double sliderValue;
+  bool nonGrocery;
   List<Color> sliderColor = [Colors.green, Colors.orange, Colors.red];
   List<String> sliderTips = [
     "Nur die Läden mit sehr geringer Auslastung werden angezeigt "
@@ -21,7 +21,15 @@ class _FilterDialogState extends State<FilterDialog> {
     "Die Läden mit sehr hoher Auslastung werden nicht angezeigt",
     "Alle Läden werden angezeigt, auch wenn gerade viel los ist"
   ];
-  bool nonGrocery = false;
+
+  _FilterDialogState(this._mapBloc);
+
+
+  @override
+  void initState() {
+    sliderValue = _mapBloc.fillStatusPreference.toDouble();
+    nonGrocery = _mapBloc.nonGrocery;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +73,15 @@ class _FilterDialogState extends State<FilterDialog> {
               });},
             ),
 
-            SizedBox(
-              height: 20,
-            )
+            FlatButton(
+              onPressed: () {
+                _mapBloc.add(MapSettingsChanged(
+                    sliderValue.round(), nonGrocery
+                ));
+                Navigator.of(context).pop();
+              },
+              child: Text("OK"),
+            ),
           ],
         ));
   }

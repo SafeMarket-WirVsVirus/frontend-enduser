@@ -10,7 +10,7 @@ class LocationsRepository {
       id: 'id1',
       position: LatLng(48.160490, 11.555184),
       name: 'Supermarkt A',
-      fillStatus: FillStatus.green,
+      fillStatus: FillStatus.red,
         slot_duration: Duration(minutes: 10)
     ),
     Location(

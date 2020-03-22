@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 
 /// EVENTS
@@ -60,6 +61,8 @@ class MapLocationsLoaded extends MapState {
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationsRepository _locationsRepository;
+  int fillStatusPreference = 3;
+  bool nonGrocery = false;
 
   MapBloc({
     @required LocationsRepository locationsRepository,
@@ -83,7 +86,16 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         markerIcons: markerIcons,
       );
     } else if (event is MapSettingsChanged) {
-      
+      MapSettingsChanged e = event;
+      List<Location> locations;
+      if (this.state is MapLocationsLoaded) {
+        locations = ((this.state) as MapLocationsLoaded).locations;
+      }
+      final List<Location> newLocations = locations.where((l) => l.fillStatus.index < e.fillStatusPreference);
+      yield MapLocationsLoaded(
+        locations: newLocations,
+        markerIcons: null,
+      );
     }
   }
 

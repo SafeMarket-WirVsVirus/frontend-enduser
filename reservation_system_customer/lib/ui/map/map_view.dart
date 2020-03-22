@@ -108,9 +108,9 @@ class MapViewState extends State<MapView> {
 
   void _setfilters() {
     showDialog(context: context,
-    builder: (BuildContext context) {
-      return FilterDialog();
-    });
+    builder: (newContext) => FilterDialog(
+      mapBloc: BlocProvider.of<MapBloc>(context),
+    ));
   }
 
 
