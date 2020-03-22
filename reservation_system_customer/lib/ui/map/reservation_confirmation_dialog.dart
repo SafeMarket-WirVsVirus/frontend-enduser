@@ -28,11 +28,11 @@ class ReservationConfirmationDialog extends StatelessWidget {
         children: <Widget>[
           Text(
               AppLocalizations.of(context).translate("res_detail_1") +
-                  "${this.name}" +
+                  " ${this.name} " +
                   AppLocalizations.of(context).translate("res_detail_2") +
-                  "${dateFormat.format(this.startTime)}" +
+                  " ${dateFormat.format(this.startTime)} " +
                   AppLocalizations.of(context).translate("res_detail_2") +
-                  "${timeFormat.format(this.startTime)}"),
+                  " ${timeFormat.format(this.startTime)} "),
 //              'Du hast am ${dateFormat.format(this.startTime)} um ${timeFormat.format(this.startTime)} einen Shopping-Slot bei ${this.name} reserviert.'),
         ],
       ),

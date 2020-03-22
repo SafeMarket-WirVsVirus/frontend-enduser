@@ -13,6 +13,7 @@
   "res_detail_2": "on",
   "res_detail_3": "at",
   "ticket": "Ticket",
+  "your_ticket": "Your Ticket:",
 
   "reminder_title_1": "Time to go shopping: ",
   "reminder_text": "- Your reservation begins in 30 minutes",
@@ -29,7 +30,7 @@
   "choose_opt_1": "Choose options (",
   "choose_opt_2": ")",
   "change_date": "Change date",
-  "reserve_slot": "reserve slot",
+  "reserve_slot": "Reserve slot",
 
   "res_success": "Reservation successfull"
 }

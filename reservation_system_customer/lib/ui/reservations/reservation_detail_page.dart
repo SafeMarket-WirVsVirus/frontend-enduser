@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../repository/data/data.dart';
 
-Future<void> _ticketDialog(BuildContext context, String id) {
+Future<void> _ticketDialog(BuildContext context, String id, String title) {
   return showDialog<void>(
     context: context,
     builder: (BuildContext context) {
@@ -22,7 +22,7 @@ Future<void> _ticketDialog(BuildContext context, String id) {
             Padding(
               padding: EdgeInsets.all(10),
               child: Text(
-                'Dein Ticket:',
+                title,
                 style: Theme.of(context).textTheme.headline,
               ),
             ),
@@ -153,7 +153,9 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               style: Theme.of(context).textTheme.headline,
             ),
             onPressed: () {
-              _ticketDialog(context, '${reservation.id}');
+              _ticketDialog(context,
+                  '${reservation.id}',
+                  AppLocalizations.of(context).translate("your_ticket"));
             },
           ),
           SizedBox(
