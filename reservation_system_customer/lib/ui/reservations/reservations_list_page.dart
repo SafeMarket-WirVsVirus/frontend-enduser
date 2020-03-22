@@ -37,6 +37,7 @@ class ReservationsListPage extends StatelessWidget {
                   ),
                 ],
               ),
+              title: Text(AppLocalizations.of(context).translate("reservations")),
             ),
             body: ListView.builder(
                 itemCount: state.reservations.length,

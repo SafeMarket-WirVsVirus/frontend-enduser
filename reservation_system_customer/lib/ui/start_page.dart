@@ -24,6 +24,31 @@ class _StartPageState extends State<StartPage> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocBuilder<ReservationsBloc, ReservationsState>(
+        builder: (context, state) {
+      if (state is ReservationsLoaded) {
+        return _HomePage();
+      }
+      return LoadingPage();
+    });
+  }
+}
+
+class _HomePage extends StatefulWidget {
+  @override
+  __HomePageState createState() => __HomePageState();
+}
+
+class __HomePageState extends State<_HomePage> {
+  int _selectedIndex = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    var state = BlocProvider.of<ReservationsBloc>(context).state;
+    if (state is ReservationsLoaded && (state.reservations?.isNotEmpty ?? false)) {
+      _selectedIndex = 0;
+    }
+
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
@@ -34,10 +59,14 @@ class _StartPageState extends State<StartPage> {
           BottomNavigationBarItem(
             icon: new Image.asset('assets/005-calendar.png', height: 40,),
             title: Text('MEINE SLOTS'),
+            icon: Icon(Icons.home),
+            title: Text(AppLocalizations.of(context).translate("reservations")),
           ),
           BottomNavigationBarItem(
             icon: new Image.asset('assets/001-loupe.png', height: 40,),
             title: Text('SUCHE'),
+            icon: Icon(Icons.map),
+            title: Text(AppLocalizations.of(context).translate("map")),
           ),
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:reservation_system_customer/app_localizations.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 
@@ -17,12 +18,6 @@ class _FilterDialogState extends State<FilterDialog> {
   double sliderValue;
   LocationType filterSelection;
   List<Color> sliderColor = [Colors.green, Colors.orange, Colors.red];
-  List<String> sliderTips = [
-    "Nur die Läden mit sehr geringer Auslastung werden angezeigt "
-        "(optimal für besonders gefährdete Personen)",
-    "Die Läden mit sehr hoher Auslastung werden nicht angezeigt",
-    "Alle Läden werden angezeigt, auch wenn gerade viel los ist"
-  ];
 
   _FilterDialogState(this._mapBloc);
 
@@ -45,7 +40,7 @@ class _FilterDialogState extends State<FilterDialog> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
               child: Text(
-                'Auslastungsniveau',
+                AppLocalizations.of(context).translate("fill_status"),
                 style: Theme.of(context).textTheme.headline,
               ),
             ),
@@ -63,7 +58,7 @@ class _FilterDialogState extends State<FilterDialog> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(sliderTips[(sliderValue - 1).round()]),
+              child: Text(_getSliderTips()),
             ),
             SizedBox(
               height: 20,
@@ -88,10 +83,19 @@ class _FilterDialogState extends State<FilterDialog> {
                     MapSettingsChanged(sliderValue.round(), filterSelection));
                 Navigator.of(context).pop();
               },
-              child: Text("OK"),
+              child: Text(AppLocalizations.of(context).translate("ok")),
             ),
           ],
         ));
+  }
+
+  String _getSliderTips() {
+    List<String> sliderTips = [
+      AppLocalizations.of(context).translate("slider_tips_1"),
+      AppLocalizations.of(context).translate("slider_tips_2"),
+      AppLocalizations.of(context).translate("slider_tips_3"),
+    ];
+    return sliderTips[sliderValue.round() - 1];
   }
 }
 

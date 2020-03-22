@@ -1,0 +1,38 @@
+{
+  "reservations": "Reservations",
+  "map": "Map",
+  "appname": "SafeMarket",
+  "cancel": "Cancel",
+  "ok": "OK",
+  "start": "Start: ",
+
+  "delete_res_1": "Do you really want to delete the reservation for ",
+  "delete_res_2": "?",
+
+  "no_reservations": "You do not have any open reservations at the moment",
+
+  "res_detail_1": "You have a shopping slot at",
+  "res_detail_2": "on",
+  "res_detail_3": "at",
+  "ticket": "Ticket",
+  "your_ticket": "Your Ticket:",
+
+  "reminder_title_1": "Time to go shopping: ",
+  "reminder_text": "- Your reservation begins in 30 minutes",
+  "reminder_snack": "Reminder set 30 minutes before your reservation",
+
+  "fill_status": "Utilization",
+  "slider_tips_1": "Only stores with low utilization are shown (great for high-risk groups)",
+  "slider_tips_2": "Stores with very high utilization are not shown",
+  "slider_tips_3": "All stores are shown, even if utilization is high at the moment",
+  "supermarkets": "Supermarkets",
+  "bakeries": "Bakeries",
+  "pharmacies": "Pharmacies",
+
+  "choose_opt_1": "Choose options (",
+  "choose_opt_2": ")",
+  "change_date": "Change date",
+  "reserve_slot": "Reserve slot",
+
+  "res_success": "Reservation successfull"
+}
