@@ -54,27 +54,6 @@ class LocationsRepository {
   Future<List<Location>> getStores(LatLng position) async {
     final store1 = await getStore(10);
     final store2 = await getStore(11);
-    //return [store1, store2];
-
-    Capacity_utilization cu1 = Capacity_utilization();
-    cu1.utilization = 0.9;
-    Daily_Utilization du = Daily_Utilization(date: DateTime.now());
-    for (var i = 1; i < 20; i++) {
-      du.timeslot_data.add(Timeslot_Data(
-          startTime: DateTime.now().add(new Duration(minutes: i * 10)),
-          bookings: i,
-          utilization: i / 10));
-    }
-    cu1.daily_utilization.add(du);
-    return [
-      Location(
-        id: 1,
-        position: LatLng(47.960490, 11.355184),
-        fillStatus: FillStatus.green,
-        name: 'My name',
-        capacity_utilization: cu1,
-        slot_duration: Duration(minutes: 20),
-      )
-    ];
+    return [store1, store2];
   }
 }
