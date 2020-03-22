@@ -94,7 +94,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       if (this.state is MapLocationsLoaded) {
         locations = ((this.state) as MapLocationsLoaded).locations;
       }
-      final List<Location> newLocations = locations.where((l) => l.fillStatus.index < e.fillStatusPreference);
+      final List<Location> newLocations = locations
+          .where((l) => l.fillStatus.index < e.fillStatusPreference).toList();
+      print(newLocations);
       yield MapLocationsLoaded(
         locations: newLocations,
         markerIcons: null,
