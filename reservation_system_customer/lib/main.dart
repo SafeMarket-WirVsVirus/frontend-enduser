@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       title: 'Reservierungssystem',
       theme: ThemeData(
           primaryColor: Color(0xff2196F3),
-          accentColor: Color(0xff81FF95),
+          accentColor: Color(0xff00F2A9),
           brightness: Brightness.light),
       home: MultiProvider(
         providers: [

@@ -32,12 +32,12 @@ class _StartPageState extends State<StartPage> {
         }),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text('Reservations'),
+            icon: new Image.asset('assets/005-calendar.png', height: 40,),
+            title: Text('MEINE SLOTS'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
-            title: Text('Map'),
+            icon: new Image.asset('assets/001-loupe.png', height: 40,),
+            title: Text('SUCHE'),
           ),
         ],
       ),
