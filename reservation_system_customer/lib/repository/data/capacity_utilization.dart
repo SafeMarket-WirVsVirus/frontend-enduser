@@ -24,7 +24,7 @@ class Capacity_utilization {
         return daily_utilization[i];
       }
     }
-    return daily_utilization[daily_utilization.length - 1 ];
+    return daily_utilization[daily_utilization.length - 1];
   }
 }
 
@@ -80,6 +80,14 @@ class Daily_Utilization {
       return (new DateFormat.Hm()).format(slot.startTime);
     }
     return "";
+  }
+
+  String get_tooltip_text(int selectedIndex) {
+    String time = (DateFormat.Hm()).format(
+        timeslot_data[selectedIndex].startTime) + " Uhr";
+    int utilPercent = (timeslot_data[selectedIndex].utilization * 100).round();
+    String utilization = "Auslastung: " + utilPercent.toString() + "%";
+    return time + '\n' + utilization;
   }
 }
 

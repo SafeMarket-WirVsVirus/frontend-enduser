@@ -120,7 +120,23 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                                       scrollIndexOffset;
                               print(selectedBarIndex);
                             });
-                          }))),
+                              },
+                              touchTooltipData: BarTouchTooltipData(
+                                  tooltipBgColor: Colors.greenAccent,
+                                  getTooltipItem: (group, groupIndex, rod,
+                                      rodIndex) {
+                                    String text = widget.location
+                                        .capacity_utilization
+                                        .get_utilization_by_date(barplotDate)
+                                        .get_tooltip_text(selectedBarIndex);
+                                    return BarTooltipItem(
+                                        text, TextStyle(color: Theme
+                                        .of(context)
+                                        .primaryColor)
+                                    );
+                                  }
+                              )
+                          ),)),
                   Center(
                     widthFactor: 0.25,
                     child: FlatButton(
