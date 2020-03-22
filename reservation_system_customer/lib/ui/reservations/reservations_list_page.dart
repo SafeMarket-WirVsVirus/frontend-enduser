@@ -62,14 +62,21 @@ class ReservationsListPage extends StatelessWidget {
                         context: context,
                         builder: (context) => AlertDialog(
                           title: Text(
-                              'Do you really want to delete the reservation for ${item.location?.name}?'),
+                            AppLocalizations.of(context)
+                                    .translate("delete_res_1") +
+                                '${item.location?.name}' +
+                                AppLocalizations.of(context)
+                                    .translate("delete_res_2"),
+                          ),
                           actions: <Widget>[
                             FlatButton(
-                              child: Text('Cancel'),
+                              child: Text(AppLocalizations.of(context)
+                                  .translate("cancel")),
                               onPressed: () => Navigator.of(context).pop(false),
                             ),
                             FlatButton(
-                              child: Text('OK'),
+                              child: Text(AppLocalizations.of(context)
+                                  .translate("ok")),
                               onPressed: () => Navigator.of(context).pop(true),
                             ),
                           ],
@@ -86,7 +93,10 @@ class ReservationsListPage extends StatelessWidget {
                     child: ListTile(
                       title: Text(item.location?.name ?? ''),
                       subtitle:
-                          Text('Start: ${dateFormat.format(item.startTime)}'),
+                          Text(
+                              AppLocalizations.of(context)
+                                  .translate("start") +
+                              '${dateFormat.format(item.startTime)}'),
                       onTap: () {
                         Navigator.push(
                             context,
@@ -107,7 +117,8 @@ class ReservationsListPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  "Du hast aktuell keine offenen Reservationen.",
+                  AppLocalizations.of(context)
+                      .translate("no_reservations"),
                   style: Theme.of(context).textTheme.title,
                   textAlign: TextAlign.center,
                 ),
