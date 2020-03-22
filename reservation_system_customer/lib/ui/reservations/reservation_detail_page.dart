@@ -71,10 +71,12 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
 
   @override
   void initState() {
-    markers.add(Marker(
-      markerId: MarkerId('{reservation.location.id}'),
-      position: reservation.location.position,
-    ));
+    if (reservation.location?.position != null) {
+      markers.add(Marker(
+        markerId: MarkerId('${reservation.location.id}'),
+        position: reservation.location.position,
+      ));
+    }
     _getReminderState();
     super.initState();
   }
@@ -84,7 +86,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text(widget.reservation.location.name),
+        title: Text(widget.reservation.location?.name ?? ''),
         actions: <Widget>[
           IconButton(
             icon: reminder
@@ -110,7 +112,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               children: <Widget>[
                 Text("Du hast einen Shopping-Slot bei"),
                 Text(
-                  "${reservation.location.name}",
+                  reservation.location?.name ?? '',
                   style: Theme.of(context).textTheme.headline,
                 ),
                 Text("am"),
@@ -139,10 +141,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
                 scrollGesturesEnabled: false,
                 zoomGesturesEnabled: false,
                 initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                    reservation.location.position.latitude,
-                    reservation.location.position.longitude,
-                  ),
+                  target: reservation.location?.position ?? LatLng(0, 0),
                   zoom: 15,
                 ),
                 onMapCreated: _onMapCreated,
@@ -159,7 +158,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               style: Theme.of(context).textTheme.headline,
             ),
             onPressed: () {
-              _ticketDialog(context, reservation.id);
+              _ticketDialog(context, '${reservation.id}');
             },
           ),
           SizedBox(
@@ -176,7 +175,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
 
   void _getReminderState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool reminderSet = prefs.getInt(reservation.id) == null ? false : true;
+    bool reminderSet = reservation.id == null ? false : true;
 
     print("Saved state: Remider set = $reminderSet");
 
@@ -243,7 +242,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
         notificationId,
-        'Zeit einzukaufen: ${reservation.location.name} - ${timeFormat.format(reservation.startTime)} h',
+        'Zeit einzukaufen: ${reservation.location?.name ?? ''} - ${timeFormat.format(reservation.startTime)} h',
         '- Deine Reservierung beginnt in 30 Minuten',
         scheduledNotificationDateTime,
         platformChannelSpecifics);

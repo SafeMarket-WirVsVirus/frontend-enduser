@@ -1,38 +1,81 @@
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+import 'package:reservation_system_customer/repository/repository.dart';
 import 'data/data.dart';
+import 'package:http/http.dart' as http;
 
 class ReservationsRepository {
-  var reservations = [
-    Reservation(
-      id: 'id1',
-      location: Location(
-        id: 1,
-        name: 'Supermarkt A',
-        position: LatLng(48.160490, 11.555184),
-      ),
-      startTime: DateTime.now().add(Duration(minutes: 31)),
-    ),
-    Reservation(
-      id: 'id2',
-      location: Location(
-        id: 2,
-        name: 'Supermarkt B',
-        position: LatLng(47.960490, 11.355184),
-      ),
-      startTime: DateTime.now().add(Duration(hours: 5)),
-    ),
-  ];
+  final String baseUrl;
 
-  Future<List<Reservation>> cancelReservation(String id) async {
-    //TODO: Cancel the reservation
-    await Future.delayed(Duration(seconds: 1));
-    reservations.removeWhere((item) => item.id == id);
-    return reservations;
+  ReservationsRepository({
+    @required this.baseUrl,
+  });
+
+  Future<List<Reservation>> cancelReservation({
+    @required int locationId,
+    @required String deviceId,
+    @required int reservationId,
+  }) async {
+    var queryParameters = {
+      'deviceId': deviceId,
+      'locationId': locationId,
+      'reservationId': reservationId,
+    };
+    final uri = Uri.https(
+        baseUrl, '/api/Reservation/RevokeSpecificReservation', queryParameters);
+    final response = await http.delete(uri);
+    if (response.statusCode == 200) {
+      print('cancelReservation: success');
+      return getReservations(deviceId: deviceId);
+    }
+    print('cancelReservation: error ${response.statusCode}');
+    return [];
   }
 
-  Future<List<Reservation>> getReservations() async {
-    //TODO: Fetch the real reservations
-    await Future.delayed(Duration(seconds: 2));
-    return reservations;
+  Future<void> createReservation({
+    @required String deviceId,
+    @required int locationId,
+    @required DateTime startTime,
+  }) async {
+    var queryParameters = {
+      'locationId': '$locationId',
+      'dateTime': startTime.toIso8601String(),
+      'deviceId': deviceId,
+    };
+    final uri = Uri.https(baseUrl, '/api/Reservation/Reserve', queryParameters);
+    final response = await http.post(uri);
+
+    if (response.statusCode == 200) {
+      print('createReservation: success');
+    } else {
+      print('createReservation: error ${response.statusCode}');
+    }
+  }
+
+  Future<List<Reservation>> getReservations({
+    @required String deviceId,
+  }) async {
+    var queryParameters = {
+      'deviceId': deviceId,
+    };
+    final uri = Uri.https(
+        baseUrl, '/api/Reservation/ReservationsByDevice', queryParameters);
+
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      print('getReservations: success');
+
+      List j = json.decode(response.body) as List;
+      List<Reservation> reservations = [];
+      j.forEach((m) {
+        if (m is Map) {
+          reservations.add(Reservation.fromJson(m));
+        }
+      });
+      return reservations;
+    }
+    print('getReservations: error ${response.statusCode}');
+    return [];
   }
 }

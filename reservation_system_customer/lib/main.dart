@@ -9,8 +9,11 @@ import 'repository/repository.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  final baseUrl = 'wirvsvirusretail.azurewebsites.net';
+
   @override
   Widget build(BuildContext context) {
+    final userRepository = UserRepository();
     return MaterialApp(
       title: 'Reservierungssystem',
       theme: ThemeData.dark().copyWith(
@@ -20,16 +23,17 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => ReservationsBloc(
-              reservationsRepository: ReservationsRepository(),
+              reservationsRepository: ReservationsRepository(baseUrl: baseUrl),
+              userRepository: userRepository,
             ),
           ),
           BlocProvider(
             create: (context) => MapBloc(
-              locationsRepository: LocationsRepository(),
+              locationsRepository: LocationsRepository(baseUrl: baseUrl),
             ),
           ),
           Provider(
-            create: (context) => UserRepository(),
+            create: (context) => userRepository,
           )
         ],
         child: StartPage(),
