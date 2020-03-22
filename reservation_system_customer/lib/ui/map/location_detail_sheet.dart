@@ -23,8 +23,11 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Container(
+      height: 450,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(5),
+        child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -45,8 +48,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                     children: <Widget>[
                       Text(
                         widget.location.name,
-                        style: Theme
-                            .of(context)
+                        style: Theme.of(context)
                             .textTheme
                             .headline
                             .copyWith(fontWeight: FontWeight.bold),
@@ -54,18 +56,12 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       ),
                       Text(
                         widget.location.address_street,
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .subtitle,
+                        style: Theme.of(context).textTheme.subtitle,
                         textAlign: TextAlign.left,
                       ),
                       Text(
                         widget.location.address_city,
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .subtitle,
+                        style: Theme.of(context).textTheme.subtitle,
                         textAlign: TextAlign.start,
                       )
                     ],
@@ -77,44 +73,18 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               capacity_utilization: widget.location.capacity_utilization,
               barplotDate: barplotDate,
               selectedSlotChanged: (slot) {
-                selectedTime = slot;
+                setState(() {
+                  selectedTime = slot;
+                });
               },
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                FlatButton(
-                    textColor: Colors.blue,
-                  onPressed: () async {
-                    Future<DateTime> selectedDate = showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now().subtract(Duration(hours: 1)),
-                      lastDate: DateTime.now().add(Duration(days: 2)),
-                      builder: (BuildContext context, Widget child) {
-                        return Theme(
-                          data: ThemeData.dark(),
-                          child: child,
-                        );
-                      },
-                    );
-                    DateTime timepoint = await selectedDate;
-                    setState(() {
-                      if (timepoint != null &&
-                          timepoint.isAfter(DateTime.now())) {
-                        setState(() {
-                          barplotDate = timepoint;
-                        });
-                      }
-                    });
-                  },
-                    child: Text(
-                      (new DateFormat.yMMMMd("en_US")).format(barplotDate),
-                      style: TextStyle(decoration: TextDecoration.underline),
-                    )
-                )
-              ],
-            ),
+            _ChangeDateButton(
+                title: (DateFormat.yMMMMd("en_US")).format(barplotDate),
+                dateChanged: (date) {
+                  setState(() {
+                    barplotDate = date;
+                  });
+                }),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -126,27 +96,71 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                     textColor: Color(0xFF322153),
                     shape: RoundedRectangleBorder(
                         borderRadius: new BorderRadius.circular(20),
-                        side: BorderSide(color: Color(0xFF00F2A9))
-                    ),
-                    onPressed: () {
-                      BlocProvider.of<ReservationsBloc>(context)
-                          .add(MakeReservation(
-                        locationId: widget.location.id,
-                        startTime: selectedTime,
-                      ));
-                      return showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return ReservationConfirmationDialog(
-                              widget.location.name, selectedTime);
-                        },
-                      );
-                    },
+                        side: BorderSide(color: Color(0xFF00F2A9))),
+                    onPressed: selectedTime == null
+                        ? null
+                        : () {
+                            BlocProvider.of<ReservationsBloc>(context)
+                                .add(MakeReservation(
+                              locationId: widget.location.id,
+                              startTime: selectedTime,
+                            ));
+                            return showDialog<void>(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return ReservationConfirmationDialog(
+                                    widget.location.name, selectedTime);
+                              },
+                            );
+                          },
                   ),
                 ),
               ],
             )
-          ]),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ChangeDateButton extends StatelessWidget {
+  final String title;
+  final ValueChanged<DateTime> dateChanged;
+
+  const _ChangeDateButton({
+    Key key,
+    @required this.title,
+    @required this.dateChanged,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FlatButton(
+      child: Text(
+        title,
+        style: TextStyle(decoration: TextDecoration.underline),
+      ),
+      textColor: Colors.blue,
+      onPressed: () async {
+        Future<DateTime> selectedDate = showDatePicker(
+          context: context,
+          initialDate: DateTime.now(),
+          firstDate: DateTime.now().subtract(Duration(hours: 1)),
+          lastDate: DateTime.now().add(Duration(days: 2)),
+          builder: (BuildContext context, Widget child) {
+            return Theme(
+              data: ThemeData.dark(),
+              child: child,
+            );
+          },
+        );
+        DateTime date = await selectedDate;
+
+        if (date != null && date.isAfter(DateTime.now())) {
+          dateChanged(date);
+        }
+      },
     );
   }
 }

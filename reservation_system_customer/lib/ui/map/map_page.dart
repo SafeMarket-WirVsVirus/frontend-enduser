@@ -29,8 +29,8 @@ class MapPage extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.0),
                         topRight: Radius.circular(20.0))),
-                builder: (_) => Provider(
-                  create: (_) => BlocProvider.of<ReservationsBloc>(context),
+                builder: (_) => BlocProvider(
+                    create: (_) => BlocProvider.of<ReservationsBloc>(context),
                   child: LocationDetailSheet(location: location),
                 ),
               );
