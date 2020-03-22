@@ -5,7 +5,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:reservation_system_customer/app_localizations.dart';
-import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../repository/data/data.dart';
