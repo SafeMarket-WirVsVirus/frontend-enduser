@@ -24,7 +24,7 @@ class MapLoadLocations extends MapEvent {
   List<Object> get props => [position];
 }
 
-class MapSettingsChanged extends MapEvent{
+class MapSettingsChanged extends MapEvent {
   final int fillStatusPreference;
   final bool nonGrocery;
 
@@ -63,6 +63,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationsRepository _locationsRepository;
   int fillStatusPreference = 3;
   bool nonGrocery = false;
+  List<Location> locations = [];
+  Map<FillStatus, BitmapDescriptor> markerIcons;
 
   MapBloc({
     @required LocationsRepository locationsRepository,
@@ -73,35 +75,39 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   @override
   Stream<MapState> mapEventToState(MapEvent event) async* {
+    if (markerIcons == null) {
+      markerIcons = await _markerIcons();
+    }
     if (event is MapLoadLocations) {
       yield MapLoading();
-      final locations = await _locationsRepository.getStores(event.position);
-      final Map<FillStatus, BitmapDescriptor> markerIcons = {};
-      markerIcons[FillStatus.green] = await _icon(FillStatus.green);
-      markerIcons[FillStatus.yellow] = await _icon(FillStatus.yellow);
-      markerIcons[FillStatus.red] = await _icon(FillStatus.red);
+      locations = await _locationsRepository.getStores(event.position);
 
       yield MapLocationsLoaded(
-        locations: locations,
+        locations: _filteredLocations(locations),
         markerIcons: markerIcons,
       );
     } else if (event is MapSettingsChanged) {
-      MapSettingsChanged e = event;
-      fillStatusPreference = e.fillStatusPreference;
-      nonGrocery = e.nonGrocery;
-
-      List<Location> locations;
-      if (this.state is MapLocationsLoaded) {
-        locations = ((this.state) as MapLocationsLoaded).locations;
-      }
-      final List<Location> newLocations = locations
-          .where((l) => l.fillStatus.index < e.fillStatusPreference).toList();
-      print(newLocations);
+      fillStatusPreference = event.fillStatusPreference;
+      nonGrocery = event.nonGrocery;
       yield MapLocationsLoaded(
-        locations: newLocations,
-        markerIcons: null,
+        locations: _filteredLocations(locations),
+        markerIcons: markerIcons,
       );
     }
+  }
+
+  List<Location> _filteredLocations(List<Location> locations) {
+    return locations
+        .where((l) => l.fillStatus.index < fillStatusPreference)
+        .toList();
+  }
+
+  Future<Map<FillStatus, BitmapDescriptor>> _markerIcons() async {
+    final Map<FillStatus, BitmapDescriptor> markerIcons = {};
+    markerIcons[FillStatus.green] = await _icon(FillStatus.green);
+    markerIcons[FillStatus.yellow] = await _icon(FillStatus.yellow);
+    markerIcons[FillStatus.red] = await _icon(FillStatus.red);
+    return markerIcons;
   }
 
   Future<BitmapDescriptor> _icon(FillStatus color) async {
