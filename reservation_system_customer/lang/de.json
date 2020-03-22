@@ -6,6 +6,8 @@
   "cancel": "Abbrechen",
   "ok": "OK",
   "start": "Start: ",
+  "notification": "Erinnern",
+  "edit": "Bearbeiten",
 
   "delete_res_1": "Willst du die Reservierung für ",
   "delete_res_2": " wirklich löschen?",

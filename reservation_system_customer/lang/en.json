@@ -6,6 +6,8 @@
   "cancel": "Cancel",
   "ok": "OK",
   "start": "Start: ",
+  "notification": "Notify",
+  "edit": "Edit",
 
   "delete_res_1": "Do you really want to delete the reservation for ",
   "delete_res_2": "?",
