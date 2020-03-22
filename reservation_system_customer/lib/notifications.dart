@@ -6,35 +6,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_localizations.dart';
 
-class Notifications {
+class NotificationHandler {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final Reservation reservation;
   final BuildContext context;
   final DateFormat timeFormat = DateFormat("hh:mm");
 
-  Notifications(
+  NotificationHandler(
       this.flutterLocalNotificationsPlugin, this.reservation, this.context);
 
   int notificationId = 0;
 
-  void _setUpLocalNotificationsPlugin() async {
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
-    var initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
-    var initializationSettingsIOS = IOSInitializationSettings(
-        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
-  }
+
 
   void _cancelReminder() async {
-    if (flutterLocalNotificationsPlugin == null) {
-      _setUpLocalNotificationsPlugin();
-    }
-
     //cancel the notification
     await flutterLocalNotificationsPlugin.cancel(notificationId);
 
@@ -44,10 +29,6 @@ class Notifications {
   }
 
   void _setReminder() async {
-    if (flutterLocalNotificationsPlugin == null) {
-      _setUpLocalNotificationsPlugin();
-    }
-
     //use the current system time in seconds (cannot handle milliseconds) as a notificationId
     notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 

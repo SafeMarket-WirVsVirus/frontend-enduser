@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:reservation_system_customer/notifications.dart';
 
 import '../../app_localizations.dart';
 
@@ -14,6 +16,10 @@ class ReservationListEntry extends StatefulWidget {
 }
 
 class _ReservationListEntryState extends State<ReservationListEntry> {
+  bool reminderSet = false;
+
+  var flutterLocalNotificationsPlugin;
+
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -105,12 +111,20 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
                     width: 70,
                     child: FlatButton(
                       child: Image(
-                        image: AssetImage(
+                          fit: BoxFit.fitWidth,
+                          image: reminderSet ?AssetImage(
                           'assets/004-bell.png',
-                        ),
-                        fit: BoxFit.fitWidth,
-                      ),
-                      onPressed: () {},
+                        ):
+                        AssetImage(
+                        'assets/004-bell-mute.png',
+                      ),),
+                      onPressed: () {
+                        setState(() {
+                          reminderSet = !reminderSet;
+                        });
+
+                        NotificationHandler notification = NotificationHandler(null,widget.item,context);
+                      },
                     ),
                   ),
                   Container(
@@ -128,5 +142,20 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
             ],
           ),
         ));
+  }
+
+  void _setUpNotificationPlugin(){
+    void _setUpLocalNotificationsPlugin() async {
+      flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+      // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+      var initializationSettingsAndroid =
+      AndroidInitializationSettings('app_icon');
+      var initializationSettingsIOS = IOSInitializationSettings(
+          onDidReceiveLocalNotification: (int id, String title, String body, String payload){return null;});
+      var initializationSettings = InitializationSettings(
+          initializationSettingsAndroid, initializationSettingsIOS);
+      await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+          onSelectNotification: (String payload){return null;});
+    }
   }
 }
