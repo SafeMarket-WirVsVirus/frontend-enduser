@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final userRepository = UserRepository();
     return MaterialApp(
-      title: AppLocalizations.of(context).translate("appname"),
+      title: "SafeMarket",
       theme: ThemeData.dark().copyWith(
         accentColor: Colors.orange,
       ),

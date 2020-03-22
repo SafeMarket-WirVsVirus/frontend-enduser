@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:reservation_system_customer/app_localizations.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'reservation_confirmation_dialog.dart';
@@ -53,9 +54,10 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Container(
-                    child: Text("Optionen auswählen (" +
+                    child: Text(
+                        AppLocalizations.of(context).translate("choose_opt_1") +
                         (new DateFormat("dd'.' MMM yyyy")).format(barplotDate) +
-                        ")"),
+                            AppLocalizations.of(context).translate("choose_opt_2")),
                   ),
                 )
               ],
@@ -190,7 +192,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       }
                     });
                   },
-                  child: Text("Anderes Datum auswählen",
+                  child: Text(AppLocalizations.of(context).translate("change_date"),
                       style: Theme.of(context).textTheme.caption),
                 )
               ],
@@ -199,7 +201,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                 child: RaisedButton(
-                  child: Text("Slot reservieren"),
+                  child: Text(AppLocalizations.of(context).translate("reserve_slot")),
                   onPressed: () {
                     BlocProvider.of<ReservationsBloc>(context)
                         .add(MakeReservation(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../app_localizations.dart';
 import 'reservation_detail_page.dart';
 
 class ReservationsListPage extends StatelessWidget {
@@ -20,7 +21,7 @@ class ReservationsListPage extends StatelessWidget {
       } else if (state is ReservationsLoaded) {
         return Scaffold(
           appBar: AppBar(
-            title: Text('Reservation System'),
+            title: Text(AppLocalizations.of(context).translate("reservations")),
           ),
           body: ListView.builder(
               itemCount: state.reservations.length,
@@ -43,15 +44,20 @@ class ReservationsListPage extends StatelessWidget {
                     return await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
-                        title: Text(
-                            'Do you really want to delete the reservation for ${item.location?.name}?'),
+                        title: Text(AppLocalizations.of(context)
+                                .translate("delete_res_1") +
+                            "${item.location?.name}" +
+                            AppLocalizations.of(context)
+                                .translate("delete_res_2")),
                         actions: <Widget>[
                           FlatButton(
-                            child: Text('Cancel'),
+                            child: Text(AppLocalizations.of(context)
+                                .translate("cancel")),
                             onPressed: () => Navigator.of(context).pop(false),
                           ),
                           FlatButton(
-                            child: Text('OK'),
+                            child: Text(AppLocalizations.of(context)
+                                .translate("ok")),
                             onPressed: () => Navigator.of(context).pop(true),
                           ),
                         ],
@@ -68,7 +74,8 @@ class ReservationsListPage extends StatelessWidget {
                   child: ListTile(
                     title: Text(item.location?.name ?? ''),
                     subtitle:
-                        Text('Start: ${dateFormat.format(item.startTime)}'),
+                        Text(AppLocalizations.of(context).translate("start") +
+                            '${dateFormat.format(item.startTime)}'),
                     onTap: () {
                       Navigator.push(
                           context,

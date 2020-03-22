@@ -18,5 +18,19 @@
   "reminder_text": "- Deine Reservierung beginnt in 30 Minuten",
   "reminder_snack": "Erinnerung 30 Minuten vor deinem Termin",
 
-  "fill_status": "Auslastungsniveau"
+  "fill_status": "Auslastungsniveau",
+  "slider_tips_1": "Nur die Läden mit sehr geringer Auslastung werden angezeigt (optimal für besonders gefährdete Personen)",
+  "slider_tips_2": "Die Läden mit sehr hoher Auslastung werden nicht angezeigt",
+  "slider_tips_3": "Alle Läden werden angezeigt, auch wenn gerade viel los ist",
+  "supermarkets": "Supermärkte",
+  "bakeries": "Backereien",
+  "pharmacies": "Apotheken",
+
+  "choose_opt_1": "Optionen auswählen (",
+  "choose_opt_2": ")",
+  "change_date": "Anderes Datum auswählen",
+  "reserve_slot": "Slot reservieren",
+
+  "res_success": "Reservierung erfolgreich"
+
 }
