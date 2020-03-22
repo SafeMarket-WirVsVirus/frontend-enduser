@@ -9,6 +9,8 @@
   "delete_res_1": "Do you really want to delete the reservation for ",
   "delete_res_2": "?",
 
+  "no_reservations": "You do not have any open reservations at the moment",
+
   "res_detail_1": "You have a shopping slot at",
   "res_detail_2": "on",
   "res_detail_3": "at",

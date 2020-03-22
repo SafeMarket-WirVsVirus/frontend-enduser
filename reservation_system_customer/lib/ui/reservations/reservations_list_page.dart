@@ -97,7 +97,7 @@ class ReservationsListPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  "Du hast aktuell keine offenen Reservationen.",
+                  AppLocalizations.of(context).translate("no_reservations"),
                   style: Theme.of(context).textTheme.title,
                   textAlign: TextAlign.center,
                 ),

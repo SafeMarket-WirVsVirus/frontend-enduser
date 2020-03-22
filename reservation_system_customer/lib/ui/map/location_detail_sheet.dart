@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/reservation_slot_selection.dart';
+import '../../app_localizations.dart';
 import 'reservation_confirmation_dialog.dart';
 
 class LocationDetailSheet extends StatefulWidget {

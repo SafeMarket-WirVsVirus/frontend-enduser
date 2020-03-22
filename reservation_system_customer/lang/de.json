@@ -9,6 +9,8 @@
   "delete_res_1": "Willst du die Reservierung für ",
   "delete_res_2": " wirklich löschen?",
 
+  "no_reservations": "Du hast aktuell keine offenen Reservierungen",
+
   "res_detail_1": "Du hast einen Shopping-Slot bei",
   "res_detail_2": "am",
   "res_detail_3": "um",
