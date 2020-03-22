@@ -1,32 +1,15 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:reservation_system_customer/repository/data/capacity_utilization.dart';
+import 'package:reservation_system_customer/constants.dart';
+import 'package:reservation_system_customer/repository/data/time_slot_data.dart';
 
 import 'data/data.dart';
 
 class LocationsRepository {
   final String baseUrl;
-
-  static Capacity_utilization _cap() {
-    Capacity_utilization cu1 = Capacity_utilization();
-    cu1.utilization = 0.9;
-    Daily_Utilization du = Daily_Utilization(date: DateTime.now());
-    for (var i = 1; i < 20; i++) {
-      Random random = new Random();
-      du.timeslot_data.add(
-        Timeslot_Data(
-          startTime: DateTime.now().add(new Duration(minutes: i * 10)),
-          bookings: random.nextInt(20),
-        ),
-      );
-    }
-    cu1.daily_utilization.add(du);
-    return cu1;
-  }
 
   var locations = [
     Location(
@@ -37,7 +20,6 @@ class LocationsRepository {
         fillStatus: FillStatus.green,
         slotDuration: Duration(minutes: 30),
         slotSize: 20,
-        capacity_utilization: _cap(),
         address: "Neustädter Straße 1"),
     Location(
       id: 2434234,
@@ -47,7 +29,6 @@ class LocationsRepository {
       fillStatus: FillStatus.red,
       slotSize: 20,
       slotDuration: Duration(minutes: 30),
-      capacity_utilization: _cap(),
       address: "Neustädter Straße 1",
     ),
     Location(
@@ -58,7 +39,6 @@ class LocationsRepository {
       fillStatus: FillStatus.green,
       slotSize: 20,
       slotDuration: Duration(minutes: 30),
-      capacity_utilization: _cap(),
       address: "Neustädter Straße 1",
     ),
     Location(
@@ -69,7 +49,6 @@ class LocationsRepository {
       fillStatus: FillStatus.red,
       slotSize: 20,
       slotDuration: Duration(minutes: 30),
-      capacity_utilization: _cap(),
       address: "Neustädter Straße 1",
     ),
     Location(
@@ -80,7 +59,6 @@ class LocationsRepository {
       fillStatus: FillStatus.yellow,
       slotSize: 20,
       slotDuration: Duration(minutes: 30),
-      capacity_utilization: _cap(),
       address: "Neustädter Straße 1",
     ),
   ];
@@ -91,15 +69,35 @@ class LocationsRepository {
     final uri = Uri.https(baseUrl, '/api/Location/$id');
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      var tmpLocation = Location.fromJson(json.decode(response.body));
-
-      //TODO: Delete dummy data
-      tmpLocation.capacity_utilization = _cap();
-      return tmpLocation;
+      print('getStore succeeded');
+      return Location.fromJson(json.decode(response.body));
     } else {
       print('getStore failed with ${response.statusCode}');
     }
     return null;
+  }
+
+  Future<List<TimeSlotData>> getLocationReservations({
+    @required int id,
+    @required DateTime startTime,
+  }) async {
+    var queryParameters = {
+      'locationId': id.toString(),
+      'startTime': startTime.toIso8601String(),
+      'slotSizeInMinutes': Constants.slotSizeInMinutes.toString(),
+    };
+    final uri = Uri.https(
+        baseUrl, '/api/Location/GetReservationPerSlot', queryParameters);
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      print('getLocationReservations succeeded');
+      var locationReservations =
+          TimeSlotDataResult.fromJson(json.decode(response.body));
+      return locationReservations.timeSlotData;
+    } else {
+      print('getLocationReservations failed with ${response.statusCode}');
+    }
+    return [];
   }
 
   Future<List<Location>> getStores({

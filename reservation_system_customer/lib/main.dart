@@ -6,12 +6,12 @@ import 'package:reservation_system_customer/ui/start_page.dart';
 
 import 'app_localizations.dart';
 import 'bloc/bloc.dart';
+import 'constants.dart';
 import 'repository/repository.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  final baseUrl = 'wirvsvirusretail.azurewebsites.net';
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +26,13 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => ReservationsBloc(
-              reservationsRepository: ReservationsRepository(baseUrl: baseUrl),
+              reservationsRepository: ReservationsRepository(baseUrl: Constants.baseUrl),
               userRepository: userRepository,
             ),
           ),
           BlocProvider(
             create: (context) => MapBloc(
-              locationsRepository: LocationsRepository(baseUrl: baseUrl),
+              locationsRepository: LocationsRepository(baseUrl: Constants.baseUrl),
             ),
           ),
           Provider(
