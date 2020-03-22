@@ -40,7 +40,6 @@ Future<void> _ticketDialog(BuildContext context, String id) {
   );
 }
 
-
 class ReservationDetailPage extends StatefulWidget {
   final Reservation reservation;
 
@@ -73,7 +72,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
   @override
   void initState() {
     markers.add(Marker(
-      markerId: MarkerId(reservation.location.id),
+      markerId: MarkerId('{reservation.location.id}'),
       position: reservation.location.position,
     ));
     _getReminderState();
@@ -110,22 +109,26 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
             child: Column(
               children: <Widget>[
                 Text("Du hast einen Shopping-Slot bei"),
-                Text("${reservation.location.name}",
-                  style: Theme.of(context).textTheme.headline,),
+                Text(
+                  "${reservation.location.name}",
+                  style: Theme.of(context).textTheme.headline,
+                ),
                 Text("am"),
-                Text("${dateFormat.format(reservation.timeSlot.startTime)}",
-                  style: Theme.of(context).textTheme.headline,),
+                Text(
+                  "${dateFormat.format(reservation.startTime)}",
+                  style: Theme.of(context).textTheme.headline,
+                ),
                 Text("um"),
-                Text("${timeFormat.format(reservation.timeSlot.startTime)}",
-                  style: Theme.of(context).textTheme.headline,),
+                Text(
+                  "${timeFormat.format(reservation.startTime)}",
+                  style: Theme.of(context).textTheme.headline,
+                ),
               ],
             ),
           ),
-
           SizedBox(
             height: 10,
           ),
-
           Expanded(
             child: Container(
               constraints: BoxConstraints.expand(),
@@ -147,19 +150,18 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
               ),
             ),
           ),
-
           SizedBox(
             height: 10,
           ),
-
           FlatButton(
-            child: Text("Ticket",
-              style: Theme.of(context).textTheme.headline,),
+            child: Text(
+              "Ticket",
+              style: Theme.of(context).textTheme.headline,
+            ),
             onPressed: () {
               _ticketDialog(context, reservation.id);
             },
           ),
-
           SizedBox(
             height: 10,
           ),
@@ -199,7 +201,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
     var initializationSettingsAndroid =
-    AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('app_icon');
     var initializationSettingsIOS = IOSInitializationSettings(
         onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     var initializationSettings = InitializationSettings(
@@ -230,7 +232,7 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     var scheduledNotificationDateTime =
-    reservation.timeSlot.startTime.subtract(Duration(minutes: 30));
+        reservation.startTime.subtract(Duration(minutes: 30));
     //TODO: add actual androidPlatformChannelSpecifics information here
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your other channel id',
@@ -241,8 +243,8 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.schedule(
         notificationId,
-        'Zeit einzukaufen: ${reservation.location.name} - ${timeFormat.format(reservation.timeSlot.startTime)} h',
-        '- Navigation?',
+        'Zeit einzukaufen: ${reservation.location.name} - ${timeFormat.format(reservation.startTime)} h',
+        '- Deine Reservierung beginnt in 30 Minuten',
         scheduledNotificationDateTime,
         platformChannelSpecifics);
 
@@ -258,10 +260,8 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
     if (payload != null) {
       debugPrint('notification payload: ' + payload);
     }
-    await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => ReservationsListPage()),
-    );
+
+    print("clicked push notification (Android)");
   }
 
   //iOS
@@ -279,12 +279,8 @@ class _ReservationDetailPageState extends State<ReservationDetailPage> {
             child: Text('Ok'),
             onPressed: () async {
               Navigator.of(context, rootNavigator: true).pop();
-              await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ReservationsListPage(),
-                ),
-              );
+
+              print("clicked push notification (iOS)");
             },
           )
         ],

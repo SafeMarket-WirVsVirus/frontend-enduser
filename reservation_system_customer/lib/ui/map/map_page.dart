@@ -12,16 +12,22 @@ class MapPage extends StatelessWidget {
       Map<MarkerId, Marker> markers = {};
       if (state is MapLocationsLoaded) {
         state.locations.forEach((location) {
-          markers[MarkerId(location.id)] = Marker(
-            markerId: MarkerId(location.id),
+          final id = '${location.id}';
+          markers[MarkerId(id)] = Marker(
+            markerId: MarkerId(id),
             position: location.position,
             icon: state.markerIcons[location.fillStatus],
             infoWindow: InfoWindow(
                 title: location.name, snippet: "A Short description"),
+            // TODO remove
             onTap: () {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0))),
                 builder: (context) => LocationDetailSheet(location: location),
               );
             },

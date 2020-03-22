@@ -66,7 +66,7 @@ class ReservationsListPage extends StatelessWidget {
                 child: ListTile(
                   title: Text(item.location.name),
                   subtitle: Text(
-                      'Start: ${dateFormat.format(item.timeSlot.startTime)}'),
+                      'Start: ${dateFormat.format(item.startTime)}'),
                   onTap: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => ReservationDetailPage(reservation: item)));
                   },
