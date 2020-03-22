@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
 
 class ReservationConfirmationDialog extends StatelessWidget {
   final name;
-  ReservationConfirmationDialog(this.name);
+  final startTime;
+  final DateFormat dateFormat = DateFormat("dd.MM.yyyy");
+  final DateFormat timeFormat = DateFormat("hh:mm");
+  ReservationConfirmationDialog(this.name, this.startTime);
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -21,27 +25,18 @@ class ReservationConfirmationDialog extends StatelessWidget {
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('You have booked a slot for ${this.name}'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              FlatButton(
-                child: Text('Cancel'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
+          Text('Du hast am ${dateFormat.format(this.startTime)} um ${timeFormat.format(this.startTime)} einen Shopping-Slot bei ${this.name} reserviert.'),
         ],
-      )
+      ),
+      actions: <Widget>[
+        FlatButton(
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.pop(context);
+              },
+            child: Text('OK'),
+        )
+      ],
     );
   }
 }
