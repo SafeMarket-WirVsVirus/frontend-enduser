@@ -27,11 +27,12 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 400,
+      height: 450,
       child: Column(
           mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,

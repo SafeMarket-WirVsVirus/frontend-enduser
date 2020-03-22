@@ -7,6 +7,7 @@ import 'package:reservation_system_customer/ui/map/map_view.dart';
 import 'location_detail_sheet.dart';
 
 class MapPage extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MapBloc, MapState>(builder: (context, state) {
@@ -17,11 +18,10 @@ class MapPage extends StatelessWidget {
           markers[MarkerId(id)] = Marker(
             markerId: MarkerId(id),
             position: location.position,
+            consumeTapEvents: true,
             icon: state.markerIcons[location.fillStatus],
-            infoWindow: InfoWindow(
-                title: location.name, snippet: "A Short description"),
-            // TODO remove
             onTap: () {
+              //TODO: Visible area on marker
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,

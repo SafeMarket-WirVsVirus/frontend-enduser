@@ -111,7 +111,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }
 
   Future<BitmapDescriptor> _icon(FillStatus color) async {
-    final size = 70;
+    final size = 90;
     switch (color) {
       case FillStatus.green:
         return _getBytesFromAsset('assets/icon_green.png', size);

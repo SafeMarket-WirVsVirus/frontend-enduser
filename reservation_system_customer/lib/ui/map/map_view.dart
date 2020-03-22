@@ -61,6 +61,9 @@ class MapViewState extends State<MapView> {
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
         },
+        onCameraMove: (position) {
+          // TODO: Update search results
+        },
         markers: Set<Marker>.of(widget.markers.values),
       ),
 
