@@ -24,7 +24,6 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Theme.of(context).primaryColor,
       height: 400,
       child: Column(
           mainAxisSize: MainAxisSize.max,
