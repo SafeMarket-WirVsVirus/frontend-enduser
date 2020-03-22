@@ -22,6 +22,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   DateTime barplotDate = DateTime.now();
   int selectedBarIndex = -1;
   int scrollIndexOffset = 0;
+  int barsShown = 7;
 
   @override
   Widget build(BuildContext context) {
@@ -79,7 +80,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       .get_utilization_by_date(barplotDate)
                       .get_bar_data(
                           scrollIndexOffset, //startpoint
-                          7, // datacount
+                      barsShown, // datacount
                           BarChartGroupData(
                               // Config
                               x: 0,
@@ -126,9 +127,15 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       splashColor: Theme.of(context).accentColor,
                       child: Icon(Icons.arrow_forward_ios),
                       onPressed: () {
-                        setState(() {
-                          scrollIndexOffset += 1;
-                        });
+                        int datapoints = widget.location.capacity_utilization
+                            .get_utilization_by_date(barplotDate)
+                            .timeslot_data
+                            .length;
+                        if (datapoints - scrollIndexOffset > barsShown) {
+                          setState(() {
+                            scrollIndexOffset += 1;
+                          });
+                        }
                       },
                     ),
                   )
