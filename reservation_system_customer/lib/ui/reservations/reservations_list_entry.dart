@@ -14,6 +14,8 @@ class ReservationListEntry extends StatefulWidget {
 }
 
 class _ReservationListEntryState extends State<ReservationListEntry> {
+  bool notificationSet = false;
+
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
@@ -67,12 +69,18 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
                       width: 60,
                       child: FlatButton(
                         child: Image(
-                          image: AssetImage(
+                          image: notificationSet?AssetImage(
                             'assets/004-bell.png',
-                          ),
+                          ):AssetImage(
+                          'assets/004-bell-mute.png',
+                        ),
                           fit: BoxFit.fitWidth,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            notificationSet = !notificationSet;
+                          });
+                        },
                       ),
                     ),
                     Text(AppLocalizations.of(context).translate("notification"))
