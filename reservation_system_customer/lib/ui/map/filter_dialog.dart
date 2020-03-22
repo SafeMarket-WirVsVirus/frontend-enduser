@@ -6,6 +6,7 @@ class FilterDialog extends StatefulWidget {
   final MapBloc mapBloc;
 
   const FilterDialog({Key key, this.mapBloc}) : super(key: key);
+
   @override
   _FilterDialogState createState() => _FilterDialogState(mapBloc);
 }
@@ -24,7 +25,6 @@ class _FilterDialogState extends State<FilterDialog> {
 
   _FilterDialogState(this._mapBloc);
 
-
   @override
   void initState() {
     sliderValue = _mapBloc.fillStatusPreference.toDouble();
@@ -37,11 +37,13 @@ class _FilterDialogState extends State<FilterDialog> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            SizedBox(height: 10),
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
               child: Text(
-                "Auslastungsniveau",
+                'Auslastungsniveau',
                 style: Theme.of(context).textTheme.headline,
               ),
             ),
@@ -64,20 +66,20 @@ class _FilterDialogState extends State<FilterDialog> {
             SizedBox(
               height: 20,
             ),
-
             CheckboxListTile(
+              activeColor: Theme.of(context).accentColor,
               value: nonGrocery,
               title: Text("Nicht-Lebensmittelläden anzeigen"),
-              onChanged: (value) {setState(() {
-                nonGrocery = value;
-              });},
+              onChanged: (value) {
+                setState(() {
+                  nonGrocery = value;
+                });
+              },
             ),
-
             FlatButton(
               onPressed: () {
-                _mapBloc.add(MapSettingsChanged(
-                    sliderValue.round(), nonGrocery
-                ));
+                _mapBloc
+                    .add(MapSettingsChanged(sliderValue.round(), nonGrocery));
                 Navigator.of(context).pop();
               },
               child: Text("OK"),
