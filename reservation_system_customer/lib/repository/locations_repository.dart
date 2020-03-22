@@ -109,8 +109,9 @@ class LocationsRepository {
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       print('getStore succeeded');
-      var locations = Locations.fromJson(json.decode(response.body));
-      return locations.locations;
+      var result = Locations.fromJson(json.decode(response.body));
+      print('getStore locations: ${result.locations.length}');
+      return locations + result.locations;
     } else {
       print('getStore failed with ${response.statusCode}');
     }
