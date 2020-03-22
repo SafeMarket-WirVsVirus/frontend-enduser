@@ -28,12 +28,6 @@ class MapViewState extends State<MapView> {
   LatLng userPosition;
 
   @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration(seconds: 0)).then((_) => _fetchLocations(context));
-  }
-
-  @override
   void setState(fn) {
     if (mounted) {
       super.setState(fn);
@@ -47,52 +41,45 @@ class MapViewState extends State<MapView> {
             defaultPosition;
 
     return Scaffold(
-      body: GoogleMap(
-        myLocationButtonEnabled: false,
-        myLocationEnabled: true,
-        mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: LatLng(
-            userPosition.latitude,
-            userPosition.longitude,
+        body: GoogleMap(
+          myLocationButtonEnabled: false,
+          myLocationEnabled: true,
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(
+              userPosition.latitude,
+              userPosition.longitude,
+            ),
+            zoom: 14,
           ),
-          zoom: 14,
+          onMapCreated: (GoogleMapController controller) {
+            _controller.complete(controller);
+            _fetchLocations(context, controller);
+          },
+          onCameraMove: (position) {
+            // TODO: Update search results
+          },
+          markers: Set<Marker>.of(widget.markers.values),
         ),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-        onCameraMove: (position) {
-          // TODO: Update search results
-        },
-        markers: Set<Marker>.of(widget.markers.values),
-      ),
-
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          FloatingActionButton(
-            mini: true,
-            onPressed: _setfilters,
-            child: Icon(Icons.filter_list),
-            backgroundColor: Theme
-                .of(context)
-                .accentColor,
-          ),
-
-          SizedBox(
-            height: 10,
-          ),
-
-          FloatingActionButton(
-            onPressed: _goToLocation,
-            child: Icon(Icons.gps_fixed),
-            backgroundColor: Theme
-                .of(context)
-                .accentColor,
-          ),
-        ],
-      )
-    );
+        floatingActionButton: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            FloatingActionButton(
+              mini: true,
+              onPressed: _setfilters,
+              child: Icon(Icons.filter_list),
+              backgroundColor: Theme.of(context).accentColor,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            FloatingActionButton(
+              onPressed: _goToLocation,
+              child: Icon(Icons.gps_fixed),
+              backgroundColor: Theme.of(context).accentColor,
+            ),
+          ],
+        ));
   }
 
   Future<void> _goToLocation() async {
@@ -110,12 +97,12 @@ class MapViewState extends State<MapView> {
   }
 
   void _setfilters() {
-    showDialog(context: context,
-    builder: (newContext) => FilterDialog(
-      mapBloc: BlocProvider.of<MapBloc>(context),
-    ));
+    showDialog(
+        context: context,
+        builder: (newContext) => FilterDialog(
+              mapBloc: BlocProvider.of<MapBloc>(context),
+            ));
   }
-
 
   void _moveCameraToNewPosition(LatLng position, {double zoom = 14.0}) async {
     final GoogleMapController controller = await _controller.future;
@@ -123,8 +110,7 @@ class MapViewState extends State<MapView> {
         CameraPosition(target: position, zoom: zoom)));
   }
 
-  _fetchLocations(context) async {
-    await Future.delayed(Duration.zero);
+  _fetchLocations(BuildContext context, GoogleMapController controller) async {
     if (BlocProvider.of<MapBloc>(context).state is MapLocationsLoaded) {
       return;
     }
@@ -139,7 +125,11 @@ class MapViewState extends State<MapView> {
           .setUserPosition(userPosition);
       _moveCameraToNewPosition(userPosition);
     }
-    BlocProvider.of<MapBloc>(context).add(MapLoadLocations(location));
+    //TODO: Test here what the zoom level should be
+    double zoomLevel = await controller.getZoomLevel();
+
+    BlocProvider.of<MapBloc>(context)
+        .add(MapLoadLocations(position: location, radius: zoomLevel.round()));
   }
 
   Future<LatLng> _getUserPosition() async {
