@@ -30,14 +30,45 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
           children: [
             SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                Icon(
+                  Icons.store,
+                  size: 75,
+                ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
-                  child: Text(
-                    widget.location.name,
-                    style: Theme.of(context).textTheme.headline,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        widget.location.name,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .headline
+                            .copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        widget.location.address_street,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .subtitle,
+                        textAlign: TextAlign.left,
+                      ),
+                      Text(
+                        widget.location.address_city,
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .subtitle,
+                        textAlign: TextAlign.start,
+                      )
+                    ],
                   ),
                 ),
               ],

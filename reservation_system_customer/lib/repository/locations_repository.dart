@@ -44,6 +44,8 @@ class LocationsRepository {
         fillStatus: tmpLocation.fillStatus,
         capacity_utilization: id == 10 ? cu1 : cu2,
         slot_duration: Duration(minutes: 10),
+          address_street: "Neustädter Straße 1",
+          address_city: "33899 Göttingen"
       );
     } else {
       print('getStore failed with ${response.statusCode}');
