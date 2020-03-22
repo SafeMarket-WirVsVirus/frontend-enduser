@@ -19,25 +19,49 @@ enum LocationType {
 }
 
 @JsonSerializable(createToJson: false)
+class OpeningHours {
+  final String openingDays;
+
+  final DateTime openingTime;
+
+  final DateTime closingTime;
+
+  OpeningHours({
+    @required this.openingDays,
+    @required this.openingTime,
+    @required this.closingTime,
+  });
+
+  factory OpeningHours.fromJson(Map<String, dynamic> json) =>
+      _$OpeningHoursFromJson(json);
+}
+
+
+@JsonSerializable(createToJson: false)
 class Location {
   /// The location id
   final int id;
 
   /// The GPS location
-  @JsonKey(ignore: true)
-  final LatLng position;
+  LatLng get position => LatLng(latitude, longitude);
+
+  @JsonKey(required: true, disallowNullValue: true)
+  final double longitude;
+  @JsonKey(required: true, disallowNullValue: true)
+  final double latitude;
 
   /// The user friendly location name
   final String name;
 
-  final String address_street;
+  @JsonKey(name: 'openings') //, fromJson: _openingHoursFromMap)
+  final List<OpeningHours> openingHours;
 
-  final String address_city;
+  final String address;
 
-  final Duration slot_duration;
+  final Duration slotDuration;
 
   @JsonKey(ignore: true)
-  final Capacity_utilization capacity_utilization;
+  Capacity_utilization capacity_utilization;
 
   /// The fill status of a location
   @JsonKey(fromJson: _fillStatusFromInt)
@@ -45,13 +69,14 @@ class Location {
 
   Location({
     @required this.id,
-    @required this.position,
+    @required this.latitude,
+    @required this.longitude,
     @required this.name,
     @required this.fillStatus,
-    @required this.slot_duration,
-    @required this.capacity_utilization,
-    @required this.address_street,
-    @required this.address_city
+    @required this.slotDuration,
+    @required this.address,
+    @required this.openingHours,
+    this.capacity_utilization,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) =>
@@ -68,4 +93,11 @@ FillStatus _fillStatusFromInt(int i) {
       return FillStatus.green;
   }
   return FillStatus.green;
+}
+
+OpeningHours _openingHoursFromMap(Object object) {
+  if (object != null && object is Map) {
+    return OpeningHours.fromJson(object);
+  }
+  return null;
 }

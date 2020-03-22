@@ -62,15 +62,10 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                         textAlign: TextAlign.left,
                       ),
                       Text(
-                        widget.location.address_street,
+                        widget.location.address ?? '',
                         style: Theme.of(context).textTheme.subtitle,
                         textAlign: TextAlign.left,
                       ),
-                      Text(
-                        widget.location.address_city,
-                        style: Theme.of(context).textTheme.subtitle,
-                        textAlign: TextAlign.start,
-                      )
                     ],
                   ),
                 ),
