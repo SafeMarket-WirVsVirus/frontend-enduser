@@ -6,11 +6,13 @@ import 'package:reservation_system_customer/repository/data/capacity_utilization
 class ReservationSlotSelection extends StatefulWidget {
   final ValueChanged<DateTime> selectedSlotChanged;
   final List<Timeslot_Data> data;
+  final int slotSize;
 
   const ReservationSlotSelection({
     Key key,
     @required this.selectedSlotChanged,
     @required this.data,
+    @required this.slotSize,
   }) : super(key: key);
 
   @override
@@ -40,6 +42,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
               child: BarChart(getBarData(
                       widget.data,
                       scrollIndexOffset,
+                      widget.slotSize,
                       barsShown,
                       BarChartGroupData(
                         x: 0,
@@ -127,6 +130,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
   BarChartData getBarData(
       List<Timeslot_Data> timeSlotData,
       int scrollIndexOffset,
+      int slotSize,
       int dataCount,
       BarChartGroupData cfg,
       int selectedIndex) {
@@ -134,29 +138,21 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
     for (int i = scrollIndexOffset; i < timeSlotData.length; i++) {
       Timeslot_Data slot = timeSlotData[i];
       Color color;
+      final percentageBookings = slot.bookings / (slotSize * 1);
 
-      if (slot.utilization < 0.33) {
-        if (i == selectedIndex) {
-          color = Colors.green[100];
-        } else {
-          color = Color(0xFF00F2A9);
-        }
-      } else if (slot.utilization < 0.66) {
-        if (i == selectedIndex) {
-          color = Colors.orange[100];
-        } else {
-          color = Color(0xFFFEBE5F);
-        }
+      if (percentageBookings < 0.33) {
+        color = Color(0xFF00F2A9);
+      } else if (percentageBookings < 0.66) {
+        color = Color(0xFFFEBE5F);
       } else {
-        if (i == selectedIndex) {
-          color = Colors.red[100];
-        } else {
-          color = Color(0xFFFF5C66);
-        }
+        color = Color(0xFFFF5C66);
+      }
+      if (i == selectedIndex) {
+        color = color.withAlpha(100);
       }
 
       data.add(cfg.copyWith(x: data.length, barRods: [
-        cfg.barRods[0].copyWith(y: slot.utilization * 100, color: color)
+        cfg.barRods[0].copyWith(y: percentageBookings * 100, color: color)
       ]));
       if (data.length >= dataCount) {
         return BarChartData(barGroups: data);

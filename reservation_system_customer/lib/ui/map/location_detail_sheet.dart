@@ -75,6 +75,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               data: widget.location.capacity_utilization
                   .get_utilization_by_date(barplotDate)
                   .timeslot_data,
+              slotSize: widget.location.slotSize,
               selectedSlotChanged: (slot) {
                 setState(() {
                   selectedTime = slot;
@@ -152,12 +153,7 @@ class _ChangeDateButton extends StatelessWidget {
           initialDate: DateTime.now(),
           firstDate: DateTime.now().subtract(Duration(hours: 1)),
           lastDate: DateTime.now().add(Duration(days: 2)),
-          builder: (BuildContext context, Widget child) {
-            return Theme(
-              data: ThemeData.dark(),
-              child: child,
-            );
-          },
+          builder: (BuildContext context, Widget child)  => child,
         );
         DateTime date = await selectedDate;
 

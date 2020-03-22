@@ -45,12 +45,8 @@ class Timeslot_Data {
   /// Number Of booked slots
   int bookings;
 
-  /// Capacity utilization [0,1]
-  double utilization;
-
   Timeslot_Data({
     @required this.startTime,
     @required this.bookings,
-    @required this.utilization,
   });
 }

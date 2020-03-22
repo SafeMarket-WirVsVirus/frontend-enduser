@@ -28,6 +28,7 @@ Location _$LocationFromJson(Map<String, dynamic> json) {
     longitude: (json['longitude'] as num)?.toDouble(),
     name: json['name'] as String,
     fillStatus: _fillStatusFromInt(json['fillStatus'] as int),
+    slotSize: json['slotSize'] as int,
     slotDuration: json['slotDuration'] == null
         ? null
         : Duration(microseconds: json['slotDuration'] as int),
