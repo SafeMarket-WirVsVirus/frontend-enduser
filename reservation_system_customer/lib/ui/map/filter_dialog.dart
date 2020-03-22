@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 
-
 class FilterDialog extends StatefulWidget {
   final MapBloc mapBloc;
 
@@ -29,6 +28,7 @@ class _FilterDialogState extends State<FilterDialog> {
 
   @override
   void initState() {
+    super.initState();
     sliderValue = _mapBloc.fillStatusPreference.toDouble();
     filterSelection = _mapBloc.filterSelection;
   }
@@ -68,52 +68,68 @@ class _FilterDialogState extends State<FilterDialog> {
             SizedBox(
               height: 20,
             ),
-            ListTile(
-                title: const Text('Supermarkt'),
-                leading: Radio(
-              activeColor: Theme.of(context).accentColor,
-                  value: LocationType.supermarket,
-                  onChanged: (LocationType value) {
-                setState(() {
-                  filterSelection = value;
-                });
-                  }, groupValue: filterSelection,
-                )),
-            ListTile(
-                title: const Text('Bäckerei'),
-                leading: Radio(
-                  activeColor: Theme
-                      .of(context)
-                      .accentColor,
-                  value: LocationType.bakery,
-                  onChanged: (LocationType value) {
-                    setState(() {
-                      filterSelection = value;
-                    });
-                  }, groupValue: filterSelection,
-                )),
-            ListTile(
-                title: const Text('Apotheke'),
-                leading: Radio(
-                  activeColor: Theme
-                      .of(context)
-                      .accentColor,
-                  value: LocationType.pharmacy,
-                  onChanged: (LocationType value) {
-                    setState(() {
-                      filterSelection = value;
-                    });
-                  }, groupValue: filterSelection,
-                )),
+            ListView.builder(
+              itemBuilder: (context, index) => _CheckboxTile(
+                locationType: LocationType.values[index],
+                groupValue: filterSelection,
+                locationSelected: (LocationType value) {
+                  setState(() {
+                    filterSelection = value;
+                  });
+                },
+              ),
+              itemCount: LocationType.values.length,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+            ),
             FlatButton(
               onPressed: () {
-                _mapBloc.add(MapSettingsChanged(
-                    sliderValue.round(), filterSelection));
+                _mapBloc.add(
+                    MapSettingsChanged(sliderValue.round(), filterSelection));
                 Navigator.of(context).pop();
               },
               child: Text("OK"),
             ),
           ],
         ));
+  }
+}
+
+class _CheckboxTile extends StatelessWidget {
+  final LocationType locationType;
+  final LocationType groupValue;
+  final ValueChanged<LocationType> locationSelected;
+
+  const _CheckboxTile({
+    Key key,
+    @required this.locationType,
+    @required this.groupValue,
+    @required this.locationSelected,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+        title: Text(locationType.localized),
+        leading: Radio(
+          activeColor: Theme.of(context).accentColor,
+          value: locationType,
+          onChanged: (_) => locationSelected(locationType),
+          groupValue: groupValue,
+        ));
+  }
+}
+
+extension LocationTypeDescription on LocationType {
+  String get localized {
+    switch (this) {
+      case LocationType.supermarket:
+        return 'Supermarkt';
+      case LocationType.bakery:
+        return 'Bäckerei';
+      case LocationType.pharmacy:
+        return 'Apotheke';
+    }
+    return '';
   }
 }

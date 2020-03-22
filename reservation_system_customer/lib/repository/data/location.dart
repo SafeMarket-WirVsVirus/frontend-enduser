@@ -11,10 +11,11 @@ enum FillStatus {
   red,
 }
 
+/// The order of the location type determines also the order in the filter dialog
 enum LocationType {
+  supermarket,
   bakery,
   pharmacy,
-  supermarket,
 }
 
 @JsonSerializable(createToJson: false)

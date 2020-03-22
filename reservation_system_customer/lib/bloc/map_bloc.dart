@@ -85,12 +85,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     }
     if (event is MapLoadLocations) {
       yield MapLoading();
-      // TODO: Update with correct value locationTypeFilterSelection
-      var locationTypeFilterSelection = LocationType.supermarket;
       locations = await _locationsRepository.getStores(
         position: event.position,
         radius: event.radius,
-        type: locationTypeFilterSelection,
+        type: filterSelection,
       );
 
       yield MapLocationsLoaded(
@@ -109,7 +107,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   List<Location> _filteredLocations(List<Location> locations) {
     return locations
-        .where((l) => l.fillStatus.index < fillStatusPreference)
+        .where((l) => l!= null && l.fillStatus.index < fillStatusPreference)
         .toList();
   }
 
