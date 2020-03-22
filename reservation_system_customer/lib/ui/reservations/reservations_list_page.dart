@@ -22,7 +22,23 @@ class ReservationsListPage extends StatelessWidget {
         if (state.reservations.length > 0) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(AppLocalizations.of(context).translate("reservations")),
+              backgroundColor: Colors.white,
+              title: Row(
+                children: <Widget>[
+                  Container(
+                    height: 40,
+                    child: Image(
+                        image: AssetImage("assets/005-calendar.png"),
+                        fit: BoxFit.fitHeight),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                          AppLocalizations.of(context)
+                              .translate("reservations_title"),
+                          style: TextStyle(color: Color(0xff322153)))),
+                ],
+              ),
             ),
             body: ListView.builder(
                 itemCount: state.reservations.length,
@@ -45,11 +61,13 @@ class ReservationsListPage extends StatelessWidget {
                       return await showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: Text(AppLocalizations.of(context)
-                              .translate("delete_res_1") +
-                              "${item.location?.name}" +
-                              AppLocalizations.of(context)
-                                  .translate("delete_res_2")),
+                          title: Text(
+                            AppLocalizations.of(context)
+                                    .translate("delete_res_1") +
+                                '${item.location?.name}' +
+                                AppLocalizations.of(context)
+                                    .translate("delete_res_2"),
+                          ),
                           actions: <Widget>[
                             FlatButton(
                               child: Text(AppLocalizations.of(context)
@@ -75,8 +93,10 @@ class ReservationsListPage extends StatelessWidget {
                     child: ListTile(
                       title: Text(item.location?.name ?? ''),
                       subtitle:
-                          Text(AppLocalizations.of(context).translate("start") +
-                            '${dateFormat.format(item.startTime)}'),
+                          Text(
+                              AppLocalizations.of(context)
+                                  .translate("start") +
+                              '${dateFormat.format(item.startTime)}'),
                       onTap: () {
                         Navigator.push(
                             context,
@@ -97,7 +117,8 @@ class ReservationsListPage extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  AppLocalizations.of(context).translate("no_reservations"),
+                  AppLocalizations.of(context)
+                      .translate("no_reservations"),
                   style: Theme.of(context).textTheme.title,
                   textAlign: TextAlign.center,
                 ),
@@ -105,74 +126,6 @@ class ReservationsListPage extends StatelessWidget {
             ],
           );
         }
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(AppLocalizations.of(context).translate("reservations")),
-          ),
-          body: ListView.builder(
-              itemCount: state.reservations.length,
-              itemBuilder: (_, int index) {
-                final item = state.reservations[index];
-                return Dismissible(
-                  key: Key('${item.id}'),
-                  background: Container(
-                    color: Colors.red,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Icon(Icons.delete, size: 40))
-                        ]),
-                  ),
-                  direction: DismissDirection.endToStart,
-                  confirmDismiss: (direction) async {
-                    return await showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text(AppLocalizations.of(context)
-                                .translate("delete_res_1") +
-                            "${item.location?.name}" +
-                            AppLocalizations.of(context)
-                                .translate("delete_res_2")),
-                        actions: <Widget>[
-                          FlatButton(
-                            child: Text(AppLocalizations.of(context)
-                                .translate("cancel")),
-                            onPressed: () => Navigator.of(context).pop(false),
-                          ),
-                          FlatButton(
-                            child: Text(AppLocalizations.of(context)
-                                .translate("ok")),
-                            onPressed: () => Navigator.of(context).pop(true),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  onDismissed: (direction) async {
-                    BlocProvider.of<ReservationsBloc>(context)
-                        .add(CancelReservation(
-                      reservationId: item.id,
-                      locationId: item.location.id,
-                    ));
-                  },
-                  child: ListTile(
-                    title: Text(item.location?.name ?? ''),
-                    subtitle:
-                        Text(AppLocalizations.of(context).translate("start") +
-                            '${dateFormat.format(item.startTime)}'),
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ReservationDetailPage(reservation: item)));
-                    },
-                  ),
-                );
-              }),
-        );
       }
       return Container();
     });

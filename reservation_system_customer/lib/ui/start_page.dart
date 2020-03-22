@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reservation_system_customer/app_localizations.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
-import 'package:reservation_system_customer/ui/loading_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
+
+import '../app_localizations.dart';
+import 'loading_page.dart';
 
 class StartPage extends StatefulWidget {
   StartPage({Key key}) : super(key: key);
@@ -15,6 +16,8 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -46,7 +49,8 @@ class __HomePageState extends State<_HomePage> {
   void initState() {
     super.initState();
     var state = BlocProvider.of<ReservationsBloc>(context).state;
-    if (state is ReservationsLoaded && (state.reservations?.isNotEmpty ?? false)) {
+    if (state is ReservationsLoaded &&
+        (state.reservations?.isNotEmpty ?? false)) {
       _selectedIndex = 0;
     }
   }
@@ -61,13 +65,19 @@ class __HomePageState extends State<_HomePage> {
         }),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: new Image.asset(
+              'assets/005-calendar.png',
+              height: 40,
+            ),
             title: Text(AppLocalizations.of(context).translate("reservations")),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.map),
+            icon: new Image.asset(
+              'assets/001-loupe.png',
+              height: 40,
+            ),
             title: Text(AppLocalizations.of(context).translate("map")),
-          ),
+          )
         ],
       ),
       body: _page(_selectedIndex),

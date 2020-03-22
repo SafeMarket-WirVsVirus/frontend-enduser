@@ -37,9 +37,15 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Icon(
-                  Icons.store,
-                  size: 75,
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: 75,
+                    child: Image(
+                      image: AssetImage('assets/002-shop.png'),
+                      fit: BoxFit.fitHeight,
+                    ),
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.all(8.0),
