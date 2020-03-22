@@ -16,7 +16,7 @@ class FilterDialog extends StatefulWidget {
 class _FilterDialogState extends State<FilterDialog> {
   final MapBloc _mapBloc;
   double sliderValue;
-  Place filterSelection;
+  LocationType filterSelection;
   List<Color> sliderColor = [Colors.green, Colors.orange, Colors.red];
   List<String> sliderTips = [
     "Nur die Läden mit sehr geringer Auslastung werden angezeigt "
@@ -30,7 +30,7 @@ class _FilterDialogState extends State<FilterDialog> {
   @override
   void initState() {
     sliderValue = _mapBloc.fillStatusPreference.toDouble();
-
+    filterSelection = _mapBloc.filterSelection;
   }
 
   @override
@@ -72,8 +72,8 @@ class _FilterDialogState extends State<FilterDialog> {
                 title: const Text('Supermarkt'),
                 leading: Radio(
               activeColor: Theme.of(context).accentColor,
-                  value: FilterSelection.supermarket,
-                  onChanged: (FilterSelection value) {
+                  value: LocationType.supermarket,
+                  onChanged: (LocationType value) {
                 setState(() {
                   filterSelection = value;
                 });
@@ -85,8 +85,8 @@ class _FilterDialogState extends State<FilterDialog> {
                   activeColor: Theme
                       .of(context)
                       .accentColor,
-                  value: FilterSelection.bakery,
-                  onChanged: (FilterSelection value) {
+                  value: LocationType.bakery,
+                  onChanged: (LocationType value) {
                     setState(() {
                       filterSelection = value;
                     });
@@ -98,8 +98,8 @@ class _FilterDialogState extends State<FilterDialog> {
                   activeColor: Theme
                       .of(context)
                       .accentColor,
-                  value: FilterSelection.pharmacy,
-                  onChanged: (FilterSelection value) {
+                  value: LocationType.pharmacy,
+                  onChanged: (LocationType value) {
                     setState(() {
                       filterSelection = value;
                     });

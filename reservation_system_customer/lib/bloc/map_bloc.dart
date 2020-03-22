@@ -27,7 +27,7 @@ class MapLoadLocations extends MapEvent {
 
 class MapSettingsChanged extends MapEvent {
   final int fillStatusPreference;
-  final FilterSelection filterSelection;
+  final LocationType filterSelection;
 
   MapSettingsChanged(this.fillStatusPreference, this.filterSelection);
 
@@ -63,7 +63,7 @@ class MapLocationsLoaded extends MapState {
 class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationsRepository _locationsRepository;
   int fillStatusPreference = 3;
-  FilterSelection filterSelection = FilterSelection.supermarket;
+  LocationType filterSelection = LocationType.supermarket;
   List<Location> locations = [];
   Map<FillStatus, BitmapDescriptor> markerIcons;
 
