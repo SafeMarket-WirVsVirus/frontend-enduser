@@ -51,7 +51,11 @@ class LocationsRepository {
     return null;
   }
 
-  Future<List<Location>> getStores(LatLng position) async {
+  Future<List<Location>> getStores({
+    @required LatLng position,
+    @required int radius,
+    @required LocationType type,
+  }) async {
     final store1 = await getStore(10);
     final store2 = await getStore(11);
     return [store1, store2];
