@@ -25,9 +25,6 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Reservation System'),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black,
         currentIndex: _selectedIndex,

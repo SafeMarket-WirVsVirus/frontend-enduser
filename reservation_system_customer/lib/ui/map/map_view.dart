@@ -48,7 +48,7 @@ class MapViewState extends State<MapView> {
 
     return Scaffold(
       body: GoogleMap(
-        myLocationButtonEnabled: true,
+        myLocationButtonEnabled: false,
         myLocationEnabled: true,
         mapType: MapType.normal,
         initialCameraPosition: CameraPosition(

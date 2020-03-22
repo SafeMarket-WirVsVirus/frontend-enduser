@@ -1,2 +1,3 @@
 export 'location.dart';
-export 'reserveration.dart';
+export 'reservation.dart';
+export 'reservations.dart';

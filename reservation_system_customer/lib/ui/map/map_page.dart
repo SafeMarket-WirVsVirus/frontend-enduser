@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/ui/map/map_view.dart';
 
@@ -12,17 +13,26 @@ class MapPage extends StatelessWidget {
       Map<MarkerId, Marker> markers = {};
       if (state is MapLocationsLoaded) {
         state.locations.forEach((location) {
-          markers[MarkerId(location.id)] = Marker(
-            markerId: MarkerId(location.id),
+          final id = '${location.id}';
+          markers[MarkerId(id)] = Marker(
+            markerId: MarkerId(id),
             position: location.position,
             icon: state.markerIcons[location.fillStatus],
             infoWindow: InfoWindow(
                 title: location.name, snippet: "A Short description"),
+            // TODO remove
             onTap: () {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
-                builder: (context) => LocationDetailSheet(location: location),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20.0),
+                        topRight: Radius.circular(20.0))),
+                builder: (_) => Provider(
+                  create: (_) => BlocProvider.of<ReservationsBloc>(context),
+                  child: LocationDetailSheet(location: location),
+                ),
               );
             },
           );

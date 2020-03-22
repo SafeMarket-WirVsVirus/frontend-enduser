@@ -1,5 +1,9 @@
 PODS:
+  - device_identifier (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
+  - flutter_local_notifications (0.0.1):
+    - Flutter
   - flutter_plugin_android_lifecycle (0.0.1):
     - Flutter
   - geolocator (5.3.0):
@@ -20,9 +24,17 @@ PODS:
     - Flutter
   - path_provider_macos (0.0.1):
     - Flutter
+  - shared_preferences (0.0.1):
+    - Flutter
+  - shared_preferences_macos (0.0.1):
+    - Flutter
+  - shared_preferences_web (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
+  - device_identifier (from `.symlinks/plugins/device_identifier/ios`)
   - Flutter (from `Flutter`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - geolocator (from `.symlinks/plugins/geolocator/ios`)
   - google_api_availability (from `.symlinks/plugins/google_api_availability/ios`)
@@ -30,14 +42,21 @@ DEPENDENCIES:
   - location_permissions (from `.symlinks/plugins/location_permissions/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
+  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
+  - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
 
 SPEC REPOS:
   trunk:
     - GoogleMaps
 
 EXTERNAL SOURCES:
+  device_identifier:
+    :path: ".symlinks/plugins/device_identifier/ios"
   Flutter:
     :path: Flutter
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_plugin_android_lifecycle:
     :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
   geolocator:
@@ -52,9 +71,17 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/path_provider/ios"
   path_provider_macos:
     :path: ".symlinks/plugins/path_provider_macos/ios"
+  shared_preferences:
+    :path: ".symlinks/plugins/shared_preferences/ios"
+  shared_preferences_macos:
+    :path: ".symlinks/plugins/shared_preferences_macos/ios"
+  shared_preferences_web:
+    :path: ".symlinks/plugins/shared_preferences_web/ios"
 
 SPEC CHECKSUMS:
+  device_identifier: 43ac773f6dba9a146a324e8f5d885607f1c633e5
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
   geolocator: 7cdcf71180b80913b3cd84ab715d3b5365b378af
   google_api_availability: 526574c9a5a0ae541e18c65f98e47afc11f53c8b
@@ -63,6 +90,9 @@ SPEC CHECKSUMS:
   location_permissions: 4a49d4e5bec5b653643e551ab77963cc99bb0e4a
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
+  shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
+  shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
+  shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
 
 PODFILE CHECKSUM: 083258d7f5e80b42ea9bfee905fe93049bc04c64
 
