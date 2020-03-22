@@ -1,37 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'data/data.dart';
 import 'package:http/http.dart' as http;
 
 class ReservationsRepository {
   final String baseUrl;
-
-  List<Reservation> reservations = [
-    Reservation(
-      id: 30,
-      location: Location(
-          id: 3,
-          name: 'REWE',
-        address: "Neustädter Straße 1,80331 München",
-        latitude: 48.135124,
-        longitude: 11.581981,
-      ),
-      startTime: DateTime.now().add(Duration(minutes: 3)),
-    ),
-    Reservation(
-      id: 20,
-      location: Location(
-          id: 10,
-          name: 'LIDL',
-        address: null,
-        latitude: 47.960490,
-        longitude: 11.355184,
-      ),
-      startTime: DateTime.now().add(Duration(hours: 5)),
-    ),
-  ];
 
   ReservationsRepository({
     @required this.baseUrl,
@@ -83,6 +59,9 @@ class ReservationsRepository {
   }) async {
     var queryParameters = {
       'deviceId': deviceId,
+      'minDate': DateTime.now()
+          .subtract(Duration(hours: Constants.minHoursBeforeNowForReservations))
+          .toString(),
     };
     final uri = Uri.https(
         baseUrl, '/api/Reservation/ReservationsByDevice', queryParameters);
@@ -90,9 +69,9 @@ class ReservationsRepository {
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       print('getReservations: success');
-      //TODO: Remove mocked reservations
-      var result = Reservations.fromJson(json.decode(response.body)).reservations;
-      return result + reservations;
+      var result =
+          Reservations.fromJson(json.decode(response.body)).reservations;
+      return result;
     }
     print('getReservations: error ${response.statusCode}');
     return [];

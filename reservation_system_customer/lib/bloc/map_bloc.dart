@@ -41,24 +41,44 @@ class MapSettingsChanged extends MapEvent {
 /// STATES
 
 abstract class MapState extends Equatable {
-  @override
-  List<Object> get props => [];
-}
-
-class MapInitial extends MapState {}
-
-class MapLoading extends MapState {}
-
-class MapLocationsLoaded extends MapState {
   final List<Location> locations;
   final Map<FillStatus, BitmapDescriptor> markerIcons;
 
-  MapLocationsLoaded({
+  MapState({
     @required this.locations,
     @required this.markerIcons,
   });
 
-  List<Object> get props => locations;
+  @override
+  List<Object> get props => locations.map((l) => l.id).toList();
+}
+
+class MapInitial extends MapState {
+  MapInitial()
+      : super(
+          locations: [],
+          markerIcons: {},
+        );
+}
+
+class MapLoading extends MapState {
+  MapLoading({
+    @required List<Location> locations,
+    @required Map<FillStatus, BitmapDescriptor> markerIcons,
+  }) : super(
+          locations: locations,
+          markerIcons: markerIcons,
+        );
+}
+
+class MapLocationsLoaded extends MapState {
+  MapLocationsLoaded({
+    @required List<Location> locations,
+    @required Map<FillStatus, BitmapDescriptor> markerIcons,
+  }) : super(
+    locations: locations,
+    markerIcons: markerIcons,
+  );
 }
 
 /// BLOC
@@ -83,12 +103,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       markerIcons = await _markerIcons();
     }
     if (event is MapLoadLocations) {
-      yield MapLoading();
-      locations = await _locationsRepository.getStores(
-        position: LatLng(50, 50),
+      yield MapLoading(
+        locations: locations,
+        markerIcons: markerIcons,
+      );
+      if (locations.length > 300) {
+        locations = [];
+      }
+      final newLocations = await _locationsRepository.getStores(
+        position: event.position,
         radius: event.radius,
         type: filterSelection,
       );
+      locations.addAll(newLocations);
 
       yield MapLocationsLoaded(
         locations: _filteredLocations(locations),
@@ -106,7 +133,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   List<Location> _filteredLocations(List<Location> locations) {
     return locations
-        .where((l) => l!= null && l.fillStatus.index < fillStatusPreference)
+        .where((l) => l != null && l.fillStatus.index < fillStatusPreference)
         .toList();
   }
 

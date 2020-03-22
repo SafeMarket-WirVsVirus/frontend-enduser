@@ -11,58 +11,6 @@ import 'data/data.dart';
 class LocationsRepository {
   final String baseUrl;
 
-  var locations = [
-    Location(
-        id: 2434234,
-        latitude: 48.135124,
-        longitude: 11.581981,
-        name: 'REWE',
-        fillStatus: FillStatus.green,
-        slotDuration: Duration(minutes: 30),
-        slotSize: 20,
-        address: "Neustädter Straße 1"),
-    Location(
-      id: 2434234,
-      latitude: 48.131184,
-      longitude: 11.590613,
-      name: 'EDEKA',
-      fillStatus: FillStatus.red,
-      slotSize: 20,
-      slotDuration: Duration(minutes: 30),
-      address: "Neustädter Straße 1",
-    ),
-    Location(
-      id: 2434236,
-      latitude: 48.138574,
-      longitude: 11.588811,
-      name: 'ALDI',
-      fillStatus: FillStatus.green,
-      slotSize: 20,
-      slotDuration: Duration(minutes: 30),
-      address: "Neustädter Straße 1",
-    ),
-    Location(
-      id: 2434237,
-      latitude: 48.125513,
-      longitude: 11.583406,
-      name: 'LIDL',
-      fillStatus: FillStatus.red,
-      slotSize: 20,
-      slotDuration: Duration(minutes: 30),
-      address: "Neustädter Straße 1",
-    ),
-    Location(
-      id: 2434238,
-      latitude: 48.128091,
-      longitude: 11.592672,
-      name: 'Kaufland',
-      fillStatus: FillStatus.yellow,
-      slotSize: 20,
-      slotDuration: Duration(minutes: 30),
-      address: "Neustädter Straße 1",
-    ),
-  ];
-
   LocationsRepository({@required this.baseUrl});
 
   Future<Location> getStore(int id) async {
@@ -105,6 +53,7 @@ class LocationsRepository {
     @required int radius,
     @required LocationType type,
   }) async {
+    print('getStores for $position, $radius, $type');
     var queryParameters = {
       'type': type.asQueryParameter,
       'longitude': position.longitude.toString(),
@@ -115,12 +64,12 @@ class LocationsRepository {
         Uri.https(baseUrl, '/api/Location/SearchRegistered', queryParameters);
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      print('getStore succeeded');
+      print('getStores succeeded');
       var result = Locations.fromJson(json.decode(response.body));
-      print('getStore locations: ${result.locations.length}');
-      return locations + result.locations;
+      print('getStores locations: ${result.locations.length}');
+      return result.locations;
     } else {
-      print('getStore failed with ${response.statusCode}');
+      print('getStores failed with ${response.statusCode}');
     }
     return [];
   }

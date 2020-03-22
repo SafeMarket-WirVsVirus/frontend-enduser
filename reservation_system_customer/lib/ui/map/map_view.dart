@@ -26,6 +26,7 @@ class MapViewState extends State<MapView> {
   final positionTimeout = Duration(seconds: 3);
   final defaultPosition = LatLng(48.160490, 11.555184);
   LatLng userPosition;
+  LatLng lastFetchPosition;
 
   @override
   void setState(fn) {
@@ -39,7 +40,7 @@ class MapViewState extends State<MapView> {
     userPosition =
         Provider.of<UserRepository>(context, listen: false).userPosition ??
             defaultPosition;
-
+    print('JR: Build with marker ${widget.markers.length} ${Set<Marker>.of(widget.markers.values).length}');
     return Scaffold(
         body: GoogleMap(
           myLocationButtonEnabled: false,
@@ -56,8 +57,30 @@ class MapViewState extends State<MapView> {
             _controller.complete(controller);
             _fetchLocations(context, controller);
           },
-          onCameraMove: (position) {
-            // TODO: Update search results
+          onCameraMove: (position) async {
+            if (position == null ||
+                position.target == null ||
+                BlocProvider.of<MapBloc>(context).state is MapLoading) {
+              return;
+            }
+
+            final newPos = position.target;
+            if (lastFetchPosition == null) {
+              BlocProvider.of<MapBloc>(context)
+                  .add(MapLoadLocations(position: newPos, radius: 1000));
+            } else {
+              final distance = await Geolocator().distanceBetween(
+                lastFetchPosition.latitude,
+                lastFetchPosition.longitude,
+                newPos.latitude,
+                newPos.longitude,
+              );
+              if (distance > 900) {
+                lastFetchPosition = newPos;
+                BlocProvider.of<MapBloc>(context)
+                    .add(MapLoadLocations(position: newPos, radius: 1000));
+              }
+            }
           },
           markers: Set<Marker>.of(widget.markers.values),
         ),
@@ -127,9 +150,9 @@ class MapViewState extends State<MapView> {
     }
     //TODO: Test here what the zoom level should be
     double zoomLevel = await controller.getZoomLevel();
-
-    BlocProvider.of<MapBloc>(context)
-        .add(MapLoadLocations(position: location ?? defaultPosition, radius: 1000));
+    lastFetchPosition = location ?? defaultPosition;
+    BlocProvider.of<MapBloc>(context).add(
+        MapLoadLocations(position: lastFetchPosition, radius: 1000));
   }
 
   Future<LatLng> _getUserPosition() async {
