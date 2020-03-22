@@ -174,16 +174,20 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               ],
             ),
             Center(
-              child: RaisedButton(
-                child: Text("Slot reservieren"),
-                onPressed: () {
-                  return showDialog<void>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return ReservationConfirmationDialog(widget.location.name);
-                    },
-                  );
-                },
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                child: RaisedButton(
+                  child: Text("Slot reservieren"),
+                  onPressed: () {
+                    return showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return ReservationConfirmationDialog(
+                            widget.location.name);
+                      },
+                    );
+                  },
+                ),
               ),
             )
           ]),
