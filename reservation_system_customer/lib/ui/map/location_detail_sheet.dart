@@ -1,6 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'reservation_confirmation_dialog.dart';
 
@@ -74,45 +75,44 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                         splashColor: Theme.of(context).accentColor,
                         child: Icon(Icons.arrow_back_ios)),
                   ),
-                  BarChart(widget
-                      .location.capacity_utilization.get_utilization_by_date(
-                      barplotDate)
+                  BarChart(widget.location.capacity_utilization
+                      .get_utilization_by_date(barplotDate)
                       .get_bar_data(
-                      scrollIndexOffset, //startpoint
-                      7, // datacount
-                      BarChartGroupData(
-                        // Config
-                          x: 0,
-                          barRods: [
-                            BarChartRodData(
-                                y: 0,
-                                width: 25,
-                                color: Colors.blue,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5.0),
-                                    topRight: Radius.circular(5.0)))
-                          ],
-                          barsSpace: 3),
-                      selectedBarIndex)
+                          scrollIndexOffset, //startpoint
+                          7, // datacount
+                          BarChartGroupData(
+                              // Config
+                              x: 0,
+                              barRods: [
+                                BarChartRodData(
+                                    y: 0,
+                                    width: 25,
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(5.0),
+                                        topRight: Radius.circular(5.0)))
+                              ],
+                              barsSpace: 3),
+                          selectedBarIndex)
                       .copyWith(
-                      alignment: BarChartAlignment.spaceEvenly,
-                      titlesData: FlTitlesData(
-                          show: true,
-                          bottomTitles: SideTitles(
-                              showTitles: true,
-                              textStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 10),
-                              getTitles: (double value) {
-                                return widget.location.capacity_utilization
-                                    .get_utilization_by_date(barplotDate)
-                                    .get_bar_titles(
-                                    value, scrollIndexOffset);
-                              }),
-                          leftTitles: SideTitles(showTitles: false)),
-                      borderData: FlBorderData(show: false),
-                      barTouchData: BarTouchData(
-                          touchCallback: (BarTouchResponse touchResponse) {
+                          alignment: BarChartAlignment.spaceEvenly,
+                          titlesData: FlTitlesData(
+                              show: true,
+                              bottomTitles: SideTitles(
+                                  showTitles: true,
+                                  textStyle: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 10),
+                                  getTitles: (double value) {
+                                    return widget.location.capacity_utilization
+                                        .get_utilization_by_date(barplotDate)
+                                        .get_bar_titles(
+                                            value, scrollIndexOffset);
+                                  }),
+                              leftTitles: SideTitles(showTitles: false)),
+                          borderData: FlBorderData(show: false),
+                          barTouchData: BarTouchData(
+                              touchCallback: (BarTouchResponse touchResponse) {
                             setState(() {
                               selectedBarIndex =
                                   touchResponse.spot.touchedBarGroupIndex +
@@ -139,9 +139,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 FlatButton(
-                  textColor: Theme
-                      .of(context)
-                      .accentColor,
+                  textColor: Theme.of(context).accentColor,
                   onPressed: () async {
                     Future<DateTime> selectedDate = showDatePicker(
                       context: context,
@@ -166,10 +164,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                     });
                   },
                   child: Text("Anderes Datum auswählen",
-                      style: Theme
-                          .of(context)
-                          .textTheme
-                          .caption),
+                      style: Theme.of(context).textTheme.caption),
                 )
               ],
             ),
@@ -179,6 +174,11 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                 child: RaisedButton(
                   child: Text("Slot reservieren"),
                   onPressed: () {
+                    BlocProvider.of<ReservationsBloc>(context)
+                        .add(MakeReservation(
+                      locationId: widget.location.id,
+                      startTime: barplotDate,
+                    ));
                     return showDialog<void>(
                       context: context,
                       builder: (BuildContext context) {

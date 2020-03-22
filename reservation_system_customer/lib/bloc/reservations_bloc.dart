@@ -29,7 +29,10 @@ class MakeReservation extends ReservationsEvent {
   final int locationId;
   final DateTime startTime;
 
-  MakeReservation({this.locationId, this.startTime});
+  MakeReservation({
+    @required this.locationId,
+    @required this.startTime,
+  });
 }
 
 /// STATES

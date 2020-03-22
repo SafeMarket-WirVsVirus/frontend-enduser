@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/ui/map/map_view.dart';
 
@@ -28,7 +29,10 @@ class MapPage extends StatelessWidget {
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20.0),
                         topRight: Radius.circular(20.0))),
-                builder: (context) => LocationDetailSheet(location: location),
+                builder: (_) => Provider(
+                  create: (_) => BlocProvider.of<ReservationsBloc>(context),
+                  child: LocationDetailSheet(location: location),
+                ),
               );
             },
           );
