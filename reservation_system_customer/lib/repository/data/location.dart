@@ -11,6 +11,12 @@ enum FillStatus {
   red,
 }
 
+enum LocationType {
+  bakery,
+  pharmacy,
+  supermarket,
+}
+
 @JsonSerializable(createToJson: false)
 class Location {
   /// The location id
