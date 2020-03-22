@@ -130,6 +130,9 @@ class MapViewState extends State<MapView> {
     }
 
     LatLng location = await _getUserPosition();
+    if (!mounted) {
+      return;
+    }
     if (location != null) {
       userPosition = location;
       Provider.of<UserRepository>(context, listen: false)
