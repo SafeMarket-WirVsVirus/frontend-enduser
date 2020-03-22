@@ -77,13 +77,19 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                         splashColor: Theme.of(context).accentColor,
                         child: Icon(Icons.arrow_back_ios)),
                   ),
-                  BarChart(widget.location.capacity_utilization
-                      .get_utilization_by_date(barplotDate)
-                      .get_bar_data(
+                  Card(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18)),
+                    color: Colors.grey[2000],
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: BarChart(widget.location.capacity_utilization
+                          .get_utilization_by_date(barplotDate)
+                          .get_bar_data(
                           scrollIndexOffset, //startpoint
-                      barsShown, // datacount
+                          barsShown, // datacount
                           BarChartGroupData(
-                              // Config
+                            // Config
                               x: 0,
                               barRods: [
                                 BarChartRodData(
@@ -96,51 +102,55 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                               ],
                               barsSpace: 3),
                           selectedBarIndex)
-                      .copyWith(
-                          alignment: BarChartAlignment.spaceEvenly,
-                          titlesData: FlTitlesData(
-                              show: true,
-                              bottomTitles: SideTitles(
-                                  showTitles: true,
-                                  textStyle: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 10),
-                                  getTitles: (double value) {
-                                    return widget.location.capacity_utilization
-                                        .get_utilization_by_date(barplotDate)
-                                        .get_bar_titles(
-                                            value, scrollIndexOffset);
-                                  }),
-                              leftTitles: SideTitles(showTitles: false)),
-                          borderData: FlBorderData(show: false),
-                          barTouchData: BarTouchData(
-                              touchCallback: (BarTouchResponse touchResponse) {
-                            setState(() {
-
-                              if(touchResponse.spot != null){
-                                selectedBarIndex =
-                                    touchResponse.spot.touchedBarGroupIndex +
-                                        scrollIndexOffset;
-                                print(selectedBarIndex);
-                              }
-                            });
-                              },
-                              touchTooltipData: BarTouchTooltipData(
-                                  tooltipBgColor: Colors.greenAccent,
-                                  getTooltipItem: (group, groupIndex, rod,
-                                      rodIndex) {
-                                    String text = widget.location
-                                        .capacity_utilization
-                                        .get_utilization_by_date(barplotDate)
-                                        .get_tooltip_text(selectedBarIndex);
-                                    return BarTooltipItem(
-                                        text, TextStyle(color: Theme
-                                        .of(context)
-                                        .primaryColor)
-                                    );
-                                  }
-                              )
-                          ),)),
+                          .copyWith(
+                        maxY: 100,
+                        alignment: BarChartAlignment.spaceEvenly,
+                        titlesData: FlTitlesData(
+                            show: true,
+                            bottomTitles: SideTitles(
+                                showTitles: true,
+                                textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10),
+                                getTitles: (double value) {
+                                  return widget
+                                      .location.capacity_utilization
+                                      .get_utilization_by_date(barplotDate)
+                                      .get_bar_titles(
+                                      value, scrollIndexOffset);
+                                }),
+                            leftTitles: SideTitles(showTitles: false)),
+                        borderData: FlBorderData(show: false),
+                        barTouchData: BarTouchData(
+                            touchCallback:
+                                (BarTouchResponse touchResponse) {
+                              setState(() {
+                                if (touchResponse.spot != null) {
+                                  selectedBarIndex = touchResponse
+                                      .spot.touchedBarGroupIndex +
+                                      scrollIndexOffset;
+                                  print(selectedBarIndex);
+                                }
+                              });
+                            },
+                            touchTooltipData: BarTouchTooltipData(
+                                tooltipBgColor: Colors.greenAccent,
+                                getTooltipItem:
+                                    (group, groupIndex, rod, rodIndex) {
+                                  String text = widget
+                                      .location.capacity_utilization
+                                      .get_utilization_by_date(barplotDate)
+                                      .get_tooltip_text(selectedBarIndex);
+                                  return BarTooltipItem(
+                                      text,
+                                      TextStyle(
+                                          color: Theme
+                                              .of(context)
+                                              .primaryColor));
+                                })),
+                      )),
+                    ),
+                  ),
                   Center(
                     widthFactor: 0.25,
                     child: FlatButton(
@@ -216,8 +226,8 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                             widget.location.name,
                             widget.location.capacity_utilization
                                 .get_utilization_by_date(barplotDate)
-                                .timeslot_data[selectedBarIndex].startTime
-                        );
+                                .timeslot_data[selectedBarIndex]
+                                .startTime);
                       },
                     );
                   },

@@ -89,7 +89,10 @@ class ReservationsListPage extends StatelessWidget {
             children: <Widget>[
               Text(
                 "Du hast aktuell keine offenen Reservationen.",
-                style: Theme.of(context).textTheme.headline5,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .title,
                 textAlign: TextAlign.center,
               )
             ],

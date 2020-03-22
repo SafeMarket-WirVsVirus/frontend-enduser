@@ -29,7 +29,7 @@ class LocationsRepository {
         du.timeslot_data.add(Timeslot_Data(
             startTime: DateTime.now().add(new Duration(minutes: i * 10)),
             bookings: i,
-            utilization: i / 10));
+            utilization: i / 20));
       }
       cu1.daily_utilization.add(du);
       Capacity_utilization cu2 = cu1;
