@@ -5,6 +5,9 @@ import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
 
+import '../app_localizations.dart';
+import 'loading_page.dart';
+
 class StartPage extends StatefulWidget {
   StartPage({Key key}) : super(key: key);
 
@@ -45,7 +48,8 @@ class __HomePageState extends State<_HomePage> {
   @override
   Widget build(BuildContext context) {
     var state = BlocProvider.of<ReservationsBloc>(context).state;
-    if (state is ReservationsLoaded && (state.reservations?.isNotEmpty ?? false)) {
+    if (state is ReservationsLoaded &&
+        (state.reservations?.isNotEmpty ?? false)) {
       _selectedIndex = 0;
     }
 
@@ -57,17 +61,19 @@ class __HomePageState extends State<_HomePage> {
         }),
         items: [
           BottomNavigationBarItem(
-            icon: new Image.asset('assets/005-calendar.png', height: 40,),
-            title: Text('MEINE SLOTS'),
-            icon: Icon(Icons.home),
+            icon: new Image.asset(
+              'assets/005-calendar.png',
+              height: 40,
+            ),
             title: Text(AppLocalizations.of(context).translate("reservations")),
           ),
           BottomNavigationBarItem(
-            icon: new Image.asset('assets/001-loupe.png', height: 40,),
-            title: Text('SUCHE'),
-            icon: Icon(Icons.map),
+            icon: new Image.asset(
+              'assets/001-loupe.png',
+              height: 40,
+            ),
             title: Text(AppLocalizations.of(context).translate("map")),
-          ),
+          )
         ],
       ),
       body: _page(_selectedIndex),

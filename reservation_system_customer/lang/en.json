@@ -1,6 +1,7 @@
 {
-  "reservations": "Reservations",
-  "map": "Map",
+  "reservations": "MY SLOTS",
+  "reservations_title": "MY\nRESERVATIONS",
+  "map": "SEARCH",
   "appname": "SafeMarket",
   "cancel": "Cancel",
   "ok": "OK",

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:intl/intl.dart';
 
+import '../../app_localizations.dart';
 import 'reservation_detail_page.dart';
 
 class ReservationsListPage extends StatelessWidget {
@@ -31,13 +32,13 @@ class ReservationsListPage extends StatelessWidget {
                         fit: BoxFit.fitHeight),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text('MEINE\nRESERVIERUNGEN',
-                        style: TextStyle(color: Color(0xff322153))),
-                  ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                          AppLocalizations.of(context)
+                              .translate("reservations_title"),
+                          style: TextStyle(color: Color(0xff322153)))),
                 ],
               ),
-              title: Text(AppLocalizations.of(context).translate("reservations")),
             ),
             body: ListView.builder(
                 itemCount: state.reservations.length,
