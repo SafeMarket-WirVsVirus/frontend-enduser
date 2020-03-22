@@ -7,9 +7,10 @@ import 'package:reservation_system_customer/repository/data/data.dart';
 import '../../app_localizations.dart';
 
 class ReservationListDetail extends StatelessWidget {
+  final ReservationsBloc resBloc;
   final Reservation reservation;
 
-  const ReservationListDetail({Key key, this.reservation}) : super(key: key);
+  const ReservationListDetail({Key key, this.reservation, this.resBloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +30,13 @@ class ReservationListDetail extends StatelessWidget {
           child: FlatButton(
               child: Icon(Icons.delete),
               onPressed: () {
-                _deleteDialog(context, reservation);
+                _deleteDialog(context, reservation, resBloc);
               }))
     ]);
   }
 }
 
-Future<void> _deleteDialog(BuildContext context, Reservation reservation) {
+Future<void> _deleteDialog(BuildContext context, Reservation reservation, ReservationsBloc resBloc) {
   return showDialog<void>(
     context: context,
     builder: (context) => AlertDialog(
@@ -52,7 +53,7 @@ Future<void> _deleteDialog(BuildContext context, Reservation reservation) {
         FlatButton(
           child: Text(AppLocalizations.of(context).translate("ok")),
           onPressed: () {
-            BlocProvider.of<ReservationsBloc>(context).add(CancelReservation(
+            resBloc.add(CancelReservation(
               reservationId: reservation.id,
               locationId: reservation.location.id,
             ));

@@ -70,6 +70,7 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                         },
                         body: ReservationListDetail(
                           reservation: item.reservation,
+                          resBloc: BlocProvider.of(context),
                         ),
                         isExpanded: item.isExpanded,
                       );
