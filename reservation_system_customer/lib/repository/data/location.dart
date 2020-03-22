@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'capacity_utilization.dart';
 
 part 'location.g.dart';
 
@@ -37,7 +36,6 @@ class OpeningHours {
       _$OpeningHoursFromJson(json);
 }
 
-
 @JsonSerializable(createToJson: false)
 class Location {
   /// The location id
@@ -64,9 +62,6 @@ class Location {
 
   final Duration slotDuration;
 
-  @JsonKey(ignore: true)
-  Capacity_utilization capacity_utilization;
-
   /// The fill status of a location
   @JsonKey(fromJson: _fillStatusFromInt)
   final FillStatus fillStatus;
@@ -81,7 +76,6 @@ class Location {
     @required this.slotDuration,
     @required this.address,
     @required this.openingHours,
-    this.capacity_utilization,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) =>
@@ -98,11 +92,4 @@ FillStatus _fillStatusFromInt(int i) {
       return FillStatus.green;
   }
   return FillStatus.green;
-}
-
-OpeningHours _openingHoursFromMap(Object object) {
-  if (object != null && object is Map) {
-    return OpeningHours.fromJson(object);
-  }
-  return null;
 }

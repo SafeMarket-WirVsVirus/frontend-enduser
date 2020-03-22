@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/app_localizations.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
-import 'package:reservation_system_customer/repository/data/capacity_utilization.dart';
+import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/reservation_slot_selection.dart';
 import 'reservation_confirmation_dialog.dart';
@@ -22,7 +22,7 @@ class LocationDetailSheet extends StatefulWidget {
 class _LocationDetailSheetState extends State<LocationDetailSheet> {
   DateTime selectedDate = DateTime.now();
   DateTime selectedTime;
-  List<Timeslot_Data> data;
+  List<TimeSlotData> data;
 
   @override
   void initState() {
@@ -59,6 +59,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                 dateChanged: (date) {
                   setState(() {
                     selectedDate = date;
+                    data = null;
                   });
                   _fetchData();
                 }),
@@ -102,16 +103,18 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
     );
   }
 
-  _fetchData() {
-    Future.delayed(Duration(seconds: 3)).then((_) {
-      if (mounted) {
-        setState(() {
-          data = widget.location.capacity_utilization
-              .get_utilization_by_date(selectedDate)
-              .timeslot_data;
-        });
-      }
-    });
+  _fetchData() async {
+    final timeSlotData = await LocationsRepository(
+      baseUrl: Constants.baseUrl,
+    ).getLocationReservations(
+      id: widget.location.id,
+      startTime: selectedDate,
+    );
+    if (mounted) {
+      setState(() {
+        data = timeSlotData;
+      });
+    }
   }
 }
 
@@ -153,7 +156,7 @@ class _ChangeDateButton extends StatelessWidget {
 
 class _ReservationSlotsWithLoading extends StatelessWidget {
   final int slotSize;
-  final List<Timeslot_Data> data;
+  final List<TimeSlotData> data;
   final ValueChanged selectedSlotChanged;
 
   const _ReservationSlotsWithLoading({
