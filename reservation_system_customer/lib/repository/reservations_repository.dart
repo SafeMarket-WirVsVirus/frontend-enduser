@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'data/data.dart';
 import 'package:http/http.dart' as http;
@@ -15,9 +14,11 @@ class ReservationsRepository {
       location: Location(
           id: 3,
           name: 'REWE',
-          position: LatLng(48.135124, 11.581981),
           address_street: "Neustädter Straße 1",
           address_city: "80331 München"),
+        latitude: 48.135124,
+        longitude: 11.581981,
+      ),
       startTime: DateTime.now().add(Duration(minutes: 3)),
     ),
     Reservation(
@@ -25,9 +26,12 @@ class ReservationsRepository {
       location: Location(
           id: 10,
           name: 'LIDL',
-          position: LatLng(47.960490, 11.355184),
           address_street: "Neustädter Straße 1",
           address_city: "80331 München"),
+
+        latitude: 47.960490,
+        longitude: 11.355184,
+      ),
       startTime: DateTime.now().add(Duration(hours: 5)),
     ),
   ];
@@ -62,32 +66,19 @@ class ReservationsRepository {
     @required int locationId,
     @required DateTime startTime,
   }) async {
-    await Future.delayed(Duration(seconds: 1));
-    reservations.add(
-      Reservation(
-        location: Location(
-            name: 'EDEKA',
-            position: LatLng(48.131184, 11.590613),
-            address_street: "Neustädter Straße 1",
-            address_city: "80331 München"),
-        id: 10,
-        startTime: DateTime.now().add(Duration(days: 1)),
-      ),
-    );
-//    var queryParameters = {
-//      'locationId': '$locationId',
-//      'dateTime': startTime.toIso8601String(),
-//      'deviceId': deviceId,
-//    };
-//    final uri = Uri.https(baseUrl, '/api/Reservation/Reserve', queryParameters);
-//    final response = await http.post(uri);
-//
-//
-//    if (response.statusCode == 200) {
-//      print('createReservation: success');
-//    } else {
-//      print('createReservation: error ${response.statusCode}');
-//    }
+    var queryParameters = {
+      'locationId': '$locationId',
+      'dateTime': startTime.toIso8601String(),
+      'deviceId': deviceId,
+    };
+    final uri = Uri.https(baseUrl, '/api/Reservation/Reserve', queryParameters);
+    final response = await http.post(uri);
+
+    if (response.statusCode == 200) {
+      print('createReservation: success');
+    } else {
+      print('createReservation: error ${response.statusCode}');
+    }
   }
 
   Future<List<Reservation>> getReservations({
@@ -99,13 +90,14 @@ class ReservationsRepository {
     final uri = Uri.https(
         baseUrl, '/api/Reservation/ReservationsByDevice', queryParameters);
 
-//    final response = await http.get(uri);
-//    if (response.statusCode == 200) {
-//      print('getReservations: success');
-//      return Reservations.fromJson(json.decode(response.body)).reservations;
-//    }
-//    print('getReservations: error ${response.statusCode}');
-//    return [];
-    return reservations;
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      print('getReservations: success');
+      //TODO: Remove mocked reservations
+      var result = Reservations.fromJson(json.decode(response.body)).reservations;
+      return result + reservations;
+    }
+    print('getReservations: error ${response.statusCode}');
+    return [];
   }
 }

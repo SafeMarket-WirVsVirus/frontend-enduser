@@ -114,7 +114,7 @@ class _CheckboxTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: Text(locationType.localized),
+        title: Text(locationType.localized(context)),
         leading: Radio(
           activeColor: Theme.of(context).accentColor,
           value: locationType,
@@ -125,14 +125,16 @@ class _CheckboxTile extends StatelessWidget {
 }
 
 extension LocationTypeDescription on LocationType {
-  String get localized {
+  String localized(context) {
     switch (this) {
       case LocationType.supermarket:
-        return 'Supermarkt';
+        return AppLocalizations.of(context).translate('supermarkets');
       case LocationType.bakery:
-        return 'Bäckerei';
+        return AppLocalizations.of(context).translate('bakeries');
       case LocationType.pharmacy:
-        return 'Apotheke';
+        return AppLocalizations.of(context).translate('pharmacies');
+      case LocationType.store:
+        return AppLocalizations.of(context).translate('stores');
     }
     return '';
   }
