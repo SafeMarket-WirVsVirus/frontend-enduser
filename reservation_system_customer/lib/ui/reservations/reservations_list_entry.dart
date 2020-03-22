@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_localizations.dart';
+import '../../notifications.dart';
 
 class ReservationListEntry extends StatefulWidget {
   final item;
@@ -15,6 +17,25 @@ class ReservationListEntry extends StatefulWidget {
 
 class _ReservationListEntryState extends State<ReservationListEntry> {
   bool notificationSet = false;
+  NotificationHandler notificationHandler;
+
+  void getNotificationState() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    bool set = prefs.get('${widget.item.id}') == null?false:true;
+
+    setState(() {
+      notificationSet = set;
+    });
+  }
+
+  @override
+  void initState() {
+    notificationHandler = NotificationHandler(null,widget.item,context);
+    getNotificationState();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,6 +101,12 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
                           setState(() {
                             notificationSet = !notificationSet;
                           });
+
+                          if(notificationSet){
+                            notificationHandler.setReminder();
+                          }else{
+                            notificationHandler.cancelReminder();
+                          }
                         },
                       ),
                     ),
