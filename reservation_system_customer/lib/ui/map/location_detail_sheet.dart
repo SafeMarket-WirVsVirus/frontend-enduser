@@ -116,10 +116,13 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                           barTouchData: BarTouchData(
                               touchCallback: (BarTouchResponse touchResponse) {
                             setState(() {
-                              selectedBarIndex =
-                                  touchResponse.spot.touchedBarGroupIndex +
-                                      scrollIndexOffset;
-                              print(selectedBarIndex);
+
+                              if(touchResponse.spot != null){
+                                selectedBarIndex =
+                                    touchResponse.spot.touchedBarGroupIndex +
+                                        scrollIndexOffset;
+                                print(selectedBarIndex);
+                              }
                             });
                               },
                               touchTooltipData: BarTouchTooltipData(
