@@ -32,7 +32,7 @@ Future<void> _ticketDialog(BuildContext context, String id, String title) {
                 data: id,
                 backgroundColor: Colors.white,
                 foregroundColor: Colors.black,
-                embeddedImage: AssetImage('assets/AppIcon.jpg'),
+                embeddedImage: AssetImage('assets/AppIcon.png'),
               ),
             ),
           ],
