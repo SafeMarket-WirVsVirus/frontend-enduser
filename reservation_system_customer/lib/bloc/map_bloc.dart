@@ -85,7 +85,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     if (event is MapLoadLocations) {
       yield MapLoading();
       locations = await _locationsRepository.getStores(
-        position: event.position,
+        position: LatLng(50, 50),
         radius: event.radius,
         type: filterSelection,
       );
