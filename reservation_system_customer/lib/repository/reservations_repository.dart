@@ -13,19 +13,21 @@ class ReservationsRepository {
     Reservation(
       id: 30,
       location: Location(
-        id: 3,
-        name: 'REWE',
-        position: LatLng(48.135124, 11.581981),
-      ),
+          id: 3,
+          name: 'REWE',
+          position: LatLng(48.135124, 11.581981),
+          address_street: "Neustädter Straße 1",
+          address_city: "80331 München"),
       startTime: DateTime.now().add(Duration(minutes: 3)),
     ),
     Reservation(
       id: 20,
       location: Location(
-        id: 10,
-        name: 'LIDL',
-        position: LatLng(47.960490, 11.355184),
-      ),
+          id: 10,
+          name: 'LIDL',
+          position: LatLng(47.960490, 11.355184),
+          address_street: "Neustädter Straße 1",
+          address_city: "80331 München"),
       startTime: DateTime.now().add(Duration(hours: 5)),
     ),
   ];
@@ -63,8 +65,11 @@ class ReservationsRepository {
     await Future.delayed(Duration(seconds: 1));
     reservations.add(
       Reservation(
-        location:
-            Location(name: 'EDEKA', position: LatLng(48.131184, 11.590613)),
+        location: Location(
+            name: 'EDEKA',
+            position: LatLng(48.131184, 11.590613),
+            address_street: "Neustädter Straße 1",
+            address_city: "80331 München"),
         id: 10,
         startTime: DateTime.now().add(Duration(days: 1)),
       ),
