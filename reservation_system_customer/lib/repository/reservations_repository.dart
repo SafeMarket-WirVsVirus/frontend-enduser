@@ -10,7 +10,7 @@ class ReservationsRepository {
         name: 'Supermarkt A',
         position: LatLng(48.160490, 11.555184),
       ),
-      startTime: DateTime.now().add(Duration(minutes: 3)),
+      startTime: DateTime.now().add(Duration(minutes: 31)),
     ),
     Reservation(
       id: 'id2',
