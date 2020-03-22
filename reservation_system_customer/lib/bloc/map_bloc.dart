@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
-import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
 
 /// EVENTS
 
@@ -67,7 +66,7 @@ class MapLocationsLoaded extends MapState {
 class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationsRepository _locationsRepository;
   int fillStatusPreference = 3;
-  LocationType filterSelection = LocationType.supermarket;
+  LocationType filterSelection = LocationType.store;
   List<Location> locations = [];
   Map<FillStatus, BitmapDescriptor> markerIcons;
 

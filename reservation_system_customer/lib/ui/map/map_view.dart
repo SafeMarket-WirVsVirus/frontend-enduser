@@ -129,7 +129,7 @@ class MapViewState extends State<MapView> {
     double zoomLevel = await controller.getZoomLevel();
 
     BlocProvider.of<MapBloc>(context)
-        .add(MapLoadLocations(position: location, radius: zoomLevel.round()));
+        .add(MapLoadLocations(position: location ?? defaultPosition, radius: 1000));
   }
 
   Future<LatLng> _getUserPosition() async {

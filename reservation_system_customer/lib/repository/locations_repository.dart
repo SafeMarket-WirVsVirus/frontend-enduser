@@ -83,7 +83,6 @@ class LocationsRepository {
     final uri = Uri.https(baseUrl, '/api/Location/$id');
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      var j = json.decode(response.body);
       var tmpLocation = Location.fromJson(json.decode(response.body));
 
       //TODO: Delete dummy data
@@ -100,8 +99,38 @@ class LocationsRepository {
     @required int radius,
     @required LocationType type,
   }) async {
-    final store1 = await getStore(7);
-    locations.add(store1);
-    return locations;
+    var queryParameters = {
+      'type': type.asQueryParameter,
+      'longitude': position.longitude.toString(),
+      'latitude': position.latitude.toString(),
+      'radiusInMeters': radius.toString(),
+    };
+    final uri = Uri.https(baseUrl, '/api/Location/SearchRegistered', queryParameters);
+    final response = await http.get(uri);
+    if (response.statusCode == 200) {
+      print('getStore succeeded');
+      var locations = Locations.fromJson(json.decode(response.body));
+      return locations.locations;
+    } else {
+      print('getStore failed with ${response.statusCode}');
+    }
+    return [];
   }
+}
+
+extension JsonLocationType on LocationType {
+  String get asQueryParameter {
+    switch(this) {
+      case LocationType.bakery:
+        return 'bakery';
+      case LocationType.supermarket:
+        return 'supermarket';
+      case LocationType.pharmacy:
+        return 'pharmacy';
+      case LocationType.store:
+        return 'store';
+    }
+    return '';
+  }
+
 }
