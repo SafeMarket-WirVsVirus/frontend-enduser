@@ -18,9 +18,10 @@ class MyApp extends StatelessWidget {
     final userRepository = UserRepository();
     return MaterialApp(
       title: "SafeMarket",
-      theme: ThemeData.dark().copyWith(
-        accentColor: Colors.orange,
-      ),
+      theme: ThemeData(
+          primaryColor: Color(0xff2196F3),
+          accentColor: Color(0xff81FF95),
+          brightness: Brightness.light),
       home: MultiProvider(
         providers: [
           BlocProvider(
