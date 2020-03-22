@@ -48,19 +48,19 @@ class Daily_Utilization {
         if (i == selectedIndex) {
           color = Colors.green[100];
         } else {
-          color = Colors.green;
+          color = Color(0xFF00F2A9);
         }
       } else if (slot.utilization < 0.66) {
         if (i == selectedIndex) {
           color = Colors.orange[100];
         } else {
-          color = Colors.orange;
+          color = Color(0xFFFEBE5F);
         }
       } else {
         if (i == selectedIndex) {
           color = Colors.red[100];
         } else {
-          color = Colors.red;
+          color = Color(0xFFFF5C66);
         }
       }
 

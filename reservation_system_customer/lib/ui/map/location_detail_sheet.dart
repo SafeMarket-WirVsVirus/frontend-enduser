@@ -84,7 +84,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 FlatButton(
-                  textColor: Theme.of(context).accentColor,
+                    textColor: Colors.blue,
                   onPressed: () async {
                     Future<DateTime> selectedDate = showDatePicker(
                       context: context,
@@ -108,32 +108,43 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                       }
                     });
                   },
-                  child: Text("Anderes Datum auswählen",
-                      style: Theme.of(context).textTheme.caption),
+                    child: Text(
+                      (new DateFormat.yMMMMd("en_US")).format(barplotDate),
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    )
                 )
               ],
             ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                child: RaisedButton(
-                  child: Text("Slot reservieren"),
-                  onPressed: () {
-                    BlocProvider.of<ReservationsBloc>(context)
-                        .add(MakeReservation(
-                      locationId: widget.location.id,
-                      startTime: selectedTime,
-                    ));
-                    return showDialog<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return ReservationConfirmationDialog(
-                            widget.location.name, selectedTime);
-                      },
-                    );
-                  },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
+                  child: RaisedButton(
+                    child: Text("Slot reservieren"),
+                    color: Color(0xFF00F2A9),
+                    textColor: Color(0xFF322153),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(20),
+                        side: BorderSide(color: Color(0xFF00F2A9))
+                    ),
+                    onPressed: () {
+                      BlocProvider.of<ReservationsBloc>(context)
+                          .add(MakeReservation(
+                        locationId: widget.location.id,
+                        startTime: selectedTime,
+                      ));
+                      return showDialog<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return ReservationConfirmationDialog(
+                              widget.location.name, selectedTime);
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
+              ],
             )
           ]),
     );
