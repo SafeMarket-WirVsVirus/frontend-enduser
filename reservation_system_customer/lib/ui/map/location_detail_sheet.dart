@@ -42,8 +42,8 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
           children: [
             SizedBox(height: 20),
             _LocationInformation(
-              name: widget.location.name,
-              address: widget.location.address,
+              name: widget.location?.name ?? "",
+              address: widget.location?.address ?? "",
             ),
             _ReservationSlotsWithLoading(
               data: data,
