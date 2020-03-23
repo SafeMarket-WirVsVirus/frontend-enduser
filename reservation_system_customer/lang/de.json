@@ -40,7 +40,7 @@
   "reserve_slot": "Slot reservieren",
 
   "res_success": "Reservierung erfolgreich",
-
-  "offline": "ups....\nDu scheinst momentan keinen Zugang zum Internet zu haben.\nDa sich diese App momentan noch in der Entwicklung befindet unterstützt sie leider keine offline Funktionalität.\nDanke für dein Verständnis."
+  "offline": "ups....\nDu scheinst momentan keinen Zugang zum Internet zu haben.\nDa sich diese App momentan noch in der Entwicklung befindet unterstützt sie leider keine offline Funktionalität.\nDanke für dein Verständnis.",
+  "data_could_not_be_loaded": "Daten konnten nicht geladen werden"
 
 }

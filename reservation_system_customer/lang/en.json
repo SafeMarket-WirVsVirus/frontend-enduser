@@ -38,7 +38,8 @@
   "change_date": "Change date",
   "reserve_slot": "Reserve slot",
 
-  "res_success": "Reservation successfull",
+  "res_success": "Reservation successful",
 
-  "offline": "ups....\nYou seem to be offline at the moment.\nBecause this App is currently still in development, it does not support using it without internet-access.\nThank you for your understanding."
+  "offline": "ups....\nYou seem to be offline at the moment.\nBecause this App is currently still in development, it does not support using it without internet-access.\nThank you for your understanding.",
+  "data_could_not_be_loaded": "Data could not be loaded"
 }

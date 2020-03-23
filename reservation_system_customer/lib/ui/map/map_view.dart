@@ -40,7 +40,7 @@ class MapViewState extends State<MapView> {
     userPosition =
         Provider.of<UserRepository>(context, listen: false).userPosition ??
             defaultPosition;
-    print('JR: Build with marker ${widget.markers.length} ${Set<Marker>.of(widget.markers.values).length}');
+    print('Build with marker ${widget.markers.length} ${Set<Marker>.of(widget.markers.values).length}');
     return Scaffold(
         body: GoogleMap(
           myLocationButtonEnabled: false,

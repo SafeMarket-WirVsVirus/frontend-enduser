@@ -175,6 +175,15 @@ class _ReservationSlotsWithLoading extends StatelessWidget {
           child: CircularProgressIndicator(),
         ),
       );
+    } else if (data.isEmpty || slotSize == 0) {
+      return Container(
+        height: 200,
+        child: Center(
+          child: Text(
+            AppLocalizations.of(context).translate('data_could_not_be_loaded'),
+          ),
+        ),
+      );
     } else {
       return ReservationSlotSelection(
         data: data,
@@ -221,8 +230,7 @@ class _LocationInformation extends StatelessWidget {
               children: <Widget>[
                 Text(
                   name ?? '',
-                  style: Theme
-                      .of(context)
+                  style: Theme.of(context)
                       .textTheme
                       .headline
                       .copyWith(fontWeight: FontWeight.bold),
@@ -232,10 +240,7 @@ class _LocationInformation extends StatelessWidget {
                 ),
                 Text(
                   address ?? '',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .caption,
+                  style: Theme.of(context).textTheme.caption,
                   textAlign: TextAlign.left,
                   softWrap: true,
                   maxLines: 3,
