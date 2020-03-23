@@ -1,67 +1,26 @@
-# Reservation System
+# SafeMarket
 
-Reservation system for WirVsVirusHackathon
+![Logo](documentation/safemarket_logo.jpg)
 
-## Sequence diagram
+## Project
+Our project was created during the [#WirVsVirus hackathon](https://wirvsvirushackathon.devpost.com).
 
-```mermaid
-sequenceDiagram
-    participant c as customer
-    participant s as shop
-    participant dl as digitallist
-    participant et as entrycontrol
-    participant d as datauser
-    c->>s: Get shop id
-    c->>dl: get ticket for shop id
-    loop Notification
-        dl->>c: notify entry slot
-    end
-    c->>et: show ticket to 
-    et->>dl: check ticket
-    dl->>et: confirm ticket
-    et->>dl: Remove from queue
-    loop Notification
-        d->>dl: retrieve status
-    end
-```
+SafeMarket is a digital reservation service which minimizes infections and queues. It allows people visiting a place to see the future, planned occupancy rate. Our first use case during the Corona pandemic is the visit of a store such as a supermarket with minimizing social interactions.
 
+The retailer creates with the [SafeMarket backoffice version](https://github.com/SafeMarket-WirVsVirus/frontend-backoffice) an entry for the store and defines:
+  - opening hours
+  - slot length for a reservation
+  - maximal capacity of people for a slot which can be booked via the system (this also allows the retailer to have a mixed group of SafeMarket and non-SafeMarket customers)
 
-## Basic Architecture
+The customer uses the SafeMarket app to search for registered stores and to make reservations for these shops.
+Furthermore, the app displays the QR code of a reservation which can be verified by the retailer.
 
-### Components required:
+For more details please check our [project description on devpost](https://devpost.com/software/17_supermarkt_status_reservation_system).
 
-#### Customer Frontend
-The customer frontend is used to generate new tickets for the location, it will also show an overview of the current waiting time for new tickets. Can be used just like the "offline" ticket machines, we know from Finanzamt. As soon as a ticket is acquired it will show the estimated waiting time for the corresponding ticket. 
+## SafeMarket App
 
-#### Entry Conrol Frontend
-The entry control frontend is used to check tickets and also create local tickets for customers w/o smart devices
+This repository contains the app which is used by the customer to make a reservation.
 
-#### Ticket Database
-Database holds the all the tickets for all shops and is also used as an archive to request data
+Please check the [ReadMe](reservation_system_customer/README.md) for the feature set as well as code documentation.
 
-#### Objects: 
-
-- Shop
-  - GPS Location, Address
-  - "Ticketlist"
-  - open_from
-  - open_until
-
-- Ticket
-  - label
-  - Userid
-  - start_timestamp
-  - end_timestamp
-  - status
-  
- 
-- User
-  - GPS Location
-  - traveling speed settings
-  - 
-
-#### 
-
-
-
-
+![Demo](documentation/20200322_demo.gif)

@@ -1,16 +1,23 @@
-# reservation_system_customer
+# SafeMarket
 
-A new Flutter project.
+## Features
+- Display, create and cancel reservations
+- Reminders for reservations
+- Search for registered locations and filter results by overall occupancy rate per day
+- Display occupancy rate per slot of locations
 
-## Getting Started
+## Architecture
 
-This project is a starting point for a Flutter application.
+### Backend and Data Layer
 
-A few resources to get you started if this is your first Flutter project:
+- [Swagger](https://wirvsvirusretail.azurewebsites.net/swagger/ui/index.html) definition of our backend
+- `repository`: backend communication as well as persistence
+- `repository/data`: model classes
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+### UI Layer
+- `bloc`: state management
+- `ui/reservations`: UI elements for reservations tab
+- `ui/map`: UI elements for the map tab
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
