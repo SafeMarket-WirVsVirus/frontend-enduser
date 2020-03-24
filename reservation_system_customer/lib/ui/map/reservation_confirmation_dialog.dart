@@ -4,12 +4,14 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/app_localizations.dart';
 
+import '../../app_localizations.dart';
+
 class ReservationConfirmationDialog extends StatelessWidget {
   final name;
   final startTime;
-  final DateFormat dateFormat = DateFormat("dd.MM.yyyy");
-  final DateFormat timeFormat = DateFormat("hh:mm");
+
   ReservationConfirmationDialog(this.name, this.startTime);
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -30,9 +32,9 @@ class ReservationConfirmationDialog extends StatelessWidget {
               AppLocalizations.of(context).translate("res_detail_1") +
                   " ${this.name} " +
                   AppLocalizations.of(context).translate("res_detail_2") +
-                  " ${dateFormat.format(this.startTime)} " +
+                  " ${DateFormat.yMd(AppLocalizations.of(context).locale.languageCode).format(this.startTime)} " +
                   AppLocalizations.of(context).translate("res_detail_3") +
-                  " ${timeFormat.format(this.startTime)} "),
+                  " ${DateFormat.jm(AppLocalizations.of(context).locale.languageCode).format(this.startTime)} "),
 //              'Du hast am ${dateFormat.format(this.startTime)} um ${timeFormat.format(this.startTime)} einen Shopping-Slot bei ${this.name} reserviert.'),
         ],
       ),

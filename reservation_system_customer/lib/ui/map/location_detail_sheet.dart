@@ -5,6 +5,7 @@ import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/reservation_slot_selection.dart';
+import '../../app_localizations.dart';
 import 'reservation_confirmation_dialog.dart';
 
 class LocationDetailSheet extends StatefulWidget {
@@ -55,7 +56,9 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
               },
             ),
             _ChangeDateButton(
-                title: (DateFormat.yMMMMd("en_US")).format(selectedDate),
+                title: (DateFormat
+                    .yMMMMd(AppLocalizations.of(context).locale.languageCode))
+                    .format(selectedDate),
                 dateChanged: (date) {
                   setState(() {
                     selectedDate = date;
