@@ -32,7 +32,6 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
         );
       } else if (state is ReservationsLoaded) {
         updateList(state.reservations);
-//        _data = generateItems(state.reservations);
         if (state.reservations.length > 0) {
           return Scaffold(
               appBar: AppBar(
@@ -70,7 +69,6 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                         },
                         body: ReservationListDetail(
                           reservation: item.reservation,
-                          resBloc: BlocProvider.of(context),
                         ),
                         isExpanded: item.isExpanded,
                       );
