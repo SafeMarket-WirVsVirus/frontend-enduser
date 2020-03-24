@@ -3,54 +3,67 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
-import 'data/data.dart';
 import 'package:http/http.dart' as http;
+import 'data/data.dart';
+import 'user_repository.dart';
 
 class ReservationsRepository {
-  final String baseUrl;
+  final String _baseUrl;
+  final UserRepository _userRepository;
 
   ReservationsRepository({
-    @required this.baseUrl,
-  });
+    @required String baseUrl,
+    @required UserRepository userRepository,
+  })  : _baseUrl = baseUrl,
+        _userRepository = userRepository;
 
-  Future<List<Reservation>> cancelReservation({
+  Future<bool> cancelReservation({
     @required int locationId,
-    @required String deviceId,
     @required int reservationId,
   }) async {
+    final deviceId = await _userRepository.deviceId();
     var queryParameters = {
       'deviceId': deviceId,
       'locationId': locationId,
       'reservationId': reservationId,
     };
     final uri = Uri.https(
-        baseUrl, '/api/Reservation/RevokeSpecificReservation', queryParameters);
+      _baseUrl,
+      '/api/Reservation/RevokeSpecificReservation',
+      queryParameters,
+    );
     final response = await http.delete(uri);
     if (response.statusCode == 200) {
       print('cancelReservation: success');
-      return getReservations(deviceId: deviceId);
+      return true;
     }
     print('cancelReservation: error ${response.statusCode}');
-    return [];
+    return false;
   }
 
-  Future<void> createReservation({
-    @required String deviceId,
+  Future<bool> createReservation({
     @required int locationId,
     @required DateTime startTime,
   }) async {
+    final deviceId = await _userRepository.deviceId();
     var queryParameters = {
       'locationId': '$locationId',
       'dateTime': startTime.toIso8601String(),
       'deviceId': deviceId,
     };
-    final uri = Uri.https(baseUrl, '/api/Reservation/Reserve', queryParameters);
+    final uri = Uri.https(
+      _baseUrl,
+      '/api/Reservation/Reserve',
+      queryParameters,
+    );
     final response = await http.post(uri);
 
     if (response.statusCode == 200) {
       print('createReservation: success');
+      return true;
     } else {
       print('createReservation: error ${response.statusCode}');
+      return false;
     }
   }
 
@@ -64,7 +77,10 @@ class ReservationsRepository {
           .toString(),
     };
     final uri = Uri.https(
-        baseUrl, '/api/Reservation/ReservationsByDevice', queryParameters);
+      _baseUrl,
+      '/api/Reservation/ReservationsByDevice',
+      queryParameters,
+    );
 
     final response = await http.get(uri);
     if (response.statusCode == 200) {

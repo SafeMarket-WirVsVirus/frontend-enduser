@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/app_localizations.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/constants.dart';
@@ -81,20 +82,30 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                         side: BorderSide(color: Color(0xFF00F2A9))),
                     onPressed: selectedTime == null
                         ? null
-                        : () {
-                            BlocProvider.of<ReservationsBloc>(context).add(
-                              MakeReservation(
-                                locationId: widget.location.id,
-                                startTime: selectedTime,
-                              ),
+                        : () async {
+                            final success =
+                                await Provider.of<ReservationsRepository>(
+                                        context,
+                                        listen: false)
+                                    .createReservation(
+                              locationId: widget.location.id,
+                              startTime: selectedTime,
                             );
-                            return showDialog<void>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return ReservationConfirmationDialog(
-                                    widget.location?.name, selectedTime);
-                              },
-                            );
+
+                            if (success) {
+                              BlocProvider.of<ReservationsBloc>(context)
+                                  .add(LoadReservations());
+                              final snackBar = SnackBar(
+                                  content: Text(AppLocalizations.of(context)
+                                      .translate("reminder_snack")));
+                              Scaffold.of(context).showSnackBar(snackBar);
+                            } else {
+                              showDialog<void>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    _CreateReservationFailedDialog(),
+                              );
+                            }
                           },
                   ),
                 ),
@@ -252,6 +263,30 @@ class _LocationInformation extends StatelessWidget {
             ),
           ),
         ),
+      ],
+    );
+  }
+}
+
+class _CreateReservationFailedDialog extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(
+        AppLocalizations.of(context)
+            .translate("create_reservation_failed_title"),
+      ),
+      content: Text(
+        AppLocalizations.of(context)
+            .translate("create_reservation_failed_description"),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(AppLocalizations.of(context).translate("ok")),
+        )
       ],
     );
   }

@@ -12,29 +12,6 @@ abstract class ReservationsEvent extends Equatable {
 
 class LoadReservations extends ReservationsEvent {}
 
-class CancelReservation extends ReservationsEvent {
-  final int reservationId;
-  final int locationId;
-
-  CancelReservation({
-    @required this.reservationId,
-    @required this.locationId,
-  });
-
-  @override
-  List<Object> get props => [reservationId, locationId];
-}
-
-class MakeReservation extends ReservationsEvent {
-  final int locationId;
-  final DateTime startTime;
-
-  MakeReservation({
-    @required this.locationId,
-    @required this.startTime,
-  });
-}
-
 /// STATES
 
 abstract class ReservationsState extends Equatable {
@@ -87,25 +64,6 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
         print("Loading reservations failed");
         yield ReservationsLoadFail();
       }
-    } else if (event is CancelReservation) {
-      yield ReservationsLoading();
-      final reservations = await _reservationsRepository.cancelReservation(
-        reservationId: event.reservationId,
-        deviceId: deviceId,
-        locationId: event.locationId,
-      );
-      yield ReservationsLoaded(reservations);
-    } else if (event is MakeReservation) {
-      await _reservationsRepository.createReservation(
-        deviceId: deviceId,
-        locationId: event.locationId,
-        startTime: event.startTime,
-      );
-      yield ReservationsLoading();
-      final reservations = await _reservationsRepository.getReservations(
-        deviceId: deviceId,
-      );
-      yield ReservationsLoaded(reservations);
     }
   }
 }

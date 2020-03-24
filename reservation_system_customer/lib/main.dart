@@ -12,10 +12,13 @@ import 'repository/repository.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final userRepository = UserRepository();
+    final reservationRepository = ReservationsRepository(
+      baseUrl: Constants.baseUrl,
+      userRepository: userRepository,
+    );
     return MaterialApp(
       title: "SafeMarket",
       theme: ThemeData(
@@ -26,25 +29,28 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => ReservationsBloc(
-              reservationsRepository: ReservationsRepository(baseUrl: Constants.baseUrl),
+              reservationsRepository: reservationRepository,
               userRepository: userRepository,
             ),
           ),
           BlocProvider(
             create: (context) => MapBloc(
-              locationsRepository: LocationsRepository(baseUrl: Constants.baseUrl),
+              locationsRepository:
+                  LocationsRepository(baseUrl: Constants.baseUrl),
             ),
           ),
           Provider(
             create: (context) => userRepository,
-          )
+          ),
+          Provider(
+            create: (context) => reservationRepository,
+          ),
         ],
         child: StartPage(),
       ),
-//
       supportedLocales: [
         Locale('en', ''),
-        Locale('de', '')
+        Locale('de', ''),
       ],
 
       localizationsDelegates: [

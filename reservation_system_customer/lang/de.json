@@ -20,6 +20,11 @@
   "ticket": "Ticket",
   "your_ticket": "Dein Ticket:",
 
+  "create_reservation_success_snackbar": "Slot reserviert",
+
+  "create_reservation_failed_title": "Achtung",
+  "create_reservation_failed_description": "Deine Reservierung konnte leider nicht erstellt werden.",
+
 
   "reminder_title_1": "Zeit einzukaufen: ",
   "reminder_text": "- Deine Reservierung beginnt in 30 Minuten",
@@ -39,7 +44,6 @@
   "change_date": "Anderes Datum auswählen",
   "reserve_slot": "Slot reservieren",
 
-  "res_success": "Reservierung erfolgreich",
   "offline": "ups....\nDu scheinst momentan keinen Zugang zum Internet zu haben.\nDa sich diese App momentan noch in der Entwicklung befindet unterstützt sie leider keine offline Funktionalität.\nDanke für dein Verständnis.",
   "data_could_not_be_loaded": "Daten konnten nicht geladen werden"
 

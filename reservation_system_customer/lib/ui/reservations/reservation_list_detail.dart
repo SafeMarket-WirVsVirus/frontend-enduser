@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/repository/data/data.dart';
+import 'package:reservation_system_customer/repository/repository.dart';
 
 import '../../app_localizations.dart';
 
 class ReservationListDetail extends StatelessWidget {
-  final ReservationsBloc resBloc;
   final Reservation reservation;
 
-  const ReservationListDetail({Key key, this.reservation, this.resBloc}) : super(key: key);
+  const ReservationListDetail({
+    Key key,
+    this.reservation,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +32,15 @@ class ReservationListDetail extends StatelessWidget {
           child: FlatButton(
               child: Icon(Icons.delete),
               onPressed: () {
-                _deleteDialog(context, reservation, resBloc);
+                _deleteDialog(context, reservation);
               }))
     ]);
   }
 }
 
-Future<void> _deleteDialog(BuildContext context, Reservation reservation, ReservationsBloc resBloc) {
+Future<void> _deleteDialog(BuildContext context, Reservation reservation) {
+  var reservationsRepository =
+      Provider.of<ReservationsRepository>(context, listen: false);
   return showDialog<void>(
     context: context,
     builder: (context) => AlertDialog(
@@ -51,15 +55,14 @@ Future<void> _deleteDialog(BuildContext context, Reservation reservation, Reserv
           onPressed: () => Navigator.of(context).pop(),
         ),
         FlatButton(
-          child: Text(AppLocalizations.of(context).translate("ok")),
-          onPressed: () {
-            resBloc.add(CancelReservation(
-              reservationId: reservation.id,
-              locationId: reservation.location.id,
-            ));
-            Navigator.of(context).pop();
-          }
-        ),
+            child: Text(AppLocalizations.of(context).translate("ok")),
+            onPressed: () {
+              reservationsRepository.cancelReservation(
+                locationId: reservation.location.id,
+                reservationId: reservation.id,
+              );
+              Navigator.of(context).pop();
+            }),
       ],
     ),
   );

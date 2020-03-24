@@ -17,7 +17,6 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
-  int _selectedIndex = 0;
 
   @override
   void initState() {
