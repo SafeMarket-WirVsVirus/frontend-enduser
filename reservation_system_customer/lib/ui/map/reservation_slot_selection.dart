@@ -154,7 +154,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
       }
 
       data.add(cfg.copyWith(x: data.length, barRods: [
-        cfg.barRods[0].copyWith(y: percentageBookings * 100, color: color)
+        cfg.barRods[0].copyWith(y: 30 + percentageBookings * 70, color: color)
       ]));
       if (data.length >= dataCount) {
         return BarChartData(barGroups: data);
