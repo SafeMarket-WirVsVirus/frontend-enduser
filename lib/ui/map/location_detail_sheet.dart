@@ -65,7 +65,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                     data = null;
                   });
                   _fetchData();
-                }),
+                },),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
@@ -159,7 +159,7 @@ class _ChangeDateButton extends StatelessWidget {
         );
         DateTime date = await selectedDate;
 
-        if (date != null && date.isAfter(DateTime.now())) {
+        if (date != null) {
           dateChanged(date);
         }
       },
