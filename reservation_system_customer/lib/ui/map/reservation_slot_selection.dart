@@ -27,13 +27,15 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
 
   @override
   Widget build(BuildContext context) {
+    //TODO: this is hacky as shit. There HAS to be a better way but it works for now
+    double chartWidth = (widget.data.length * 35.0 + 40.0) as double;
     return Container(
       height: 200,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child:
         Container(
-          width: 100000,
+          width: chartWidth,
           child: _BarChartContainer(
             child: BarChart(getBarData(
                 widget.data,
@@ -63,7 +65,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                 .copyWith(
               maxY: 100,
               groupsSpace: 10,
-              alignment: BarChartAlignment.spaceBetween,
+              alignment: BarChartAlignment.center,
               titlesData: FlTitlesData(
                 show: true,
                 bottomTitles: SideTitles(
