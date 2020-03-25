@@ -5,15 +5,18 @@ import 'package:reservation_system_customer/repository/data/reservation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_localizations.dart';
+import 'app_localizations.dart';
+import 'app_localizations.dart';
+import 'app_localizations.dart';
 
 class NotificationHandler {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final Reservation reservation;
   final BuildContext context;
-  final DateFormat timeFormat = DateFormat("hh:mm");
+  final DateFormat timeFormat;
 
-  NotificationHandler(
-      this.flutterLocalNotificationsPlugin, this.reservation, this.context);
+  NotificationHandler(this.flutterLocalNotificationsPlugin, this.reservation, this.context):
+    timeFormat = DateFormat.jm(AppLocalizations.of(context).locale.languageCode);
 
   int notificationId = 0;
 

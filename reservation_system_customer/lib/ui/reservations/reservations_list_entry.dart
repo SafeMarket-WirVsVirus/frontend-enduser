@@ -19,10 +19,10 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
   bool notificationSet = false;
   NotificationHandler notificationHandler;
 
-  void getNotificationState() async{
+  void getNotificationState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    bool set = prefs.get('${widget.item.id}') == null?false:true;
+    bool set = prefs.get('${widget.item.id}') == null ? false : true;
 
     setState(() {
       notificationSet = set;
@@ -31,7 +31,7 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
 
   @override
   void initState() {
-    notificationHandler = NotificationHandler(null,widget.item,context);
+    notificationHandler = NotificationHandler(null, widget.item, context);
     getNotificationState();
 
     super.initState();
@@ -39,7 +39,6 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
 
   @override
   Widget build(BuildContext context) {
-    final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
     return Container(
       height: 120,
       child: Column(
@@ -65,18 +64,12 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
                       children: <Widget>[
                         Text(
                           widget.item.location?.name ?? '',
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .headline,
+                          style: Theme.of(context).textTheme.headline,
                           softWrap: true,
                         ),
                         Text(
                           widget.item.location?.address ?? "",
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .caption,
+                          style: Theme.of(context).textTheme.caption,
                           maxLines: 2,
                           softWrap: true,
                         ),
@@ -90,11 +83,13 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
                       width: 60,
                       child: FlatButton(
                         child: Image(
-                          image: notificationSet?AssetImage(
-                            'assets/004-bell.png',
-                          ):AssetImage(
-                          'assets/004-bell-mute.png',
-                        ),
+                          image: notificationSet
+                              ? AssetImage(
+                                  'assets/004-bell.png',
+                                )
+                              : AssetImage(
+                                  'assets/004-bell-mute.png',
+                                ),
                           fit: BoxFit.fitWidth,
                         ),
                         onPressed: () {
@@ -102,9 +97,9 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
                             notificationSet = !notificationSet;
                           });
 
-                          if(notificationSet){
+                          if (notificationSet) {
                             notificationHandler.setReminder();
-                          }else{
+                          } else {
                             notificationHandler.cancelReminder();
                           }
                         },
@@ -117,8 +112,11 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
             ),
           ),
           Text(
-            DateFormat.yMMMMd("de_DE").add_jm().format(widget.item.startTime),
-            style: TextStyle(fontWeight: FontWeight.bold),)
+            DateFormat.yMd(AppLocalizations.of(context).locale.languageCode)
+                .add_jm()
+                .format(widget.item.startTime),
+            style: TextStyle(fontWeight: FontWeight.bold),
+          )
         ],
       ),
     );
