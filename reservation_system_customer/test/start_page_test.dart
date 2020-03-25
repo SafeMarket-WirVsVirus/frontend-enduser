@@ -15,6 +15,7 @@ import 'package:reservation_system_customer/ui/map/map_page.dart';
 import 'package:reservation_system_customer/ui/offline_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MockReservationsBloc extends Mock implements ReservationsBloc {}
 
@@ -27,6 +28,9 @@ class MockAppLocalizations extends Fake implements AppLocalizations {
   String translate(String key) {
     return key;
   }
+
+  @override
+  Locale get locale => Locale('en');
 }
 
 class MockLocalizationsDelegate extends Fake
@@ -48,6 +52,7 @@ void main() {
   Widget startPage;
 
   setUp(() {
+    SharedPreferences.setMockInitialValues({});
     reservationsBloc = MockReservationsBloc();
     mapBloc = MapBloc();
     userRepository = MockUserRepository();
