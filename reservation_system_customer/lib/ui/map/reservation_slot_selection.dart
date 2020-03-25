@@ -86,6 +86,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                 barTouchData: BarTouchData(
                   touchExtraThreshold: EdgeInsets.symmetric(vertical: 20),
                   allowTouchBarBackDraw: true,
+                  handleBuiltInTouches: false,
                   touchCallback: (BarTouchResponse touchResponse) {
                     setState(() {
                       if (touchResponse.spot != null) {
