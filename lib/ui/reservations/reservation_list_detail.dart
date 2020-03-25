@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:reservation_system_customer/app_localizations.dart';
 import 'package:reservation_system_customer/repository/data/data.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
-
-import '../../app_localizations.dart';
 
 class ReservationListDetail extends StatelessWidget {
   final Reservation reservation;
@@ -29,8 +28,8 @@ class ReservationListDetail extends StatelessWidget {
       ),
       Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
-        child: Row(children:
-        reservation.codeWords.map<Widget>((String word) {
+        child: Row(
+            children: reservation.codeWords.map<Widget>((String word) {
           return Expanded(
             child: Center(
               child: Text(
@@ -39,8 +38,7 @@ class ReservationListDetail extends StatelessWidget {
               ),
             ),
           );
-        }).toList()
-        ),
+        }).toList()),
       ),
       Align(
           alignment: Alignment.topRight,

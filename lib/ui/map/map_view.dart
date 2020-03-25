@@ -25,7 +25,8 @@ class MapViewState extends State<MapView> {
   final positionTimeout = Duration(seconds: 3);
   final defaultPosition = LatLng(48.160490, 11.555184);
   LatLng userPosition;
-  LatLng lastFetchPosition;
+  CameraPosition lastFetchCameraPosition;
+  CameraPosition currentCameraPosition;
 
   @override
   void setState(fn) {
@@ -51,36 +52,23 @@ class MapViewState extends State<MapView> {
               userPosition.latitude,
               userPosition.longitude,
             ),
-            zoom: 14,
+            zoom: 15,
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
             _fetchLocations(context, controller);
           },
-          onCameraMove: (position) async {
-            if (position == null ||
-                position.target == null ||
+          onCameraMove: (position) {
+            currentCameraPosition = position;
+          },
+          onCameraIdle: () async {
+            if (currentCameraPosition == null ||
+                currentCameraPosition.target == null ||
                 BlocProvider.of<MapBloc>(context).state is MapLoading) {
               return;
             }
 
-            final newPos = position.target;
-            if (lastFetchPosition == null) {
-              BlocProvider.of<MapBloc>(context)
-                  .add(MapLoadLocations(position: newPos, radius: 1000));
-            } else {
-              final distance = await Geolocator().distanceBetween(
-                lastFetchPosition.latitude,
-                lastFetchPosition.longitude,
-                newPos.latitude,
-                newPos.longitude,
-              );
-              if (distance > 900) {
-                lastFetchPosition = newPos;
-                BlocProvider.of<MapBloc>(context)
-                    .add(MapLoadLocations(position: newPos, radius: 1000));
-              }
-            }
+            _fetchLocationsIfNeeded(currentCameraPosition);
           },
           markers: Set<Marker>.of(widget.markers.values),
         ),
@@ -89,7 +77,7 @@ class MapViewState extends State<MapView> {
           children: <Widget>[
             FloatingActionButton(
               mini: true,
-              onPressed: _setfilters,
+              onPressed: _setFilters,
               child: Icon(Icons.filter_list),
               backgroundColor: Theme.of(context).accentColor,
             ),
@@ -97,7 +85,7 @@ class MapViewState extends State<MapView> {
               height: 10,
             ),
             FloatingActionButton(
-              onPressed: _goToLocation,
+              onPressed: () => _moveCameraToNewPosition(userPosition),
               child: Icon(Icons.gps_fixed),
               backgroundColor: Theme.of(context).accentColor,
             ),
@@ -105,21 +93,7 @@ class MapViewState extends State<MapView> {
         ));
   }
 
-  Future<void> _goToLocation() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-            target: LatLng(
-              userPosition.latitude,
-              userPosition.longitude,
-            ),
-            zoom: 15),
-      ),
-    );
-  }
-
-  void _setfilters() {
+  void _setFilters() {
     showDialog(
         context: context,
         builder: (newContext) => FilterDialog(
@@ -127,7 +101,7 @@ class MapViewState extends State<MapView> {
             ));
   }
 
-  void _moveCameraToNewPosition(LatLng position, {double zoom = 14.0}) async {
+  void _moveCameraToNewPosition(LatLng position, {double zoom = 15.0}) async {
     final GoogleMapController controller = await _controller.future;
     controller.animateCamera(CameraUpdate.newCameraPosition(
         CameraPosition(target: position, zoom: zoom)));
@@ -148,11 +122,40 @@ class MapViewState extends State<MapView> {
           .setUserPosition(userPosition);
       _moveCameraToNewPosition(userPosition);
     }
-    //TODO: Test here what the zoom level should be
-    //double zoomLevel = await controller.getZoomLevel();
-    lastFetchPosition = location ?? defaultPosition;
-    BlocProvider.of<MapBloc>(context)
-        .add(MapLoadLocations(position: lastFetchPosition, radius: 1000));
+
+    final zoomLevel = await controller.getZoomLevel();
+    final position =
+        CameraPosition(target: location ?? defaultPosition, zoom: zoomLevel);
+    _fetchLocationsIfNeeded(position);
+  }
+
+  Future<void> _fetchLocationsIfNeeded(CameraPosition newPos) async {
+    final radius = await _getRadius();
+
+    if (lastFetchCameraPosition != null) {
+      double zoomLevel = newPos.zoom;
+      if (zoomLevel <= 12) {
+        print('Not updating locations, zoomLevel <= 12: $zoomLevel');
+        return;
+      }
+
+      final distance =
+          await _getDistance(newPos.target, lastFetchCameraPosition.target);
+      print('Distance: $distance, radius: $radius, zoomLevel: $zoomLevel');
+
+      if (distance < radius * 1) {
+        print('Not updating locations, distance < radius');
+        return;
+      }
+    }
+
+    if (!mounted) {
+      return;
+    }
+    print('Fetching Updates for $newPos and $radius');
+    lastFetchCameraPosition = newPos;
+    BlocProvider.of<MapBloc>(context).add(MapLoadLocations(
+        position: lastFetchCameraPosition.target, radius: radius));
   }
 
   Future<LatLng> _getUserPosition() async {
@@ -174,5 +177,22 @@ class MapViewState extends State<MapView> {
       } catch (_) {}
     }
     return location;
+  }
+
+  Future<double> _getDistance(LatLng pos1, LatLng pos2) async {
+    final distance = await Geolocator().distanceBetween(
+      pos1.latitude,
+      pos1.longitude,
+      pos2.latitude,
+      pos2.longitude,
+    );
+    return distance;
+  }
+
+  Future<int> _getRadius() async {
+    final GoogleMapController controller = await _controller.future;
+    final region = await controller.getVisibleRegion();
+    final distance = await _getDistance(region.northeast, region.southwest);
+    return (distance / 2.0).floor();
   }
 }

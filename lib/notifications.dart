@@ -64,9 +64,7 @@ class NotificationHandler {
         notificationId,
         AppLocalizations.of(context).translate("reminder_title_1") +
             '${reservation.location?.name ?? ''} - '
-                '${DateFormat.jm(AppLocalizations
-                .of(context).locale.languageCode)
-                .format(reservation.startTime)}',
+                '${DateFormat.jm(AppLocalizations.of(context).locale.languageCode).format(reservation.startTime)}',
         AppLocalizations.of(context).translate("reminder_text"),
         scheduledNotificationDateTime,
         platformChannelSpecifics);
