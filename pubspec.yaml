@@ -1,5 +1,5 @@
 name: reservation_system_customer
-description: A new Flutter project.
+description: App for customers of stores to reduce queues.
 
 version: 1.0.0+1
 
@@ -32,6 +32,7 @@ dependencies:
 dev_dependencies:
   json_serializable: ^3.2.5
   build_runner: ^1.8.0
+  effective_dart: ^1.0.0
   flutter_test:
     sdk: flutter
 

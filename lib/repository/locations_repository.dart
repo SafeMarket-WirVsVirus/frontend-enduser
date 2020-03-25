@@ -7,7 +7,6 @@ import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/data/time_slot_data.dart';
 
 import 'data/data.dart';
-import 'data/data.dart';
 
 class LocationsRepository {
   final String baseUrl;

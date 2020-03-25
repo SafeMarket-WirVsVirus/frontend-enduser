@@ -1,14 +1,10 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/repository/data/reservation.dart';
 import 'package:reservation_system_customer/ui/reservations/reservation_list_detail.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_entry.dart';
 
 import '../../app_localizations.dart';
-
 
 class ReservationsListPage extends StatefulWidget {
   @override
@@ -16,7 +12,6 @@ class ReservationsListPage extends StatefulWidget {
 }
 
 class _ReservationsListPageState extends State<ReservationsListPage> {
-
   List<Item> _data = new List();
 
   @override
@@ -112,7 +107,7 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
   }
 }
 
-class Item extends Equatable {
+class Item {
   final Reservation reservation;
   bool isExpanded;
 
@@ -122,5 +117,9 @@ class Item extends Equatable {
   });
 
   @override
-  List<Object> get props => [reservation.id];
+  bool operator ==(Object other) =>
+      other is Item && reservation.id == other.reservation.id;
+
+  @override
+  int get hashCode => reservation.id;
 }

@@ -10,7 +10,6 @@ import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../repository/data/data.dart';
-import '../repository/data/data.dart';
 
 /// EVENTS
 

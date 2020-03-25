@@ -23,6 +23,8 @@ class MockMapBloc extends Mock implements MapBloc {}
 
 class MockUserRepository extends Mock implements UserRepository {}
 
+class MockLocationsRepository extends Mock implements LocationsRepository {}
+
 class MockAppLocalizations extends Fake implements AppLocalizations {
   @override
   String translate(String key) {
@@ -54,7 +56,9 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     reservationsBloc = MockReservationsBloc();
-    mapBloc = MapBloc();
+    mapBloc = MapBloc(
+      locationsRepository: MockLocationsRepository(),
+    );
     userRepository = MockUserRepository();
 
     when(userRepository.loadUserPosition())
@@ -136,7 +140,17 @@ void main() {
         ReservationsLoaded([
           Reservation(
             id: 123,
-            location: Location(),
+            location: Location(
+              id: 5,
+              name: null,
+              latitude: 10,
+              longitude: 20,
+              fillStatus: FillStatus.yellow,
+              openingHours: [],
+              slotDuration: null,
+              slotSize: null,
+              address: null,
+            ),
             startTime: DateTime.now(),
           ),
         ]),

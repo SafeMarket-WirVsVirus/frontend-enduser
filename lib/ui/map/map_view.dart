@@ -148,7 +148,7 @@ class MapViewState extends State<MapView> {
       _moveCameraToNewPosition(userPosition);
     }
     //TODO: Test here what the zoom level should be
-    double zoomLevel = await controller.getZoomLevel();
+    //double zoomLevel = await controller.getZoomLevel();
     lastFetchPosition = location ?? defaultPosition;
     BlocProvider.of<MapBloc>(context).add(
         MapLoadLocations(position: lastFetchPosition, radius: 1000));

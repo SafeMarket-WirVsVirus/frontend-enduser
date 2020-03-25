@@ -13,7 +13,7 @@ class UserRepository {
 
   LatLng get userPosition => _userPosition;
 
-  UserRepository() {}
+  UserRepository();
 
   Future<void> setUserPosition(LatLng position) async {
     _userPosition = position;
@@ -26,8 +26,8 @@ class UserRepository {
 
   void loadUserPosition() async {
     final prefs = await SharedPreferences.getInstance();
-    double lat = prefs.get(_PersistenceKeys.userPositionLatKey) ?? null;
-    double lng = prefs.get(_PersistenceKeys.userPositionLngKey) ?? null;
+    final lat = prefs.getDouble(_PersistenceKeys.userPositionLatKey);
+    final lng = prefs.getDouble(_PersistenceKeys.userPositionLngKey);
     if (lat != null && lng != null) {
       _userPosition = LatLng(lat, lng);
     }

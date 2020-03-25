@@ -28,39 +28,34 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
   @override
   Widget build(BuildContext context) {
     //TODO: this is hacky as shit. There HAS to be a better way but it works for now
-    double chartWidth = (widget.data.length * 35.0 + 40.0) as double;
+    double chartWidth = widget.data.length * 35.0 + 40.0;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
-      child:
-      Container(
+      child: Container(
         height: 200,
         width: chartWidth,
         child: _BarChartContainer(
           child: BarChart(getBarData(
-              widget.data,
-              scrollIndexOffset,
-              widget.slotSize,
-              barsShown,
-              BarChartGroupData(
-                x: 0,
-                barRods: [
-                  BarChartRodData(
-                      y: 0,
-                      width: 25,
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(5.0),
-                        topRight: Radius.circular(5.0),
-                      ),
-                      backDrawRodData: BackgroundBarChartRodData(
-                          show: true,
-                          y: 100,
-                          color: Colors.grey[200]
-                      )
-                  )
-                ],
-              ),
-              selectedBarIndex)
+                  widget.data,
+                  scrollIndexOffset,
+                  widget.slotSize,
+                  barsShown,
+                  BarChartGroupData(
+                    x: 0,
+                    barRods: [
+                      BarChartRodData(
+                          y: 0,
+                          width: 25,
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(5.0),
+                            topRight: Radius.circular(5.0),
+                          ),
+                          backDrawRodData: BackgroundBarChartRodData(
+                              show: true, y: 100, color: Colors.grey[200]))
+                    ],
+                  ),
+                  selectedBarIndex)
               .copyWith(
             maxY: 100,
             groupsSpace: 10,
@@ -74,8 +69,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                       fontSize: 10,
                       color: Colors.black),
                   getTitles: (double value) {
-                    return getBarTitles(
-                        widget.data, value, scrollIndexOffset);
+                    return getBarTitles(widget.data, value, scrollIndexOffset);
                   }),
               leftTitles: SideTitles(showTitles: false),
             ),
@@ -87,9 +81,8 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
               touchCallback: (BarTouchResponse touchResponse) {
                 setState(() {
                   if (touchResponse.spot != null) {
-                    selectedBarIndex =
-                        touchResponse.spot.touchedBarGroupIndex +
-                            scrollIndexOffset;
+                    selectedBarIndex = touchResponse.spot.touchedBarGroupIndex +
+                        scrollIndexOffset;
                     var date = widget.data[selectedBarIndex].start;
                     print('$selectedBarIndex $date');
                     widget.selectedSlotChanged(date);
@@ -101,29 +94,6 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
         ),
       ),
     );
-  }
-
-  _navigate(_NavigationDirection direction) {
-    var newIndex = scrollIndexOffset;
-    switch (direction) {
-      case _NavigationDirection.backwards:
-        if (scrollIndexOffset > 0) {
-          newIndex -= 1;
-        }
-        break;
-      case _NavigationDirection.forwards:
-        final dataPoints = widget.data.length;
-        if (dataPoints - scrollIndexOffset > barsShown) {
-          newIndex += 1;
-        }
-        break;
-    }
-
-    if (newIndex != scrollIndexOffset) {
-      setState(() {
-        scrollIndexOffset = newIndex;
-      });
-    }
   }
 
   BarChartData getBarData(
@@ -138,8 +108,8 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
       TimeSlotData slot = timeSlotData[i];
       Color color;
       final percentageBookings = (i == selectedIndex
-          ? slot.registrationCount + 1
-          : slot.registrationCount) /
+              ? slot.registrationCount + 1
+              : slot.registrationCount) /
           (slotSize * 1);
 
       if (percentageBookings < 0.33) {
@@ -194,53 +164,23 @@ class _BarChartContainer extends StatelessWidget {
   }
 }
 
-enum _NavigationDirection { forwards, backwards }
-
-class _NavigationButton extends StatelessWidget {
-  final _NavigationDirection navigationDirection;
-  final ValueChanged<_NavigationDirection> onPressed;
-
-  const _NavigationButton({
-    Key key,
-    @required this.navigationDirection,
-    @required this.onPressed,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      widthFactor: 0.25,
-      child: FlatButton(
-          onPressed: () {
-            onPressed(navigationDirection);
-          },
-          splashColor: Theme.of(context).accentColor,
-          child: Icon(
-            navigationDirection == _NavigationDirection.backwards
-                ? Icons.arrow_back_ios
-                : Icons.arrow_forward_ios,
-          )),
-    );
-  }
-}
-
 // unused at the moment
-class _ToolTipData extends BarTouchTooltipData {
-  _ToolTipData(BuildContext context, DateTime startTime, double percent)
-      : super(
-            tooltipBgColor: Colors.greenAccent,
-            getTooltipItem: (group, groupIndex, rod, rodIndex) {
-              String text = _formattedText(startTime, percent);
-              return BarTooltipItem(
-                  text, TextStyle(color: Theme.of(context).primaryColor));
-            },
-            fitInsideVertically: true,
-            fitInsideHorizontally: true);
-
-  static String _formattedText(DateTime startTime, double percent) {
-    String time = (DateFormat.Hm()).format(startTime) + " Uhr";
-    int utilPercent = (percent * 100).round();
-    String utilization = "Auslastung: " + utilPercent.toString() + "%";
-    return time + '\n' + utilization;
-  }
-}
+//class _ToolTipData extends BarTouchTooltipData {
+//  _ToolTipData(BuildContext context, DateTime startTime, double percent)
+//      : super(
+//            tooltipBgColor: Colors.greenAccent,
+//            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+//              String text = _formattedText(startTime, percent);
+//              return BarTooltipItem(
+//                  text, TextStyle(color: Theme.of(context).primaryColor));
+//            },
+//            fitInsideVertically: true,
+//            fitInsideHorizontally: true);
+//
+//  static String _formattedText(DateTime startTime, double percent) {
+//    String time = (DateFormat.Hm()).format(startTime) + " Uhr";
+//    int utilPercent = (percent * 100).round();
+//    String utilization = "Auslastung: " + utilPercent.toString() + "%";
+//    return time + '\n' + utilization;
+//  }
+//}
