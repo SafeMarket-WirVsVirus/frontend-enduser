@@ -103,6 +103,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       filterSelection = _getLocationTypeFromQueryParameter(
               pref.getString("filter_selection")) ??
           filterSelection;
+      fillStatusPreference =
+          pref.getInt("fill_status_preference") ?? fillStatusPreference;
     });
   }
 
@@ -137,6 +139,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       //save the new filter selection
       SharedPreferences.getInstance().then((pref) {
         pref.setString("filter_selection", filterSelection.asQueryParameter);
+        pref.setInt("fill_status_preference", fillStatusPreference);
       });
 
       fillStatusPreference = event.fillStatusPreference;
