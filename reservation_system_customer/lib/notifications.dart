@@ -5,18 +5,13 @@ import 'package:reservation_system_customer/repository/data/reservation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_localizations.dart';
-import 'app_localizations.dart';
-import 'app_localizations.dart';
-import 'app_localizations.dart';
 
 class NotificationHandler {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
   final Reservation reservation;
   final BuildContext context;
-  final DateFormat timeFormat;
 
-  NotificationHandler(this.flutterLocalNotificationsPlugin, this.reservation, this.context):
-    timeFormat = DateFormat.jm(AppLocalizations.of(context).locale.languageCode);
+  NotificationHandler(this.flutterLocalNotificationsPlugin, this.reservation, this.context);
 
   int notificationId = 0;
 
@@ -67,7 +62,10 @@ class NotificationHandler {
     await flutterLocalNotificationsPlugin.schedule(
         notificationId,
         AppLocalizations.of(context).translate("reminder_title_1") +
-            '${reservation.location?.name ?? ''} - ${timeFormat.format(reservation.startTime)} h',
+            '${reservation.location?.name ?? ''} - '
+                '${DateFormat.jm(AppLocalizations
+                .of(context).locale.languageCode)
+                .format(reservation.startTime)} h',
         AppLocalizations.of(context).translate("reminder_text"),
         scheduledNotificationDateTime,
         platformChannelSpecifics);
