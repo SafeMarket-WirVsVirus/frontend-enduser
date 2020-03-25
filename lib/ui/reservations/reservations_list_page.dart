@@ -59,7 +59,7 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                       return ExpansionPanel(
                         canTapOnHeader: true,
                         headerBuilder: (BuildContext context, bool isExpanded) {
-                          return ReservationListEntry(item: item.reservation);
+                          return ReservationListEntry(item: item);
                         },
                         body: ReservationListDetail(
                           reservation: item.reservation,

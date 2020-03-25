@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_localizations.dart';
 import '../../notifications.dart';
 
 class ReservationListEntry extends StatefulWidget {
-  final item;
+  final Item item;
 
   const ReservationListEntry({Key key, this.item}) : super(key: key);
 
@@ -21,7 +22,7 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
   void getNotificationState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    bool set = prefs.get('${widget.item.id}') == null ? false : true;
+    bool set = prefs.get('${widget.item.reservation.id}') == null ? false : true;
 
     setState(() {
       notificationSet = set;
@@ -30,9 +31,8 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
 
   @override
   void initState() {
-    notificationHandler = NotificationHandler(null, widget.item, context);
+    notificationHandler = NotificationHandler(null, widget.item.reservation, context);
     getNotificationState();
-
     super.initState();
   }
 
@@ -40,82 +40,93 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
   Widget build(BuildContext context) {
     return Container(
       height: 120,
-      child: Column(
+      child: Stack(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                Container(
-                  width: 50,
-                  child: Image(
-                    image: AssetImage('assets/002-shop.png'),
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          widget.item.location?.name ?? '',
-                          style: Theme.of(context).textTheme.headline,
-                          softWrap: true,
-                        ),
-                        Text(
-                          widget.item.location?.address ?? "",
-                          style: Theme.of(context).textTheme.caption,
-                          maxLines: 2,
-                          softWrap: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Column(
+          Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.max,
                   children: <Widget>[
                     Container(
-                      width: 60,
-                      child: FlatButton(
-                        child: Image(
-                          image: notificationSet
-                              ? AssetImage(
-                                  'assets/004-bell.png',
-                                )
-                              : AssetImage(
-                                  'assets/004-bell-mute.png',
-                                ),
-                          fit: BoxFit.fitWidth,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            notificationSet = !notificationSet;
-                          });
-
-                          if (notificationSet) {
-                            notificationHandler.setReminder();
-                          } else {
-                            notificationHandler.cancelReminder();
-                          }
-                        },
+                      width: 50,
+                      child: Image(
+                        image: AssetImage('assets/002-shop.png'),
+                        fit: BoxFit.fitWidth,
                       ),
                     ),
-                    Text(AppLocalizations.of(context).translate("notification"))
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              widget.item.reservation.location?.name ?? '',
+                              style: Theme.of(context).textTheme.headline,
+                              softWrap: true,
+                            ),
+                            Text(
+                              widget.item.reservation.location?.address ?? "",
+                              style: Theme.of(context).textTheme.caption,
+                              maxLines: 2,
+                              softWrap: true,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          width: 60,
+                          child: FlatButton(
+                            child: Image(
+                              image: notificationSet
+                                  ? AssetImage(
+                                      'assets/004-bell.png',
+                                    )
+                                  : AssetImage(
+                                      'assets/004-bell-mute.png',
+                                    ),
+                              fit: BoxFit.fitWidth,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                notificationSet = !notificationSet;
+                              });
+
+                              if (notificationSet) {
+                                notificationHandler.setReminder();
+                              } else {
+                                notificationHandler.cancelReminder();
+                              }
+                            },
+                          ),
+                        ),
+                        Text(AppLocalizations.of(context).translate("notification"))
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
+              ),
+              Text(
+                DateFormat.yMd(AppLocalizations.of(context).locale.languageCode)
+                    .add_jm()
+                    .format(widget.item.reservation.startTime),
+                style: TextStyle(fontWeight: FontWeight.bold),
+              )
+            ],
           ),
-          Text(
-            DateFormat.yMd(AppLocalizations.of(context).locale.languageCode)
-                .add_jm()
-                .format(widget.item.startTime),
-            style: TextStyle(fontWeight: FontWeight.bold),
-          )
+          Container(
+              height: 120,
+              width: 1000,
+              color:
+            widget.item.reservation.startTime.difference(DateTime.now()).inMinutes  < -60 && !widget.item.isExpanded ?
+            Color(0xbfffffff) : Color(0x00000000),
+          ),
         ],
       ),
     );
