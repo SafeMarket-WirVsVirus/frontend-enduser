@@ -55,6 +55,11 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                               topLeft: Radius.circular(5.0),
                               topRight: Radius.circular(5.0),
                             ),
+                              backDrawRodData: BackgroundBarChartRodData(
+                                  show: true,
+                                  y: 100,
+                                  color: Colors.grey[200]
+                              )
                           )
                         ],
                         barsSpace: 3,
