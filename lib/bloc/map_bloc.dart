@@ -158,8 +158,6 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         return LocationType.supermarket;
       case 'pharmacy':
         return LocationType.pharmacy;
-      case 'store':
-        return LocationType.store;
     }
     return null;
   }

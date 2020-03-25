@@ -133,8 +133,6 @@ extension LocationTypeDescription on LocationType {
         return AppLocalizations.of(context).translate('bakeries');
       case LocationType.pharmacy:
         return AppLocalizations.of(context).translate('pharmacies');
-      case LocationType.store:
-        return AppLocalizations.of(context).translate('stores');
     }
     return '';
   }

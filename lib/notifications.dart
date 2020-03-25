@@ -11,7 +11,8 @@ class NotificationHandler {
   final Reservation reservation;
   final BuildContext context;
 
-  NotificationHandler(this.flutterLocalNotificationsPlugin, this.reservation, this.context);
+  NotificationHandler(
+      this.flutterLocalNotificationsPlugin, this.reservation, this.context);
 
   int notificationId = 0;
 
@@ -63,9 +64,7 @@ class NotificationHandler {
         notificationId,
         AppLocalizations.of(context).translate("reminder_title_1") +
             '${reservation.location?.name ?? ''} - '
-                '${DateFormat.jm(AppLocalizations
-                .of(context).locale.languageCode)
-                .format(reservation.startTime)} h',
+                '${DateFormat.jm(AppLocalizations.of(context).locale.languageCode).format(reservation.startTime)} h',
         AppLocalizations.of(context).translate("reminder_text"),
         scheduledNotificationDateTime,
         platformChannelSpecifics);

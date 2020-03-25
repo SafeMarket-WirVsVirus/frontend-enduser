@@ -1,5 +1,7 @@
 # SafeMarket
 
+![Analyze & Run Tests](https://github.com/SafeMarket-WirVsVirus/frontend-enduser/workflows/Analyze%20&%20Run%20Tests/badge.svg?branch=master)
+
 ![Logo](documentation/safemarket_logo.jpg)
 
 ## Project

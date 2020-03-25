@@ -6,7 +6,7 @@ part 'reservations.g.dart';
 
 @JsonSerializable(createToJson: false)
 class Reservations {
-@JsonKey()
+  @JsonKey()
   final List<Reservation> reservations;
 
   Reservations({

@@ -15,7 +15,6 @@ enum LocationType {
   supermarket,
   bakery,
   pharmacy,
-  store,
 }
 
 @JsonSerializable(createToJson: false)

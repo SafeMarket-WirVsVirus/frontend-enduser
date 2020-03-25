@@ -84,8 +84,6 @@ extension JsonLocationType on LocationType {
         return 'supermarket';
       case LocationType.pharmacy:
         return 'pharmacy';
-      case LocationType.store:
-        return 'store';
     }
     return '';
   }

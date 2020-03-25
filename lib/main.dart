@@ -52,13 +52,11 @@ class MyApp extends StatelessWidget {
         Locale('en', ''),
         Locale('de', ''),
       ],
-
       localizationsDelegates: [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
       ],
-
       localeListResolutionCallback: (locales, supportedLocales) {
         for (var supportedLocale in supportedLocales) {
           if (supportedLocale.languageCode == locales.first.languageCode &&

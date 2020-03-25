@@ -14,8 +14,8 @@ class OfflinePage extends StatelessWidget {
               AppLocalizations.of(context).translate("offline"),
               style: Theme.of(context).textTheme.headline,
             ),
-          )
-        )
+          ),
+        ),
       ),
     );
   }

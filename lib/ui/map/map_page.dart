@@ -8,7 +8,6 @@ import 'package:reservation_system_customer/ui/map/map_view.dart';
 import 'location_detail_sheet.dart';
 
 class MapPage extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -39,7 +39,8 @@ class MapViewState extends State<MapView> {
     userPosition =
         Provider.of<UserRepository>(context, listen: false).userPosition ??
             defaultPosition;
-    print('Build with marker ${widget.markers.length} ${Set<Marker>.of(widget.markers.values).length}');
+    print(
+        'Build with marker ${widget.markers.length} ${Set<Marker>.of(widget.markers.values).length}');
     return Scaffold(
         body: GoogleMap(
           myLocationButtonEnabled: false,
@@ -150,8 +151,8 @@ class MapViewState extends State<MapView> {
     //TODO: Test here what the zoom level should be
     //double zoomLevel = await controller.getZoomLevel();
     lastFetchPosition = location ?? defaultPosition;
-    BlocProvider.of<MapBloc>(context).add(
-        MapLoadLocations(position: lastFetchPosition, radius: 1000));
+    BlocProvider.of<MapBloc>(context)
+        .add(MapLoadLocations(position: lastFetchPosition, radius: 1000));
   }
 
   Future<LatLng> _getUserPosition() async {
