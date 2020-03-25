@@ -113,14 +113,12 @@ class _CheckboxTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return RadioListTile(
         title: Text(locationType.localized(context)),
-        leading: Radio(
-          activeColor: Theme.of(context).accentColor,
-          value: locationType,
-          onChanged: (_) => locationSelected(locationType),
-          groupValue: groupValue,
-        ));
+        activeColor: Theme.of(context).accentColor,
+        groupValue: groupValue,
+        value: locationType,
+        onChanged: (_) => locationSelected(locationType));
   }
 }
 
