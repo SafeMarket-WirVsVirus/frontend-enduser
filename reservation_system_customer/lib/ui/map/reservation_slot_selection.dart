@@ -145,7 +145,9 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
     for (int i = scrollIndexOffset; i < timeSlotData.length; i++) {
       TimeSlotData slot = timeSlotData[i];
       Color color;
-      final percentageBookings = slot.registrationCount / (slotSize * 1);
+      final percentageBookings = (i == selectedIndex ? slot.registrationCount +
+          1 : slot.registrationCount) / (slotSize * 1);
+
 
       if (percentageBookings < 0.33) {
         color = Color(0xFF00F2A9);
