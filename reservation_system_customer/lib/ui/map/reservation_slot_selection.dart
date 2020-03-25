@@ -29,77 +29,75 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
   Widget build(BuildContext context) {
     //TODO: this is hacky as shit. There HAS to be a better way but it works for now
     double chartWidth = (widget.data.length * 35.0 + 40.0) as double;
-    return Container(
-      height: 200,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child:
-        Container(
-          width: chartWidth,
-          child: _BarChartContainer(
-            child: BarChart(getBarData(
-                widget.data,
-                scrollIndexOffset,
-                widget.slotSize,
-                barsShown,
-                BarChartGroupData(
-                  x: 0,
-                  barRods: [
-                    BarChartRodData(
-                        y: 0,
-                        width: 25,
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(5.0),
-                          topRight: Radius.circular(5.0),
-                        ),
-                        backDrawRodData: BackgroundBarChartRodData(
-                            show: true,
-                            y: 100,
-                            color: Colors.grey[200]
-                        )
-                    )
-                  ],
-                ),
-                selectedBarIndex)
-                .copyWith(
-              maxY: 100,
-              groupsSpace: 10,
-              alignment: BarChartAlignment.center,
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: SideTitles(
-                    showTitles: true,
-                    textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 10,
-                        color: Colors.black),
-                    getTitles: (double value) {
-                      return getBarTitles(
-                          widget.data, value, scrollIndexOffset);
-                    }),
-                leftTitles: SideTitles(showTitles: false),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child:
+      Container(
+        height: 200,
+        width: chartWidth,
+        child: _BarChartContainer(
+          child: BarChart(getBarData(
+              widget.data,
+              scrollIndexOffset,
+              widget.slotSize,
+              barsShown,
+              BarChartGroupData(
+                x: 0,
+                barRods: [
+                  BarChartRodData(
+                      y: 0,
+                      width: 25,
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(5.0),
+                        topRight: Radius.circular(5.0),
+                      ),
+                      backDrawRodData: BackgroundBarChartRodData(
+                          show: true,
+                          y: 100,
+                          color: Colors.grey[200]
+                      )
+                  )
+                ],
               ),
-              borderData: FlBorderData(show: false),
-              barTouchData: BarTouchData(
-                touchExtraThreshold: EdgeInsets.symmetric(vertical: 20),
-                allowTouchBarBackDraw: true,
-                handleBuiltInTouches: false,
-                touchCallback: (BarTouchResponse touchResponse) {
-                  setState(() {
-                    if (touchResponse.spot != null) {
-                      selectedBarIndex =
-                          touchResponse.spot.touchedBarGroupIndex +
-                              scrollIndexOffset;
-                      var date = widget.data[selectedBarIndex].start;
-                      print('$selectedBarIndex $date');
-                      widget.selectedSlotChanged(date);
-                    }
-                  });
-                },
-              ),
-            )),
-          ),
+              selectedBarIndex)
+              .copyWith(
+            maxY: 100,
+            groupsSpace: 10,
+            alignment: BarChartAlignment.center,
+            titlesData: FlTitlesData(
+              show: true,
+              bottomTitles: SideTitles(
+                  showTitles: true,
+                  textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10,
+                      color: Colors.black),
+                  getTitles: (double value) {
+                    return getBarTitles(
+                        widget.data, value, scrollIndexOffset);
+                  }),
+              leftTitles: SideTitles(showTitles: false),
+            ),
+            borderData: FlBorderData(show: false),
+            barTouchData: BarTouchData(
+              touchExtraThreshold: EdgeInsets.symmetric(vertical: 20),
+              allowTouchBarBackDraw: true,
+              handleBuiltInTouches: false,
+              touchCallback: (BarTouchResponse touchResponse) {
+                setState(() {
+                  if (touchResponse.spot != null) {
+                    selectedBarIndex =
+                        touchResponse.spot.touchedBarGroupIndex +
+                            scrollIndexOffset;
+                    var date = widget.data[selectedBarIndex].start;
+                    print('$selectedBarIndex $date');
+                    widget.selectedSlotChanged(date);
+                  }
+                });
+              },
+            ),
+          )),
         ),
       ),
     );
