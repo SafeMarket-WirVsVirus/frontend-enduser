@@ -55,6 +55,11 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                               topLeft: Radius.circular(5.0),
                               topRight: Radius.circular(5.0),
                             ),
+                              backDrawRodData: BackgroundBarChartRodData(
+                                  show: true,
+                                  y: 100,
+                                  color: Colors.grey[200]
+                              )
                           )
                         ],
                         barsSpace: 3,
@@ -81,6 +86,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                 barTouchData: BarTouchData(
                   touchExtraThreshold: EdgeInsets.symmetric(vertical: 20),
                   allowTouchBarBackDraw: true,
+                  handleBuiltInTouches: false,
                   touchCallback: (BarTouchResponse touchResponse) {
                     setState(() {
                       if (touchResponse.spot != null) {
@@ -140,7 +146,9 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
     for (int i = scrollIndexOffset; i < timeSlotData.length; i++) {
       TimeSlotData slot = timeSlotData[i];
       Color color;
-      final percentageBookings = slot.registrationCount / (slotSize * 1);
+      final percentageBookings = (i == selectedIndex ? slot.registrationCount +
+          1 : slot.registrationCount) / (slotSize * 1);
+
 
       if (percentageBookings < 0.33) {
         color = Color(0xFF00F2A9);
