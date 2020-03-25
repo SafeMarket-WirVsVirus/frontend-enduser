@@ -27,6 +27,21 @@ class ReservationListDetail extends StatelessWidget {
           embeddedImage: AssetImage('assets/AppIcon.png'),
         ),
       ),
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Row(children:
+        reservation.codeWords.map<Widget>((String word) {
+          return Expanded(
+            child: Center(
+              child: Text(
+                word,
+                style: Theme.of(context).textTheme.headline,
+              ),
+            ),
+          );
+        }).toList()
+        ),
+      ),
       Align(
           alignment: Alignment.topRight,
           child: FlatButton(
