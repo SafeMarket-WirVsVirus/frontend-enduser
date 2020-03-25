@@ -86,7 +86,7 @@ class MapLocationsLoaded extends MapState {
 class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationsRepository _locationsRepository;
   int fillStatusPreference = 3;
-  LocationType filterSelection = LocationType.store;
+  LocationType filterSelection = LocationType.supermarket;
   List<Location> locations = [];
   Map<FillStatus, BitmapDescriptor> markerIcons;
 
