@@ -7,6 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../repository/data/data.dart';
+import '../repository/data/data.dart';
 
 /// EVENTS
 
@@ -76,9 +80,9 @@ class MapLocationsLoaded extends MapState {
     @required List<Location> locations,
     @required Map<FillStatus, BitmapDescriptor> markerIcons,
   }) : super(
-    locations: locations,
-    markerIcons: markerIcons,
-  );
+          locations: locations,
+          markerIcons: markerIcons,
+        );
 }
 
 /// BLOC
@@ -92,7 +96,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   MapBloc({
     @required LocationsRepository locationsRepository,
-  }) : _locationsRepository = locationsRepository;
+  }) : _locationsRepository = locationsRepository {
+    //get the saved filter selection
+    SharedPreferences.getInstance().then((pref) {
+      //filterSelection = LocationType.;
+      filterSelection = _getLocationTypeFromQueryParameter(
+              pref.getString("filter_selection")) ??
+          filterSelection;
+    });
+  }
 
   @override
   MapState get initialState => MapInitial();
@@ -122,6 +134,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         markerIcons: markerIcons,
       );
     } else if (event is MapSettingsChanged) {
+      //save the new filter selection
+      SharedPreferences.getInstance().then((pref) {
+        pref.setString("filter_selection", filterSelection.asQueryParameter);
+      });
+
       fillStatusPreference = event.fillStatusPreference;
       filterSelection = event.filterSelection;
       yield MapLocationsLoaded(
@@ -129,6 +146,20 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         markerIcons: markerIcons,
       );
     }
+  }
+
+  LocationType _getLocationTypeFromQueryParameter(String parameter) {
+    switch (parameter) {
+      case 'bakery':
+        return LocationType.bakery;
+      case 'supermarket':
+        return LocationType.supermarket;
+      case 'pharmacy':
+        return LocationType.pharmacy;
+      case 'store':
+        return LocationType.store;
+    }
+    return null;
   }
 
   List<Location> _filteredLocations(List<Location> locations) {
