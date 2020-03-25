@@ -21,94 +21,85 @@ class ReservationSlotSelection extends StatefulWidget {
 }
 
 class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
-  final int barsShown = 7;
+  final int barsShown = 1000;
   int scrollIndexOffset = 0;
   int selectedBarIndex;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _NavigationButton(
-              navigationDirection: _NavigationDirection.backwards,
-              onPressed: _navigate,
-            ),
-            _BarChartContainer(
-              child: BarChart(getBarData(
-                      widget.data,
-                      scrollIndexOffset,
-                      widget.slotSize,
-                      barsShown,
-                      BarChartGroupData(
-                        x: 0,
-                        barRods: [
-                          BarChartRodData(
-                            y: 0,
-                            width: 25,
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(5.0),
-                              topRight: Radius.circular(5.0),
-                            ),
-                              backDrawRodData: BackgroundBarChartRodData(
-                                  show: true,
-                                  y: 100,
-                                  color: Colors.grey[200]
-                              )
-                          )
-                        ],
-                        barsSpace: 3,
-                      ),
-                      selectedBarIndex)
-                  .copyWith(
-                maxY: 100,
-                alignment: BarChartAlignment.spaceEvenly,
-                titlesData: FlTitlesData(
-                  show: true,
-                  bottomTitles: SideTitles(
-                      showTitles: true,
-                      textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 10,
-                          color: Colors.black),
-                      getTitles: (double value) {
-                        return getBarTitles(
-                            widget.data, value, scrollIndexOffset);
-                      }),
-                  leftTitles: SideTitles(showTitles: false),
+    return Container(
+      height: 200,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child:
+        Container(
+          width: 100000,
+          child: _BarChartContainer(
+            child: BarChart(getBarData(
+                widget.data,
+                scrollIndexOffset,
+                widget.slotSize,
+                barsShown,
+                BarChartGroupData(
+                  x: 0,
+                  barRods: [
+                    BarChartRodData(
+                        y: 0,
+                        width: 25,
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5.0),
+                          topRight: Radius.circular(5.0),
+                        ),
+                        backDrawRodData: BackgroundBarChartRodData(
+                            show: true,
+                            y: 100,
+                            color: Colors.grey[200]
+                        )
+                    )
+                  ],
                 ),
-                borderData: FlBorderData(show: false),
-                barTouchData: BarTouchData(
-                  touchExtraThreshold: EdgeInsets.symmetric(vertical: 20),
-                  allowTouchBarBackDraw: true,
-                  handleBuiltInTouches: false,
-                  touchCallback: (BarTouchResponse touchResponse) {
-                    setState(() {
-                      if (touchResponse.spot != null) {
-                        selectedBarIndex =
-                            touchResponse.spot.touchedBarGroupIndex +
-                                scrollIndexOffset;
-                        var date = widget.data[selectedBarIndex].start;
-                        print('$selectedBarIndex $date');
-                        widget.selectedSlotChanged(date);
-                      }
-                    });
-                  },
-                ),
-              )),
-            ),
-            _NavigationButton(
-              navigationDirection: _NavigationDirection.forwards,
-              onPressed: _navigate,
-            ),
-          ],
+                selectedBarIndex)
+                .copyWith(
+              maxY: 100,
+              groupsSpace: 10,
+              alignment: BarChartAlignment.spaceBetween,
+              titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: SideTitles(
+                    showTitles: true,
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                        color: Colors.black),
+                    getTitles: (double value) {
+                      return getBarTitles(
+                          widget.data, value, scrollIndexOffset);
+                    }),
+                leftTitles: SideTitles(showTitles: false),
+              ),
+              borderData: FlBorderData(show: false),
+              barTouchData: BarTouchData(
+                touchExtraThreshold: EdgeInsets.symmetric(vertical: 20),
+                allowTouchBarBackDraw: true,
+                handleBuiltInTouches: false,
+                touchCallback: (BarTouchResponse touchResponse) {
+                  setState(() {
+                    if (touchResponse.spot != null) {
+                      selectedBarIndex =
+                          touchResponse.spot.touchedBarGroupIndex +
+                              scrollIndexOffset;
+                      var date = widget.data[selectedBarIndex].start;
+                      print('$selectedBarIndex $date');
+                      widget.selectedSlotChanged(date);
+                    }
+                  });
+                },
+              ),
+            )),
+          ),
         ),
-      ],
+      ),
     );
   }
 
@@ -143,12 +134,13 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
       BarChartGroupData cfg,
       int selectedIndex) {
     List<BarChartGroupData> data = new List();
-    for (int i = scrollIndexOffset; i < timeSlotData.length; i++) {
+    for (int i = 0; i < timeSlotData.length; i++) {
       TimeSlotData slot = timeSlotData[i];
       Color color;
-      final percentageBookings = (i == selectedIndex ? slot.registrationCount +
-          1 : slot.registrationCount) / (slotSize * 1);
-
+      final percentageBookings = (i == selectedIndex
+          ? slot.registrationCount + 1
+          : slot.registrationCount) /
+          (slotSize * 1);
 
       if (percentageBookings < 0.33) {
         color = Color(0xFF00F2A9);
