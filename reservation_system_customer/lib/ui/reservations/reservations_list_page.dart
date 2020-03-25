@@ -8,7 +8,7 @@ import 'package:reservation_system_customer/ui/reservations/reservation_list_det
 import 'package:reservation_system_customer/ui/reservations/reservations_list_entry.dart';
 
 import '../../app_localizations.dart';
-import 'reservation_detail_page.dart';
+
 
 class ReservationsListPage extends StatefulWidget {
   @override
@@ -16,7 +16,6 @@ class ReservationsListPage extends StatefulWidget {
 }
 
 class _ReservationsListPageState extends State<ReservationsListPage> {
-  final DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
 
   List<Item> _data = new List();
 
