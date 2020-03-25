@@ -27,7 +27,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
 
   @override
   Widget build(BuildContext context) {
-    //TODO: this is hacky as shit. There HAS to be a better way but it works for now
+    // TODO: this is hacky as shit. There HAS to be a better way but it works for now
     double chartWidth = widget.data.length * 35.0 + 40.0;
     return Center(
       child: SingleChildScrollView(
@@ -70,7 +70,8 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                         fontSize: 10,
                         color: Colors.black),
                     getTitles: (double value) {
-                      return getBarTitles(widget.data, value, scrollIndexOffset);
+                      return getBarTitles(
+                          widget.data, value, scrollIndexOffset);
                     }),
                 leftTitles: SideTitles(showTitles: false),
               ),
@@ -82,8 +83,9 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                 touchCallback: (BarTouchResponse touchResponse) {
                   setState(() {
                     if (touchResponse.spot != null) {
-                      selectedBarIndex = touchResponse.spot.touchedBarGroupIndex +
-                          scrollIndexOffset;
+                      selectedBarIndex =
+                          touchResponse.spot.touchedBarGroupIndex +
+                              scrollIndexOffset;
                       var date = widget.data[selectedBarIndex].start;
                       print('$selectedBarIndex $date');
                       widget.selectedSlotChanged(date);
@@ -165,24 +167,3 @@ class _BarChartContainer extends StatelessWidget {
     );
   }
 }
-
-// unused at the moment
-//class _ToolTipData extends BarTouchTooltipData {
-//  _ToolTipData(BuildContext context, DateTime startTime, double percent)
-//      : super(
-//            tooltipBgColor: Colors.greenAccent,
-//            getTooltipItem: (group, groupIndex, rod, rodIndex) {
-//              String text = _formattedText(startTime, percent);
-//              return BarTooltipItem(
-//                  text, TextStyle(color: Theme.of(context).primaryColor));
-//            },
-//            fitInsideVertically: true,
-//            fitInsideHorizontally: true);
-//
-//  static String _formattedText(DateTime startTime, double percent) {
-//    String time = (DateFormat.Hm()).format(startTime) + " Uhr";
-//    int utilPercent = (percent * 100).round();
-//    String utilization = "Auslastung: " + utilPercent.toString() + "%";
-//    return time + '\n' + utilization;
-//  }
-//}

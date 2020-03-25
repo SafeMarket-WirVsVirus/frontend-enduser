@@ -26,3 +26,13 @@ jobs:
       - uses: axel-op/dart-package-analyzer@v2.0.0
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
+      - name: Analyzer Output
+        run: |
+          ERRORS=${{ steps.analysis.outputs.errors }}
+          WARNINGS=${{ steps.analysis.outputs.warnings }}
+          HINTS=${{ steps.analysis.outputs.hints }}
+          if (( $(echo "$ERRORS > 0" | bc) )) || (( $(echo "$WARNINGS > 0" | bc) )) || (( $(echo "$HINTS > 0" | bc) ))
+          then
+            echo "Found issues, please check Analysis file for more information"
+            exit 1
+          fi
