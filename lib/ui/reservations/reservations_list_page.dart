@@ -47,29 +47,50 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                   ],
                 ),
               ),
-              body: SingleChildScrollView(
-                child: Container(
-                  child: ExpansionPanelList(
-                    expansionCallback: (int index, bool isExpanded) {
-                      setState(() {
-                        _data[index].isExpanded = !isExpanded;
-                      });
-                    },
-                    children: _data.map<ExpansionPanel>((Item item) {
-                      return ExpansionPanel(
-                        canTapOnHeader: true,
-                        headerBuilder: (BuildContext context, bool isExpanded) {
-                          return ReservationListEntry(item: item);
-                        },
-                        body: ReservationListDetail(
-                          reservation: item.reservation,
-                        ),
-                        isExpanded: item.isExpanded,
-                      );
-                    }).toList(),
+              body: Stack(
+                children: <Widget>[
+                  Container(
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/background.jpg"),
+                        fit: BoxFit.cover,
+                      )
+                    ),
                   ),
-                ),
-              ));
+                  SingleChildScrollView(
+                    child: Container(
+                      color: Theme.of(context).accentColor,
+                      child: ExpansionPanelList(
+                        expansionCallback: (int index, bool isExpanded) {
+                          setState(() {
+                            for (int i = 0; i < _data.length; i++) {
+                              _data[i].isExpanded = false;
+                            }
+                            _data[index].isExpanded = !isExpanded;
+
+                          });
+                        },
+                        children: _data.map<ExpansionPanel>((Item item) {
+                          return ExpansionPanel(
+                            canTapOnHeader: true,
+                            headerBuilder: (BuildContext context, bool isExpanded) {
+                              return ReservationListEntry(item: item);
+                            },
+                            body: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: ReservationListDetail(
+                                reservation: item.reservation,
+                              ),
+                            ),
+                            isExpanded: item.isExpanded,
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  )
+                ],
+              )
+          );
         } else {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,

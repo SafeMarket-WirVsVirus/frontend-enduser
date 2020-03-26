@@ -17,7 +17,7 @@ class ReservationListDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       Padding(
-        padding: EdgeInsets.symmetric(horizontal: 100, vertical: 10),
+        padding: EdgeInsets.symmetric(horizontal: 100),
         child: QrImage(
           data: reservation.id.toString(),
           backgroundColor: Colors.white,
@@ -34,7 +34,7 @@ class ReservationListDetail extends StatelessWidget {
             child: Center(
               child: Text(
                 word,
-                style: Theme.of(context).textTheme.headline,
+                style: TextStyle(fontWeight: FontWeight.bold)
               ),
             ),
           );
@@ -43,7 +43,7 @@ class ReservationListDetail extends StatelessWidget {
       Align(
           alignment: Alignment.topRight,
           child: FlatButton(
-              child: Icon(Icons.delete),
+              child: Icon(Icons.delete_outline),
               onPressed: () {
                 _deleteDialog(context, reservation);
               }))
