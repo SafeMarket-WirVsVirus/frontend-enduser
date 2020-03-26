@@ -1,3 +1,13 @@
+## 1.0.1
+
+- Animated and scrollable bars in the location detail screen
+- Save the last map filter settings, even after the app has been restarted
+- Grey out old reservations (more than 60 minutes in the past)
+- Respect the device's default time format
+- UI support for dummy code words
+- Other small UI improvements
+
+
 ## 1.0.0
 
 - Display, create and cancel reservations
