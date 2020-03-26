@@ -22,7 +22,8 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
   void getNotificationState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    bool set = prefs.get('${widget.item.reservation.id}') == null ? false : true;
+    bool set =
+        prefs.get('${widget.item.reservation.id}') == null ? false : true;
 
     setState(() {
       notificationSet = set;
@@ -31,7 +32,8 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
 
   @override
   void initState() {
-    notificationHandler = NotificationHandler(null, widget.item.reservation, context);
+    notificationHandler =
+        NotificationHandler(null, widget.item.reservation, context);
     getNotificationState();
     super.initState();
   }
@@ -106,7 +108,8 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
                             },
                           ),
                         ),
-                        Text(AppLocalizations.of(context).translate("notification"))
+                        Text(AppLocalizations.of(context)
+                            .translate("notification"))
                       ],
                     ),
                   ],
@@ -120,12 +123,17 @@ class _ReservationListEntryState extends State<ReservationListEntry> {
               )
             ],
           ),
-          Container(
-              height: 120,
-              width: 1000,
-              color:
-            widget.item.reservation.startTime.difference(DateTime.now()).inMinutes  < -60 && !widget.item.isExpanded ?
-            Color(0xbfffffff) : Color(0x00000000),
+          Visibility(
+            visible: widget.item.reservation.startTime
+                        .difference(DateTime.now())
+                        .inMinutes <
+                    -60 &&
+                !widget.item.isExpanded,
+            child: Expanded(
+              child: Container(
+                color: Color(0xbfffffff),
+              ),
+            ),
           ),
         ],
       ),
