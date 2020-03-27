@@ -115,6 +115,11 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
 
   void updateList(List<Reservation> reservations) {
     reservations.forEach((res) => addIfNew(res));
+
+    //sort the reservation list by startTime
+    _data.sort((a, b) {
+      return a.reservation.startTime.compareTo(b.reservation.startTime);
+    });
   }
 
   void addIfNew(Reservation res) {
