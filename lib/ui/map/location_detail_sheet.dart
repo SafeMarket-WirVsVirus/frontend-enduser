@@ -97,7 +97,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                                 print('JR: Success');
                                 BlocProvider.of<ReservationsBloc>(widget.scaffoldContext)
                                     .add(LoadReservations());
-                                Navigator.pop(widget.scaffoldContext);
+                                Navigator.pop(context);
                                 final snackBar = SnackBar(
                                     content: Text(AppLocalizations.of(context)
                                         .translate("reminder_snack")));
