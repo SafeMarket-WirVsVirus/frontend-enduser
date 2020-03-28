@@ -32,18 +32,19 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                 backgroundColor: Colors.white,
                 title: Row(
                   children: <Widget>[
-                    Container(
-                      height: 40,
-                      child: Image(
-                          image: AssetImage("assets/005-calendar.png"),
-                          fit: BoxFit.fitHeight),
-                    ),
+                    Image(
+                        height: 25,
+                        image: AssetImage("assets/005-calendar.png"),
+                        fit: BoxFit.fitHeight),
+                    SizedBox(width: 15),
                     Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                            AppLocalizations.of(context)
-                                .translate("reservations_title"),
-                            style: TextStyle(color: Color(0xff322153)))),
+                      padding: EdgeInsets.all(8.0),
+                      child: Text(
+                        AppLocalizations.of(context)
+                            .translate("reservations_title"),
+                        style: TextStyle(color: Color(0xff322153)),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -51,11 +52,10 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                 children: <Widget>[
                   Container(
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/background.jpg"),
-                        fit: BoxFit.cover,
-                      )
-                    ),
+                        image: DecorationImage(
+                      image: AssetImage("assets/background.jpg"),
+                      fit: BoxFit.cover,
+                    )),
                   ),
                   SingleChildScrollView(
                     child: Container(
@@ -67,14 +67,15 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                               _data[i].isExpanded = false;
                             }
                             _data[index].isExpanded = !isExpanded;
-
                           });
                         },
                         children: _data.map<ExpansionPanel>((Item item) {
                           return ExpansionPanel(
                             canTapOnHeader: true,
-                            headerBuilder: (BuildContext context, bool isExpanded) {
-                              return ReservationListEntry(item: item);
+                            headerBuilder:
+                                (BuildContext context, bool isExpanded) {
+                              return ReservationListEntry(
+                                  reservation: item.reservation);
                             },
                             body: Padding(
                               padding: EdgeInsets.all(10),
@@ -89,8 +90,7 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                     ),
                   )
                 ],
-              )
-          );
+              ));
         } else {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.center,
