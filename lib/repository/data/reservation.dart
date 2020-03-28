@@ -25,6 +25,11 @@ class Reservation {
     @required this.startTime,
   });
 
+  @override
+  String toString() {
+    return 'Reservation $id @$startTime';
+  }
+
   factory Reservation.fromJson(Map<String, dynamic> json) =>
       _$ReservationFromJson(json);
 }

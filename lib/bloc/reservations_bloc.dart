@@ -54,15 +54,19 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
     if (event is LoadReservations) {
       yield ReservationsLoading();
       try {
-        print("Loading reservations...");
+        print('Loading reservations ...');
         final reservations = await _reservationsRepository
             .getReservations(
               deviceId: deviceId,
             )
             .timeout(Duration(seconds: 5));
+        reservations?.sort((a, b) {
+          return a.startTime.compareTo(b.startTime);
+        });
+        print('Loaded reservations: $reservations');
         if (reservations != null) yield ReservationsLoaded(reservations);
       } catch (_) {
-        print("Loading reservations failed");
+        print('Loading reservations failed');
         yield ReservationsLoadFail();
       }
     }
