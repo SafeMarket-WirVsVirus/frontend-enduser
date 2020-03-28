@@ -29,20 +29,19 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
         if (state.reservations.length > 0) {
           return Scaffold(
               appBar: AppBar(
-                backgroundColor: Colors.white,
                 title: Row(
                   children: <Widget>[
                     Image(
-                        height: 25,
-                        image: AssetImage("assets/005-calendar.png"),
-                        fit: BoxFit.fitHeight),
+                      height: 25,
+                      image: AssetImage("assets/005-calendar.png"),
+                      fit: BoxFit.fitHeight,
+                    ),
                     SizedBox(width: 15),
                     Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
                         AppLocalizations.of(context)
                             .translate("reservations_title"),
-                        style: TextStyle(color: Color(0xff322153)),
                       ),
                     ),
                   ],

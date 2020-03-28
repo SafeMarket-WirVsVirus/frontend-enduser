@@ -21,9 +21,18 @@ class MyApp extends StatelessWidget {
     );
     return MaterialApp(
       title: "SafeMarket",
-      theme: ThemeData(
+      theme: ThemeData.light().copyWith(
           primaryColor: Color(0xff2196F3),
           accentColor: Color(0xff00F2A9),
+          appBarTheme: ThemeData.light().appBarTheme.copyWith(
+                color: Colors.white,
+                textTheme: ThemeData.light().textTheme.copyWith(
+                      title: TextStyle(
+                        color: Color(0xff322153),
+                        fontSize: 17,
+                      ),
+                    ),
+              ),
           brightness: Brightness.light),
       home: MultiProvider(
         providers: [
