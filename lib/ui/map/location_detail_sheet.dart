@@ -9,10 +9,12 @@ import 'package:reservation_system_customer/ui/map/reservation_slot_selection.da
 
 class LocationDetailSheet extends StatefulWidget {
   final Location location;
+  final BuildContext scaffoldContext;
 
   LocationDetailSheet({
     Key key,
     @required this.location,
+    @required this.scaffoldContext,
   }) : super(key: key);
 
   @override
@@ -33,86 +35,89 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 450,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(5),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: 20),
-            _LocationInformation(
-              name: widget.location?.name ?? "",
-              address: widget.location?.address ?? "",
-            ),
-            _ReservationSlotsWithLoading(
-              data: data,
-              slotSize: widget.location.slotSize,
-              selectedSlotChanged: (slot) {
-                setState(() {
-                  selectedTime = slot;
-                });
-              },
-            ),
-            _ChangeDateButton(
-              title: (DateFormat.yMMMMd(
-                      AppLocalizations.of(context).locale.languageCode))
-                  .format(selectedDate),
-              dateChanged: (date) {
-                setState(() {
-                  selectedDate = date;
-                  data = null;
-                });
-                _fetchData();
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
-                  child: RaisedButton(
-                    child: Text(
-                        AppLocalizations.of(context).translate("reserve_slot")),
-                    color: Color(0xFF00F2A9),
-                    textColor: Color(0xFF322153),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(20),
-                        side: BorderSide(color: Color(0xFF00F2A9))),
-                    onPressed: selectedTime == null
-                        ? null
-                        : () async {
-                            final success =
-                                await Provider.of<ReservationsRepository>(
-                                        context,
-                                        listen: false)
-                                    .createReservation(
-                              locationId: widget.location.id,
-                              startTime: selectedTime,
-                            );
-
-                            if (success) {
-                              BlocProvider.of<ReservationsBloc>(context)
-                                  .add(LoadReservations());
-                              final snackBar = SnackBar(
-                                  content: Text(AppLocalizations.of(context)
-                                      .translate("reminder_snack")));
-                              Scaffold.of(context).showSnackBar(snackBar);
-                            } else {
-                              showDialog<void>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    _CreateReservationFailedDialog(),
+        height: 450,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(5),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: 20),
+              _LocationInformation(
+                name: widget.location?.name ?? "",
+                address: widget.location?.address ?? "",
+              ),
+              _ReservationSlotsWithLoading(
+                data: data,
+                slotSize: widget.location.slotSize,
+                selectedSlotChanged: (slot) {
+                  setState(() {
+                    selectedTime = slot;
+                  });
+                },
+              ),
+              _ChangeDateButton(
+                title: (DateFormat.yMMMMd(
+                        AppLocalizations.of(context).locale.languageCode))
+                    .format(selectedDate),
+                dateChanged: (date) {
+                  setState(() {
+                    selectedDate = date;
+                    data = null;
+                  });
+                  _fetchData();
+                },
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
+                    child: RaisedButton(
+                      child: Text(
+                          AppLocalizations.of(context).translate("reserve_slot")),
+                      color: Color(0xFF00F2A9),
+                      textColor: Color(0xFF322153),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(20),
+                          side: BorderSide(color: Color(0xFF00F2A9))),
+                      onPressed: selectedTime == null
+                          ? null
+                          : () async {
+                              final success =
+                                  await Provider.of<ReservationsRepository>(
+                                          context,
+                                          listen: false)
+                                      .createReservation(
+                                locationId: widget.location.id,
+                                startTime: selectedTime,
                               );
-                            }
-                          },
+
+                              if (success) {
+                                print('JR: Success');
+                                BlocProvider.of<ReservationsBloc>(widget.scaffoldContext)
+                                    .add(LoadReservations());
+                                Navigator.pop(widget.scaffoldContext);
+                                final snackBar = SnackBar(
+                                    content: Text(AppLocalizations.of(context)
+                                        .translate("reminder_snack")));
+                                Scaffold.of(widget.scaffoldContext).showSnackBar(snackBar);
+                              } else {
+                                showDialog<void>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      _CreateReservationFailedDialog(),
+                                );
+                              }
+                            },
+                    ),
                   ),
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
-      ),
+
     );
   }
 

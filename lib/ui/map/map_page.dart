@@ -38,7 +38,10 @@ class MapPage extends StatelessWidget {
                           create: (_) => Provider.of<ReservationsRepository>(
                               context,
                               listen: false),
-                          child: LocationDetailSheet(location: location)),
+                          child: LocationDetailSheet(
+                            location: location,
+                            scaffoldContext: context,
+                          )),
                     ),
                   );
                 },
