@@ -44,6 +44,7 @@ class _HomePage extends StatefulWidget {
 }
 
 class __HomePageState extends State<_HomePage> {
+  final pages = [_BottomBarType.reservations, _BottomBarType.map];
   int _selectedIndex = 1;
 
   @override
@@ -64,22 +65,16 @@ class __HomePageState extends State<_HomePage> {
         onTap: (index) => setState(() {
           _selectedIndex = index;
         }),
-        items: [
-          BottomNavigationBarItem(
-            icon: new Image.asset(
-              'assets/005-calendar.png',
-              height: 40,
-            ),
-            title: Text(AppLocalizations.of(context).translate("reservations")),
-          ),
-          BottomNavigationBarItem(
-            icon: new Image.asset(
-              'assets/001-loupe.png',
-              height: 40,
-            ),
-            title: Text(AppLocalizations.of(context).translate("map")),
-          )
-        ],
+        items: pages
+            .map((type) => BottomNavigationBarItem(
+                  icon: Image.asset(type.iconName, height: 30),
+                  title: Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text(AppLocalizations.of(context)
+                        .translate(type.textIdentifier)),
+                  ),
+                ))
+            .toList(),
       ),
       body: _page(_selectedIndex),
     );
@@ -93,6 +88,32 @@ class __HomePageState extends State<_HomePage> {
         return MapPage();
       default:
         return Container();
+    }
+  }
+}
+
+enum _BottomBarType { reservations, map }
+
+extension _BottomBarInfos on _BottomBarType {
+  String get textIdentifier {
+    switch (this) {
+      case _BottomBarType.reservations:
+        return 'reservations';
+      case _BottomBarType.map:
+        return 'map';
+      default:
+        return '';
+    }
+  }
+
+  String get iconName {
+    switch (this) {
+      case _BottomBarType.reservations:
+        return 'assets/005-calendar.png';
+      case _BottomBarType.map:
+        return 'assets/001-loupe.png';
+      default:
+        return '';
     }
   }
 }
