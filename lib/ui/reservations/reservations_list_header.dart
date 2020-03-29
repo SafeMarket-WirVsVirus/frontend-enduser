@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/data/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_localizations.dart';
 import '../../notifications.dart';
 
-class ReservationListEntry extends StatelessWidget {
+class ReservationListHeader extends StatelessWidget {
   final Reservation reservation;
 
-  const ReservationListEntry({
+  const ReservationListHeader({
     Key key,
     this.reservation,
   }) : super(key: key);
@@ -101,33 +102,44 @@ class __NotificationButtonState extends State<_NotificationButton> {
 
   @override
   Widget build(BuildContext context) {
+    var canScheduleNotification = _canScheduleNotification();
     return FlatButton(
       padding: EdgeInsets.all(4),
       child: Column(
         children: <Widget>[
-          Image(
-            width: 20,
-            image: isNotificationSet
-                ? AssetImage('assets/004-bell.png')
-                : AssetImage('assets/004-bell-mute.png'),
-            fit: BoxFit.fitWidth,
+          Opacity(
+            opacity: canScheduleNotification ? 1 : 0.4,
+            child: Image(
+              width: 20,
+              image: isNotificationSet
+                  ? AssetImage('assets/004-bell.png')
+                  : AssetImage('assets/004-bell-mute.png'),
+              fit: BoxFit.fitWidth,
+            ),
           ),
           SizedBox(height: 5),
           Text(AppLocalizations.of(context).translate("notification")),
         ],
       ),
-      onPressed: () {
-        setState(() {
-          isNotificationSet = !isNotificationSet;
-        });
+      onPressed: canScheduleNotification
+          ? () {
+              setState(() {
+                isNotificationSet = !isNotificationSet;
+              });
 
-        if (isNotificationSet) {
-          notificationHandler.setReminder();
-        } else {
-          notificationHandler.cancelReminder();
-        }
-      },
+              if (isNotificationSet) {
+                notificationHandler.setReminder();
+              } else {
+                notificationHandler.cancelReminder();
+              }
+            }
+          : null,
     );
+  }
+
+  bool _canScheduleNotification() {
+    return widget.reservation.startTime.difference(DateTime.now()) >
+        Constants.durationForNotificationBeforeStartTime;
   }
 
   void _updateNotificationState() async {

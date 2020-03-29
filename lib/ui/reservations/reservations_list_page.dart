@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
-import 'package:reservation_system_customer/repository/data/reservation.dart';
+import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/ui/reservations/reservation_list_detail.dart';
-import 'package:reservation_system_customer/ui/reservations/reservations_list_entry.dart';
+import 'package:reservation_system_customer/ui/reservations/reservations_list_header.dart';
 
 import '../../app_localizations.dart';
 
@@ -12,7 +12,7 @@ class ReservationsListPage extends StatefulWidget {
 }
 
 class _ReservationsListPageState extends State<ReservationsListPage> {
-  List<Item> _data = new List();
+  int expandedReservationId;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,6 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
           child: CircularProgressIndicator(),
         );
       } else if (state is ReservationsLoaded) {
-        updateList(state.reservations);
         if (state.reservations.length > 0) {
           return Scaffold(
               appBar: AppBar(
@@ -61,28 +60,42 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                       color: Theme.of(context).accentColor,
                       child: ExpansionPanelList(
                         expansionCallback: (int index, bool isExpanded) {
+                          final reservation = state.reservations[index];
                           setState(() {
-                            for (int i = 0; i < _data.length; i++) {
-                              _data[i].isExpanded = false;
+                            if (isExpanded) {
+                              expandedReservationId = null;
+                            } else {
+                              if (!isExpanded &&
+                                  !_isExpired(reservation.startTime)) {
+                                expandedReservationId = reservation.id;
+                              } else {
+                                expandedReservationId = null;
+                              }
                             }
-                            _data[index].isExpanded = !isExpanded;
                           });
                         },
-                        children: _data.map<ExpansionPanel>((Item item) {
+                        children: state.reservations
+                            .map<ExpansionPanel>((reservation) {
+                          final isExpired = _isExpired(reservation.startTime);
+
                           return ExpansionPanel(
-                            canTapOnHeader: true,
+                            canTapOnHeader: !isExpired ||
+                                reservation.id == expandedReservationId,
+                            isExpanded:
+                                reservation.id == expandedReservationId &&
+                                    !isExpired,
                             headerBuilder:
                                 (BuildContext context, bool isExpanded) {
-                              return ReservationListEntry(
-                                  reservation: item.reservation);
+                              return Opacity(
+                                opacity: isExpired ? 0.3 : 1,
+                                child: ReservationListHeader(
+                                  reservation: reservation,
+                                ),
+                              );
                             },
-                            body: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: ReservationListDetail(
-                                reservation: item.reservation,
-                              ),
+                            body: ReservationListDetail(
+                              reservation: reservation,
                             ),
-                            isExpanded: item.isExpanded,
                           );
                         }).toList(),
                       ),
@@ -112,34 +125,8 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
     });
   }
 
-  void updateList(List<Reservation> reservations) {
-    reservations.forEach((res) => addIfNew(res));
+  bool _isExpired(DateTime time) {
+    return time.difference(DateTime.now()) <
+        -Constants.minDurationBeforeNowBeforeExpired;
   }
-
-  void addIfNew(Reservation res) {
-    bool isNew = true;
-    if (_data == null) {
-      _data.add(Item(reservation: res));
-      return;
-    }
-    _data.forEach((item) => {if (item.reservation.id == res.id) isNew = false});
-    if (isNew) _data.add(Item(reservation: res));
-  }
-}
-
-class Item {
-  final Reservation reservation;
-  bool isExpanded;
-
-  Item({
-    this.reservation,
-    this.isExpanded = false,
-  });
-
-  @override
-  bool operator ==(Object other) =>
-      other is Item && reservation.id == other.reservation.id;
-
-  @override
-  int get hashCode => reservation.id;
 }

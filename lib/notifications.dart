@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/data/reservation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -51,7 +52,7 @@ class NotificationHandler {
     notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
     var scheduledNotificationDateTime =
-        reservation.startTime.subtract(Duration(minutes: 30));
+        reservation.startTime.subtract(Constants.durationForNotificationBeforeStartTime);
     //TODO: add actual androidPlatformChannelSpecifics information here
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your other channel id',
