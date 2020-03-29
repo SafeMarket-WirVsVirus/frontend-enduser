@@ -22,7 +22,6 @@ class ReservationSlotSelection extends StatefulWidget {
 
 class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
   final int barsShown = 1000;
-  int scrollIndexOffset = 0;
   int selectedBarIndex;
 
   @override
@@ -38,7 +37,6 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
           child: _BarChartContainer(
             child: BarChart(getBarData(
                     widget.data,
-                    scrollIndexOffset,
                     widget.slotSize,
                     barsShown,
                     BarChartGroupData(
@@ -71,7 +69,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                         color: Colors.black),
                     getTitles: (double value) {
                       return getBarTitles(
-                          widget.data, value, scrollIndexOffset);
+                          widget.data, value);
                     }),
                 leftTitles: SideTitles(showTitles: false),
               ),
@@ -84,8 +82,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                   setState(() {
                     if (touchResponse.spot != null) {
                       selectedBarIndex =
-                          touchResponse.spot.touchedBarGroupIndex +
-                              scrollIndexOffset;
+                          touchResponse.spot.touchedBarGroupIndex;
                       var date = widget.data[selectedBarIndex].start;
                       print('$selectedBarIndex $date');
                       widget.selectedSlotChanged(date);
@@ -102,7 +99,6 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
 
   BarChartData getBarData(
       List<TimeSlotData> timeSlotData,
-      int scrollIndexOffset,
       int slotSize,
       int dataCount,
       BarChartGroupData cfg,
@@ -138,9 +134,9 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
   }
 
   String getBarTitles(
-      List<TimeSlotData> data, double value, int scrollIndexOffset) {
-    if (value.toInt() + scrollIndexOffset < data.length) {
-      TimeSlotData slot = data[value.toInt() + scrollIndexOffset];
+      List<TimeSlotData> data, double value) {
+    if (value.toInt()  < data.length) {
+      TimeSlotData slot = data[value.toInt()];
       return (new DateFormat.Hm()).format(slot.start);
     }
     return "";

@@ -68,13 +68,14 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                 });
                 _fetchData();
               },
+              selectedDate: selectedDate,
             ),
             Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
                     child: SizedBox(
-                        width: 120,
+                        width: 140,
                         height: 50,
                         child: AnimatedCrossFade(
                           crossFadeState: loading
@@ -158,10 +159,12 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
 
 class _ChangeDateButton extends StatelessWidget {
   final String title;
+  final DateTime selectedDate;
   final ValueChanged<DateTime> dateChanged;
 
   const _ChangeDateButton({
     Key key,
+    @required this.selectedDate,
     @required this.title,
     @required this.dateChanged,
   }) : super(key: key);
@@ -177,8 +180,8 @@ class _ChangeDateButton extends StatelessWidget {
       onPressed: () async {
         Future<DateTime> selectedDate = showDatePicker(
           context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime.now().subtract(Duration(hours: 1)),
+          initialDate: this.selectedDate,
+          firstDate: DateTime.now().subtract(Duration(days: 1)),
           lastDate: DateTime.now().add(Duration(days: 2)),
           builder: (BuildContext context, Widget child) => child,
         );
