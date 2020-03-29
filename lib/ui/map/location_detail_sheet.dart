@@ -25,6 +25,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   DateTime selectedDate = DateTime.now();
   DateTime selectedTime;
   List<TimeSlotData> data;
+  bool loading = false;
 
   @override
   void initState() {
@@ -35,89 +36,108 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 450,
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(5),
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: 20),
-              _LocationInformation(
-                name: widget.location?.name ?? "",
-                address: widget.location?.address ?? "",
-              ),
-              _ReservationSlotsWithLoading(
-                data: data,
-                slotSize: widget.location.slotSize,
-                selectedSlotChanged: (slot) {
-                  setState(() {
-                    selectedTime = slot;
-                  });
-                },
-              ),
-              _ChangeDateButton(
-                title: (DateFormat.yMMMMd(
-                        AppLocalizations.of(context).locale.languageCode))
-                    .format(selectedDate),
-                dateChanged: (date) {
-                  setState(() {
-                    selectedDate = date;
-                    data = null;
-                  });
-                  _fetchData();
-                },
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  Padding(
+      height: 450,
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(5),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: 20),
+            _LocationInformation(
+              name: widget.location?.name ?? "",
+              address: widget.location?.address ?? "",
+            ),
+            _ReservationSlotsWithLoading(
+              data: data,
+              slotSize: widget.location.slotSize,
+              selectedSlotChanged: (slot) {
+                setState(() {
+                  selectedTime = slot;
+                });
+              },
+            ),
+            _ChangeDateButton(
+              title: (DateFormat.yMMMMd(
+                      AppLocalizations.of(context).locale.languageCode))
+                  .format(selectedDate),
+              dateChanged: (date) {
+                setState(() {
+                  selectedDate = date;
+                  data = null;
+                });
+                _fetchData();
+              },
+            ),
+            Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
-                    child: RaisedButton(
-                      child: Text(
-                          AppLocalizations.of(context).translate("reserve_slot")),
-                      color: Color(0xFF00F2A9),
-                      textColor: Color(0xFF322153),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(20),
-                          side: BorderSide(color: Color(0xFF00F2A9))),
-                      onPressed: selectedTime == null
-                          ? null
-                          : () async {
-                              final success =
-                                  await Provider.of<ReservationsRepository>(
-                                          context,
-                                          listen: false)
-                                      .createReservation(
-                                locationId: widget.location.id,
-                                startTime: selectedTime,
-                              );
+                    child: SizedBox(
+                        width: 120,
+                        height: 50,
+                        child: AnimatedCrossFade(
+                          crossFadeState: loading
+                              ? CrossFadeState.showSecond
+                              : CrossFadeState.showFirst,
+                          duration: Duration(milliseconds: 300),
+                          firstChild: RaisedButton(
+                            child: Text(AppLocalizations.of(context)
+                                .translate("reserve_slot")),
+                            color: Color(0xFF00F2A9),
+                            textColor: Color(0xFF322153),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20),
+                                side: BorderSide(color: Color(0xFF00F2A9))),
+                            onPressed: selectedTime == null
+                                ? null
+                                : () async {
+                                    if (!loading) {
+                                      setState(() {
+                                        loading = true;
+                                      });
 
-                              if (success) {
-                                print('JR: Success');
-                                BlocProvider.of<ReservationsBloc>(widget.scaffoldContext)
-                                    .add(LoadReservations());
-                                Navigator.pop(context);
-                                final snackBar = SnackBar(
-                                    content: Text(AppLocalizations.of(context)
-                                        .translate("reminder_snack")));
-                                Scaffold.of(widget.scaffoldContext).showSnackBar(snackBar);
-                              } else {
-                                showDialog<void>(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                      _CreateReservationFailedDialog(),
-                                );
-                              }
-                            },
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+                                      final success = await Provider.of<
+                                                  ReservationsRepository>(
+                                              context,
+                                              listen: false)
+                                          .createReservation(
+                                        locationId: widget.location.id,
+                                        startTime: selectedTime,
+                                      );
+
+                                      if (success) {
+                                        print('JR: Success');
+                                        BlocProvider.of<ReservationsBloc>(
+                                                widget.scaffoldContext)
+                                            .add(LoadReservations());
+                                        Navigator.pop(context);
+                                        final snackBar = SnackBar(
+                                            content: Text(AppLocalizations.of(
+                                                    context)
+                                                .translate("reminder_snack")));
+                                        Scaffold.of(widget.scaffoldContext)
+                                            .showSnackBar(snackBar);
+                                      } else {
+                                        showDialog<void>(
+                                          context: context,
+                                          builder: (BuildContext context) =>
+                                              _CreateReservationFailedDialog(),
+                                        );
+                                      }
+
+                                      setState(() {
+                                        loading = false;
+                                      });
+                                    }
+                                  },
+                          ),
+                          secondChild:
+                              Center(child: CircularProgressIndicator()),
+                        ))))
+          ],
         ),
-
+      ),
     );
   }
 
