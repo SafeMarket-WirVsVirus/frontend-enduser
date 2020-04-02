@@ -1,3 +1,10 @@
+## 1.0.2
+- Improved reservation list UI
+- Sort reservation list by dates
+- Improved Splashscreen
+- Datepicker fixes
+
+
 ## 1.0.1
 
 - Animated and scrollable bars in the location detail screen
