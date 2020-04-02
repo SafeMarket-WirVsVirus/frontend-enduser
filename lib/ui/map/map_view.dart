@@ -27,12 +27,35 @@ class MapViewState extends State<MapView> {
   LatLng userPosition;
   CameraPosition lastFetchCameraPosition;
   CameraPosition currentCameraPosition;
+  StreamSubscription<Position> positionStream;
+
+  @override
+  void dispose() {
+    super.dispose();
+    positionStream?.cancel();
+  }
 
   @override
   void setState(fn) {
     if (mounted) {
       super.setState(fn);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    var locationOptions =
+        LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
+
+    positionStream = Geolocator()
+        .getPositionStream(locationOptions)
+        .listen((Position position) {
+      print("user moved to new location ${position.toString()}");
+      userPosition = LatLng(position.latitude, position.longitude);
+      Provider.of<UserRepository>(context, listen: false)
+          .setUserPosition(userPosition);
+    });
   }
 
   @override
