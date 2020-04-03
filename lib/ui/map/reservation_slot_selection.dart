@@ -1,7 +1,5 @@
 import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:reservation_system_customer/repository/data/data.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 class ReservationSlotSelection extends StatefulWidget {
   final ValueChanged<DateTime> selectedSlotChanged;

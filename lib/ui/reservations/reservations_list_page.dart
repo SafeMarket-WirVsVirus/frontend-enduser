@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/ui/reservations/reservation_list_detail.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_header.dart';
-
-import '../../app_localizations.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 class ReservationsListPage extends StatefulWidget {
   @override
@@ -39,8 +36,7 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
                     Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Text(
-                        AppLocalizations.of(context)
-                            .translate("reservations_title"),
+                        AppLocalizations.of(context).reservationsNavBarTitle.toUpperCase(),
                       ),
                     ),
                   ],
@@ -112,7 +108,7 @@ class _ReservationsListPageState extends State<ReservationsListPage> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
-                  AppLocalizations.of(context).translate("no_reservations"),
+                  AppLocalizations.of(context).reservationsListEmpty,
                   style: Theme.of(context).textTheme.title,
                   textAlign: TextAlign.center,
                 ),

@@ -31,6 +31,7 @@ dev_dependencies:
   json_serializable: ^3.2.5
   build_runner: ^1.8.0
   effective_dart: ^1.0.0
+  intl_translation: ^0.17.9
   flutter_test:
     sdk: flutter
 
@@ -40,4 +41,3 @@ flutter:
   uses-material-design: true
   assets:
     - assets/
-    - lang/

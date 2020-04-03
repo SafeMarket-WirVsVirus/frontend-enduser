@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/constants.dart';
-import 'package:reservation_system_customer/repository/data/reservation.dart';
+import 'package:reservation_system_customer/repository/data/data.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'app_localizations.dart';
 
 class NotificationHandler {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -61,12 +58,17 @@ class NotificationHandler {
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     NotificationDetails platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    final localizations = AppLocalizations.of(context);
+    final formattedDate = DateFormat.jm(localizations.locale.languageCode)
+        .format(reservation.startTime);
     await flutterLocalNotificationsPlugin.schedule(
         notificationId,
-        AppLocalizations.of(context).translate("reminder_title_1") +
-            '${reservation.location?.name ?? ''} - '
-                '${DateFormat.jm(AppLocalizations.of(context).locale.languageCode).format(reservation.startTime)}',
-        AppLocalizations.of(context).translate("reminder_text"),
+        reservation.location?.name == null
+            ? localizations.reservationReminderNotificationTitleWithoutLocation(
+                formattedDate)
+            : localizations.reservationReminderNotificationTitle(
+                reservation.location?.name, formattedDate),
+        localizations.reservationReminderNotificationDescription,
         scheduledNotificationDateTime,
         platformChannelSpecifics);
 

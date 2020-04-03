@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:reservation_system_customer/app_localizations.dart';
-import 'package:reservation_system_customer/repository/data/data.dart';
-import 'package:reservation_system_customer/repository/repository.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 class ReservationListDetail extends StatelessWidget {
   final Reservation reservation;
@@ -32,10 +29,7 @@ class ReservationListDetail extends StatelessWidget {
             children: reservation.codeWords.map<Widget>((String word) {
           return Expanded(
             child: Center(
-              child: Text(
-                word,
-                style: TextStyle(fontWeight: FontWeight.bold)
-              ),
+              child: Text(word, style: TextStyle(fontWeight: FontWeight.bold)),
             ),
           );
         }).toList()),
@@ -58,17 +52,19 @@ Future<void> _deleteDialog(BuildContext context, Reservation reservation) {
     context: context,
     builder: (context) => AlertDialog(
       title: Text(
-        AppLocalizations.of(context).translate("delete_res_1") +
-            '${reservation.location?.name ?? ''}' +
-            AppLocalizations.of(context).translate("delete_res_2"),
+        reservation.location?.name == null
+            ? AppLocalizations.of(context)
+                .deleteReservationDialogTitleWithoutLocation
+            : AppLocalizations.of(context)
+                .deleteReservationDialogTitle(reservation.location?.name),
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(AppLocalizations.of(context).translate("cancel")),
+          child: Text(AppLocalizations.of(context).commonCancel),
           onPressed: () => Navigator.of(context).pop(),
         ),
         FlatButton(
-            child: Text(AppLocalizations.of(context).translate("ok")),
+            child: Text(AppLocalizations.of(context).commonOk),
             onPressed: () {
               reservationsRepository.cancelReservation(
                 locationId: reservation.location.id,

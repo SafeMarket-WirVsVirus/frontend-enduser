@@ -1,11 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:reservation_system_customer/app_localizations.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/constants.dart';
-import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/reservation_slot_selection.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 class LocationDetailSheet extends StatefulWidget {
   final Location location;
@@ -84,7 +80,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                           duration: Duration(milliseconds: 300),
                           firstChild: RaisedButton(
                             child: Text(AppLocalizations.of(context)
-                                .translate("reserve_slot")),
+                                .reserveSlotButtonTitle),
                             color: Color(0xFF00F2A9),
                             textColor: Color(0xFF322153),
                             shape: RoundedRectangleBorder(
@@ -108,7 +104,6 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                                       );
 
                                       if (success) {
-                                        print('JR: Success');
                                         BlocProvider.of<ReservationsBloc>(
                                                 widget.scaffoldContext)
                                             .add(LoadReservations());
@@ -116,7 +111,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                                         final snackBar = SnackBar(
                                             content: Text(AppLocalizations.of(
                                                     context)
-                                                .translate("reminder_snack")));
+                                                .createReservationSuccessSnackbar));
                                         Scaffold.of(widget.scaffoldContext)
                                             .showSnackBar(snackBar);
                                       } else {
@@ -221,7 +216,7 @@ class _ReservationSlotsWithLoading extends StatelessWidget {
         height: 200,
         child: Center(
           child: Text(
-            AppLocalizations.of(context).translate('data_could_not_be_loaded'),
+            AppLocalizations.of(context).locationSlotDateNotAvailable,
           ),
         ),
       );
@@ -300,19 +295,17 @@ class _CreateReservationFailedDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(
-        AppLocalizations.of(context)
-            .translate("create_reservation_failed_title"),
+        AppLocalizations.of(context).createReservationFailedDialogTitle,
       ),
       content: Text(
-        AppLocalizations.of(context)
-            .translate("create_reservation_failed_description"),
+        AppLocalizations.of(context).createReservationFailedDialogDescription,
       ),
       actions: <Widget>[
         FlatButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text(AppLocalizations.of(context).translate("ok")),
+          child: Text(AppLocalizations.of(context).commonOk),
         )
       ],
     );

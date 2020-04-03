@@ -1,12 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
 import 'package:reservation_system_customer/ui/offline_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
-import '../app_localizations.dart';
 import 'loading_page.dart';
 
 class StartPage extends StatefulWidget {
@@ -70,8 +68,7 @@ class __HomePageState extends State<_HomePage> {
                   icon: Image.asset(type.iconName, height: 30),
                   title: Padding(
                     padding: EdgeInsets.only(top: 8),
-                    child: Text(AppLocalizations.of(context)
-                        .translate(type.textIdentifier)),
+                    child: Text(type.label(context).toUpperCase()),
                   ),
                 ))
             .toList(),
@@ -95,12 +92,12 @@ class __HomePageState extends State<_HomePage> {
 enum _BottomBarType { reservations, map }
 
 extension _BottomBarInfos on _BottomBarType {
-  String get textIdentifier {
+  String label(BuildContext context) {
     switch (this) {
       case _BottomBarType.reservations:
-        return 'reservations';
+        return AppLocalizations.of(context).reservationsBottomBarTitle;
       case _BottomBarType.map:
-        return 'map';
+        return AppLocalizations.of(context).mapBottomBarTitle;
       default:
         return '';
     }

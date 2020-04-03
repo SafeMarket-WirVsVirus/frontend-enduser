@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:reservation_system_customer/app_localizations.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 class OfflinePage extends StatelessWidget {
   @override
@@ -11,7 +10,7 @@ class OfflinePage extends StatelessWidget {
           padding: EdgeInsets.all(30),
           child: Center(
             child: Text(
-              AppLocalizations.of(context).translate("offline"),
+              AppLocalizations.of(context).reservationsNotAvailableOffline,
               style: Theme.of(context).textTheme.headline,
             ),
           ),

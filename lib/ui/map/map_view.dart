@@ -1,12 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 class MapView extends StatefulWidget {
   final Map<MarkerId, Marker> markers;

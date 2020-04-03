@@ -7,7 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
-import 'package:reservation_system_customer/app_localizations.dart';
+import 'package:reservation_system_customer/localization/app_localizations.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 
 import 'package:reservation_system_customer/repository/repository.dart';
@@ -26,11 +26,6 @@ class MockUserRepository extends Mock implements UserRepository {}
 class MockLocationsRepository extends Mock implements LocationsRepository {}
 
 class MockAppLocalizations extends Fake implements AppLocalizations {
-  @override
-  String translate(String key) {
-    return key;
-  }
-
   @override
   Locale get locale => Locale('en');
 }
@@ -110,7 +105,6 @@ void main() {
       await tester.pumpWidget(startPage);
 
       expect(find.byType(OfflinePage), findsOneWidget);
-      expect(find.text('offline'), findsOneWidget);
     });
 
     testWidgets(

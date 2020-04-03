@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
-import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_view.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 import 'location_detail_sheet.dart';
 

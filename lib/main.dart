@@ -1,13 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
-
-import 'app_localizations.dart';
-import 'bloc/bloc.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 import 'constants.dart';
-import 'repository/repository.dart';
 
 void main() => runApp(MyApp());
 

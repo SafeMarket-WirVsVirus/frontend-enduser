@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:reservation_system_customer/app_localizations.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
-import 'package:reservation_system_customer/repository/repository.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 class FilterDialog extends StatefulWidget {
   final MapBloc mapBloc;
@@ -40,7 +36,7 @@ class _FilterDialogState extends State<FilterDialog> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
               child: Text(
-                AppLocalizations.of(context).translate("fill_status"),
+                AppLocalizations.of(context).locationUtilizationSliderTitle,
                 style: Theme.of(context).textTheme.headline,
               ),
             ),
@@ -83,7 +79,7 @@ class _FilterDialogState extends State<FilterDialog> {
                     MapSettingsChanged(sliderValue.round(), filterSelection));
                 Navigator.of(context).pop();
               },
-              child: Text(AppLocalizations.of(context).translate("ok")),
+              child: Text(AppLocalizations.of(context).commonOk),
             ),
           ],
         ));
@@ -91,9 +87,9 @@ class _FilterDialogState extends State<FilterDialog> {
 
   String _getSliderTips() {
     List<String> sliderTips = [
-      AppLocalizations.of(context).translate("slider_tips_1"),
-      AppLocalizations.of(context).translate("slider_tips_2"),
-      AppLocalizations.of(context).translate("slider_tips_3"),
+      AppLocalizations.of(context).locationUtilizationSliderTip1,
+      AppLocalizations.of(context).locationUtilizationSliderTip2,
+      AppLocalizations.of(context).locationUtilizationSliderTip3,
     ];
     return sliderTips[sliderValue.round() - 1];
   }
@@ -126,11 +122,11 @@ extension LocationTypeDescription on LocationType {
   String localized(context) {
     switch (this) {
       case LocationType.supermarket:
-        return AppLocalizations.of(context).translate('supermarkets');
+        return AppLocalizations.of(context).locationFilterSupermarketsLabel;
       case LocationType.bakery:
-        return AppLocalizations.of(context).translate('bakeries');
+        return AppLocalizations.of(context).locationFilterBakeriesLabel;
       case LocationType.pharmacy:
-        return AppLocalizations.of(context).translate('pharmacies');
+        return AppLocalizations.of(context).locationFilterPharmaciesLabel;
     }
     return '';
   }

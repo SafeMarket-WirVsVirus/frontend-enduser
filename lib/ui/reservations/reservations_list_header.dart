@@ -1,12 +1,7 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/constants.dart';
-import 'package:reservation_system_customer/repository/data/data.dart';
+import 'package:reservation_system_customer/notifications.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../app_localizations.dart';
-import '../../notifications.dart';
 
 class ReservationListHeader extends StatelessWidget {
   final Reservation reservation;
@@ -118,7 +113,7 @@ class __NotificationButtonState extends State<_NotificationButton> {
             ),
           ),
           SizedBox(height: 5),
-          Text(AppLocalizations.of(context).translate("notification")),
+          Text(AppLocalizations.of(context).addReminderButtonTitle),
         ],
       ),
       onPressed: canScheduleNotification
