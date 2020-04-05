@@ -2,7 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
 import 'package:reservation_system_customer/ui/offline_page.dart';
-import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
+import 'package:reservation_system_customer/ui/reservations/reservations_page.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
 import 'loading_page.dart';
@@ -80,7 +80,7 @@ class __HomePageState extends State<_HomePage> {
   Widget _page(int index) {
     switch (index) {
       case 0:
-        return ReservationsListPage();
+        return ReservationsPage();
       case 1:
         return MapPage();
       default:

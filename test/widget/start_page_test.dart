@@ -1,21 +1,13 @@
 import 'dart:async';
 
-import 'package:bloc_test/bloc_test.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:provider/provider.dart';
-import 'package:reservation_system_customer/localization/app_localizations.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
-
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
 import 'package:reservation_system_customer/ui/offline_page.dart';
-import 'package:reservation_system_customer/ui/reservations/reservations_list_page.dart';
+import 'package:reservation_system_customer/ui/reservations/reservations_page.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'widget_test_helper.dart';
 
 class MockReservationsBloc extends Mock implements ReservationsBloc {}
 
@@ -51,30 +43,20 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     reservationsBloc = MockReservationsBloc();
-    mapBloc = MapBloc(
-      locationsRepository: MockLocationsRepository(),
-    );
+    mapBloc = MockMapBloc();
     userRepository = MockUserRepository();
 
     when(userRepository.loadUserPosition())
         .thenAnswer((_) => Future.value(null));
 
-    startPage = MaterialApp(
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider.value(value: reservationsBloc),
-          BlocProvider.value(value: mapBloc),
-        ],
-        child: Provider.value(
-          value: userRepository,
-          child: StartPage(),
-        ),
+    mockBlocState(mapBloc, MapInitial());
+
+    startPage = TestApp(
+      blocs: [reservationsBloc, mapBloc],
+      child: Provider.value(
+        value: userRepository,
+        child: StartPage(),
       ),
-      localizationsDelegates: [
-        MockLocalizationsDelegate(),
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ],
     );
   });
 
@@ -84,8 +66,7 @@ void main() {
   });
 
   _mockBlocState(ReservationsState state) {
-    when(reservationsBloc.state).thenReturn(state);
-    whenListen(reservationsBloc, Stream.fromIterable([state]));
+    mockBlocState(reservationsBloc, state);
   }
 
   group('StartPage', () {
@@ -152,7 +133,7 @@ void main() {
 
       await tester.pumpWidget(startPage);
 
-      expect(find.byType(ReservationsListPage), findsOneWidget);
+      expect(find.byType(ReservationsPage), findsOneWidget);
     });
   });
 }
