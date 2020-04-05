@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -78,6 +79,10 @@ class MapViewState extends State<MapView> {
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
+            rootBundle.loadString('assets/map_style.json').then((style) {
+              controller.setMapStyle(style);
+            });
+
             _fetchLocations(context, controller);
           },
           onCameraMove: (position) {
