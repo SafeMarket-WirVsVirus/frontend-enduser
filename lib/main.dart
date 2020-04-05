@@ -20,14 +20,16 @@ class MyApp extends StatelessWidget {
           primaryColor: Color(0xff2196F3),
           accentColor: Color(0xff00F2A9),
           appBarTheme: ThemeData.light().appBarTheme.copyWith(
-                color: Colors.white,
-                textTheme: ThemeData.light().textTheme.copyWith(
-                      title: TextStyle(
-                        color: Color(0xff322153),
-                        fontSize: 17,
-                      ),
+              color: Colors.white,
+              textTheme: ThemeData.light().textTheme.copyWith(
+                    title: TextStyle(
+                      color: Color(0xff322153),
+                      fontSize: 17,
                     ),
-              ),
+                  ),
+              iconTheme: ThemeData.light().iconTheme.copyWith(
+                    color: Color(0xff322153),
+                  )),
           brightness: Brightness.light),
       home: MultiProvider(
         providers: [
