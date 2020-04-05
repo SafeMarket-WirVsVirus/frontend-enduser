@@ -67,6 +67,7 @@ class LocationsRepository {
       print('getStores succeeded');
       var result = Locations.fromJson(json.decode(response.body));
       print('getStores locations: ${result.locations.length}');
+      result.locations.forEach((l) => l.locationType = type);
       return result.locations;
     } else {
       print('getStores failed with ${response.statusCode}');
