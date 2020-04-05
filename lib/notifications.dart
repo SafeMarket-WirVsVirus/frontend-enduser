@@ -48,8 +48,8 @@ class NotificationHandler {
     //use the current system time in seconds (cannot handle milliseconds) as a notificationId
     notificationId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-    var scheduledNotificationDateTime =
-        reservation.startTime.subtract(Constants.durationForNotificationBeforeStartTime);
+    var scheduledNotificationDateTime = reservation.startTime
+        .subtract(Constants.durationForNotificationBeforeStartTime);
     //TODO: add actual androidPlatformChannelSpecifics information here
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your other channel id',
@@ -63,12 +63,15 @@ class NotificationHandler {
         .format(reservation.startTime);
     await flutterLocalNotificationsPlugin.schedule(
         notificationId,
+        localizations.reservationReminderNotificationTitle,
         reservation.location?.name == null
-            ? localizations.reservationReminderNotificationTitleWithoutLocation(
-                formattedDate)
-            : localizations.reservationReminderNotificationTitle(
-                reservation.location?.name, formattedDate),
-        localizations.reservationReminderNotificationDescription,
+            ? localizations
+                .reservationReminderNotificationDescriptionWithoutLocation(
+                    formattedDate)
+            : localizations.reservationReminderNotificationDescription(
+                reservation.location?.name,
+                formattedDate,
+              ),
         scheduledNotificationDateTime,
         platformChannelSpecifics);
 

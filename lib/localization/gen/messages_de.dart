@@ -21,9 +21,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(locationName) => "Willst du deine Reservierung für ${locationName} wirklich löschen?";
 
-  static m1(locationName, formattedTime) => "Deine Reservierung für ${locationName} startet um ${formattedTime}";
+  static m1(locationName, formattedTime) => "Deine Reservierung für ${locationName} startet um ${formattedTime}.";
 
-  static m2(formattedTime) => "Deine Reservierung startet um ${formattedTime}";
+  static m2(formattedTime) => "Deine Reservierung startet um ${formattedTime}.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -44,9 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
     "locationUtilizationSliderTip3" : MessageLookupByLibrary.simpleMessage("Alle Läden werden angezeigt, auch wenn gerade viel los ist"),
     "locationUtilizationSliderTitle" : MessageLookupByLibrary.simpleMessage("Auslastungsniveau"),
     "mapBottomBarTitle" : MessageLookupByLibrary.simpleMessage("Suche"),
-    "reservationReminderNotificationDescription" : MessageLookupByLibrary.simpleMessage("Deine Reservierung beginnt in 30 Minuten."),
-    "reservationReminderNotificationTitle" : m1,
-    "reservationReminderNotificationTitleWithoutLocation" : m2,
+    "reservationReminderNotificationDescription" : m1,
+    "reservationReminderNotificationDescriptionWithoutLocation" : m2,
+    "reservationReminderNotificationTitle" : MessageLookupByLibrary.simpleMessage("Bevorstehende Reservierung"),
     "reservationsBottomBarTitle" : MessageLookupByLibrary.simpleMessage("Meine Slots"),
     "reservationsListEmpty" : MessageLookupByLibrary.simpleMessage("Du hast aktuell keine offenen Reservierungen."),
     "reservationsNavBarTitle" : MessageLookupByLibrary.simpleMessage("Meine\nReservierungen"),
