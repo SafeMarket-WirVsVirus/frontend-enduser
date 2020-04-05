@@ -28,60 +28,62 @@ class _FilterDialogState extends State<FilterDialog> {
   Widget build(BuildContext context) {
     return Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SizedBox(height: 10),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-              child: Text(
-                AppLocalizations.of(context).locationUtilizationSliderTitle,
-                style: Theme.of(context).textTheme.headline,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(height: 10),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                child: Text(
+                  AppLocalizations.of(context).locationUtilizationSliderTitle,
+                  style: Theme.of(context).textTheme.headline,
+                ),
               ),
-            ),
-            Slider(
-              onChanged: (double value) {
-                setState(() {
-                  if (value > 0) sliderValue = value;
-                });
-              },
-              value: sliderValue,
-              min: 0.0,
-              max: 3.0,
-              divisions: 3,
-              activeColor: sliderColor[(sliderValue - 1).round()],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Text(_getSliderTips()),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            ListView.builder(
-              itemBuilder: (context, index) => _CheckboxTile(
-                locationType: LocationType.values[index],
-                groupValue: filterSelection,
-                locationSelected: (LocationType value) {
+              Slider(
+                onChanged: (double value) {
                   setState(() {
-                    filterSelection = value;
+                    if (value > 0) sliderValue = value;
                   });
                 },
+                value: sliderValue,
+                min: 0.0,
+                max: 3.0,
+                divisions: 3,
+                activeColor: sliderColor[(sliderValue - 1).round()],
               ),
-              itemCount: LocationType.values.length,
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-            ),
-            FlatButton(
-              onPressed: () {
-                _mapBloc.add(
-                    MapSettingsChanged(sliderValue.round(), filterSelection));
-                Navigator.of(context).pop();
-              },
-              child: Text(AppLocalizations.of(context).commonOk),
-            ),
-          ],
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Text(_getSliderTips()),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              ListView.builder(
+                itemBuilder: (context, index) => _CheckboxTile(
+                  locationType: LocationType.values[index],
+                  groupValue: filterSelection,
+                  locationSelected: (LocationType value) {
+                    setState(() {
+                      filterSelection = value;
+                    });
+                  },
+                ),
+                itemCount: LocationType.values.length,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+              ),
+              FlatButton(
+                onPressed: () {
+                  _mapBloc.add(
+                      MapSettingsChanged(sliderValue.round(), filterSelection));
+                  Navigator.of(context).pop();
+                },
+                child: Text(AppLocalizations.of(context).commonOk),
+              ),
+            ],
+          ),
         ));
   }
 
