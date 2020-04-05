@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Safe_Market_v3_T_CZ.png",
+      "filename" : "Safe_Market_v3_T_CZ_app.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Safe_Market_v3_T_CZ@2x.png",
+      "filename" : "Safe_Market_v3_T_CZ_app@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Safe_Market_v3_T_CZ@3x.png",
+      "filename" : "Safe_Market_v3_T_CZ_app@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
