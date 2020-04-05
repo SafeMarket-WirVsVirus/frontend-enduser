@@ -1,27 +1,31 @@
+import 'package:flutter/cupertino.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
+import 'package:reservation_system_customer/ui/map/filter_settings_theme.dart';
 
 class FilterDialog extends StatefulWidget {
   final MapBloc mapBloc;
 
-  const FilterDialog({Key key, this.mapBloc}) : super(key: key);
+  const FilterDialog({Key key, @required this.mapBloc}) : super(key: key);
 
   @override
-  _FilterDialogState createState() => _FilterDialogState(mapBloc);
+  _FilterDialogState createState() => _FilterDialogState();
 }
 
 class _FilterDialogState extends State<FilterDialog> {
-  final MapBloc _mapBloc;
-  double sliderValue;
-  LocationType filterSelection;
-  List<Color> sliderColor = [Colors.green, Colors.orange, Colors.red];
+  final _fillStatus = [FillStatus.green, FillStatus.yellow, FillStatus.red];
 
-  _FilterDialogState(this._mapBloc);
+  double get sliderValue => _fillStatus.indexOf(minFillStatus).toDouble();
+  LocationType filterSelection;
+  FillStatus minFillStatus;
+
+  _FilterDialogState();
 
   @override
   void initState() {
     super.initState();
-    sliderValue = _mapBloc.fillStatusPreference.toDouble();
-    filterSelection = _mapBloc.filterSelection;
+    final filterSettings = widget.mapBloc.state.filterSettings;
+    minFillStatus = filterSettings.minFillStatus;
+    filterSelection = filterSettings.locationType;
   }
 
   @override
@@ -44,18 +48,18 @@ class _FilterDialogState extends State<FilterDialog> {
               Slider(
                 onChanged: (double value) {
                   setState(() {
-                    if (value > 0) sliderValue = value;
+                    minFillStatus = _fillStatusFromSliderValue(value);
                   });
                 },
                 value: sliderValue,
                 min: 0.0,
-                max: 3.0,
-                divisions: 3,
-                activeColor: sliderColor[(sliderValue - 1).round()],
+                max: 2.0,
+                divisions: 2,
+                activeColor: minFillStatus.color(context),
               ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(_getSliderTips()),
+                child: Text(_sliderTip),
               ),
               SizedBox(
                 height: 20,
@@ -76,8 +80,19 @@ class _FilterDialogState extends State<FilterDialog> {
               ),
               FlatButton(
                 onPressed: () {
-                  _mapBloc.add(
-                      MapSettingsChanged(sliderValue.round(), filterSelection));
+                  var fillStatus = FillStatus.green;
+                  try {
+                    fillStatus = _fillStatusFromSliderValue(sliderValue);
+                  } on Object catch (_) {}
+
+                  widget.mapBloc.add(
+                    MapSettingsChanged(
+                      FilterSettings(
+                        locationType: filterSelection,
+                        minFillStatus: fillStatus,
+                      ),
+                    ),
+                  );
                   Navigator.of(context).pop();
                 },
                 child: Text(AppLocalizations.of(context).commonOk),
@@ -87,13 +102,20 @@ class _FilterDialogState extends State<FilterDialog> {
         ));
   }
 
-  String _getSliderTips() {
-    List<String> sliderTips = [
-      AppLocalizations.of(context).locationUtilizationSliderTip1,
-      AppLocalizations.of(context).locationUtilizationSliderTip2,
-      AppLocalizations.of(context).locationUtilizationSliderTip3,
-    ];
-    return sliderTips[sliderValue.round() - 1];
+  FillStatus _fillStatusFromSliderValue(double value) {
+    return _fillStatus[value.round()];
+  }
+
+  String get _sliderTip {
+    switch (minFillStatus) {
+      case FillStatus.red:
+        return AppLocalizations.of(context).locationUtilizationSliderTip3;
+      case FillStatus.yellow:
+        return AppLocalizations.of(context).locationUtilizationSliderTip2;
+      case FillStatus.green:
+        return AppLocalizations.of(context).locationUtilizationSliderTip1;
+    }
+    return '';
   }
 }
 
@@ -112,7 +134,13 @@ class _CheckboxTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RadioListTile(
-        title: Text(locationType.localized(context)),
+        title: Row(
+          children: [
+            Icon(locationType.icon(context), size: 20, color: Colors.grey),
+            SizedBox(width: 8),
+            Text(locationType.localized(context)),
+          ],
+        ),
         activeColor: Theme.of(context).accentColor,
         groupValue: groupValue,
         value: locationType,

@@ -5,8 +5,13 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/data/time_slot_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'data/data.dart';
+
+class _PersistenceKeys {
+  static const mapFilterSettings = 'mapFilterSettings';
+}
 
 class LocationsRepository {
   final String baseUrl;
@@ -73,6 +78,27 @@ class LocationsRepository {
       print('getStores failed with ${response.statusCode}');
     }
     return [];
+  }
+
+  Future<FilterSettings> loadMapFilterSettings() async {
+    final prefs = await SharedPreferences.getInstance();
+    try {
+      final s = prefs.getString(_PersistenceKeys.mapFilterSettings);
+      if (s != null) {
+        final settings = FilterSettings.fromJson(jsonDecode(s));
+        print('Restored $settings');
+        return settings;
+      }
+    } on Object catch (error) {
+      print('Could not load Map FilterSettings: $error');
+    }
+    return null;
+  }
+
+  Future<void> saveMapFilterSettings(FilterSettings settings) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(
+        _PersistenceKeys.mapFilterSettings, jsonEncode(settings.toJson()));
   }
 }
 

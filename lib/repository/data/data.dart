@@ -1,3 +1,4 @@
+export 'filter_settings.dart';
 export 'location.dart';
 export 'locations.dart';
 export 'reservation.dart';

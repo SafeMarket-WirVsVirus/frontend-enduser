@@ -49,7 +49,15 @@ void main() {
     when(userRepository.loadUserPosition())
         .thenAnswer((_) => Future.value(null));
 
-    mockBlocState(mapBloc, MapInitial());
+    mockBlocState(
+      mapBloc,
+      MapInitial(
+        filterSettings: FilterSettings(
+          locationType: LocationType.supermarket,
+          minFillStatus: FillStatus.red,
+        ),
+      ),
+    );
 
     startPage = TestApp(
       blocs: [reservationsBloc, mapBloc],

@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../repository/data/data.dart';
 
@@ -32,13 +31,12 @@ class MapLoadLocations extends MapEvent {
 }
 
 class MapSettingsChanged extends MapEvent {
-  final int fillStatusPreference;
-  final LocationType filterSelection;
+  final FilterSettings settings;
 
-  MapSettingsChanged(this.fillStatusPreference, this.filterSelection);
+  MapSettingsChanged(this.settings);
 
   @override
-  List<Object> get props => [fillStatusPreference, filterSelection];
+  List<Object> get props => settings.props;
 }
 
 /// STATES
@@ -46,21 +44,26 @@ class MapSettingsChanged extends MapEvent {
 abstract class MapState extends Equatable {
   final List<Location> locations;
   final Map<FillStatus, BitmapDescriptor> markerIcons;
+  final FilterSettings filterSettings;
 
   MapState({
     @required this.locations,
     @required this.markerIcons,
+    @required this.filterSettings,
   });
 
   @override
-  List<Object> get props => locations.map((l) => l.id).toList();
+  List<Object> get props =>
+      [locations.map((l) => l.id).toList(), filterSettings.props];
 }
 
 class MapInitial extends MapState {
-  MapInitial()
-      : super(
+  MapInitial({
+    @required FilterSettings filterSettings,
+  }) : super(
           locations: [],
           markerIcons: {},
+          filterSettings: filterSettings,
         );
 }
 
@@ -68,9 +71,11 @@ class MapLoading extends MapState {
   MapLoading({
     @required List<Location> locations,
     @required Map<FillStatus, BitmapDescriptor> markerIcons,
+    @required FilterSettings filterSettings,
   }) : super(
           locations: locations,
           markerIcons: markerIcons,
+          filterSettings: filterSettings,
         );
 }
 
@@ -78,54 +83,57 @@ class MapLocationsLoaded extends MapState {
   MapLocationsLoaded({
     @required List<Location> locations,
     @required Map<FillStatus, BitmapDescriptor> markerIcons,
+    @required FilterSettings filterSettings,
   }) : super(
           locations: locations,
           markerIcons: markerIcons,
+          filterSettings: filterSettings,
         );
 }
 
 /// BLOC
 
 class MapBloc extends Bloc<MapEvent, MapState> {
-  LocationType get filterSelection => _filterSelection;
-  int get fillStatusPreference => _fillStatusPreference;
-
   final LocationsRepository _locationsRepository;
-  int _fillStatusPreference = 3;
-  LocationType _filterSelection = LocationType.supermarket;
   List<Location> locations = [];
   Map<FillStatus, BitmapDescriptor> markerIcons;
+
+  FilterSettings get _filterSettings => state.filterSettings;
 
   MapBloc({
     @required LocationsRepository locationsRepository,
   }) : _locationsRepository = locationsRepository {
-    //get the saved filter selection
-    SharedPreferences.getInstance().then((pref) {
-      _filterSelection = _getLocationTypeFromQueryParameter(
-              pref.getString("filter_selection")) ??
-          _filterSelection;
-      _fillStatusPreference =
-          pref.getInt("fill_status_preference") ?? _fillStatusPreference;
+    // get the saved filter selection
+    locationsRepository.loadMapFilterSettings().then((settings) {
+      if (settings != null) {
+        add(MapSettingsChanged(settings));
+      }
     });
   }
 
   @override
-  MapState get initialState => MapInitial();
+  MapState get initialState => MapInitial(
+        filterSettings: FilterSettings(
+          locationType: LocationType.supermarket,
+          minFillStatus: FillStatus.green,
+        ),
+      );
 
   @override
   Stream<MapState> mapEventToState(MapEvent event) async* {
-    if (markerIcons == null) {
-      markerIcons = await _markerIcons();
-    }
     if (event is MapLoadLocations) {
+      if (markerIcons == null) {
+        markerIcons = await _markerIcons();
+      }
       yield MapLoading(
         locations: locations,
         markerIcons: markerIcons,
+        filterSettings: _filterSettings,
       );
       final newLocations = await _locationsRepository.getStores(
         position: event.position,
         radius: event.radius,
-        type: _filterSelection,
+        type: _filterSettings.locationType,
       );
       locations.addAll(newLocations);
       if (locations.length > 300) {
@@ -133,44 +141,40 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       }
 
       yield MapLocationsLoaded(
-        locations: _filteredLocations(locations),
+        locations: _filteredLocations(locations, _filterSettings),
         markerIcons: markerIcons,
+        filterSettings: _filterSettings,
       );
     } else if (event is MapSettingsChanged) {
-      //save the new filter selection
-      SharedPreferences.getInstance().then((pref) {
-        pref.setString("filter_selection", _filterSelection.asQueryParameter);
-        pref.setInt("fill_status_preference", _fillStatusPreference);
-      });
-
-      _fillStatusPreference = event.fillStatusPreference;
-      _filterSelection = event.filterSelection;
-      yield MapLocationsLoaded(
-        locations: _filteredLocations(locations),
-        markerIcons: markerIcons,
-      );
+      // save the new filter selection
+      _locationsRepository.saveMapFilterSettings(event.settings);
+      if (state is MapInitial) {
+        yield MapInitial(filterSettings: event.settings);
+      } else {
+        // TODO: Re-fetch locations if type changed
+        // filter locations according to event
+        yield MapLocationsLoaded(
+          locations: _filteredLocations(locations, event.settings),
+          markerIcons: markerIcons,
+          filterSettings: event.settings,
+        );
+      }
     }
   }
 
-  LocationType _getLocationTypeFromQueryParameter(String parameter) {
-    switch (parameter) {
-      case 'bakery':
-        return LocationType.bakery;
-      case 'supermarket':
-        return LocationType.supermarket;
-      case 'pharmacy':
-        return LocationType.pharmacy;
-    }
-    return null;
-  }
-
-  List<Location> _filteredLocations(List<Location> locations) {
-    return locations
+  List<Location> _filteredLocations(
+    List<Location> locations,
+    FilterSettings filterSettings,
+  ) {
+    final filteredLocations = locations
         .where((l) =>
             l != null &&
-            l.fillStatus.index < _fillStatusPreference &&
-            l.locationType == _filterSelection)
+            l.fillStatus.index <= filterSettings.minFillStatus.index &&
+            l.locationType == filterSettings.locationType)
         .toList();
+    print(
+        'MapBloc: Filtered Locations from ${locations.length} to ${filteredLocations.length}');
+    return filteredLocations;
   }
 
   Future<Map<FillStatus, BitmapDescriptor>> _markerIcons() async {
