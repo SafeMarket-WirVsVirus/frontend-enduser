@@ -65,29 +65,29 @@ extension SafeMarketStrings on AppLocalizations {
             'Dialog title which confirms that the user wants to delete the reservation',
       );
 
-  String reservationReminderNotificationTitle(
-          String locationName, String formattedTime) =>
-      Intl.message(
-        'Your reservation for $locationName starts at $formattedTime',
+  String get reservationReminderNotificationTitle => Intl.message(
+        'Upcoming reservation',
         name: 'reservationReminderNotificationTitle',
-        args: [locationName, formattedTime],
         desc:
             'Title of the notification which reminds the user of an upcoming reservation',
       );
 
-  String reservationReminderNotificationTitleWithoutLocation(
+  String reservationReminderNotificationDescriptionWithoutLocation(
           String formattedTime) =>
       Intl.message(
-        'Your reservation starts at $formattedTime',
-        name: 'reservationReminderNotificationTitleWithoutLocation',
+        'Your reservation starts at $formattedTime.',
+        name: 'reservationReminderNotificationDescriptionWithoutLocation',
         args: [formattedTime],
         desc:
-            'Title of the notification which reminds the user of an upcoming reservation',
+            'Description of the notification which reminds the user of an upcoming reservation',
       );
 
-  String get reservationReminderNotificationDescription => Intl.message(
-        'Your reservation begins in 30 minutes.',
+  String reservationReminderNotificationDescription(
+          String locationName, String formattedTime) =>
+      Intl.message(
+        'Your reservation for $locationName starts at $formattedTime.',
         name: 'reservationReminderNotificationDescription',
+        args: [locationName, formattedTime],
         desc:
             'Description of the notification which reminds the user of an upcoming reservation',
       );

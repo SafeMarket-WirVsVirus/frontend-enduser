@@ -21,9 +21,9 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static m0(locationName) => "Do you really want to delete the reservation for ${locationName}?";
 
-  static m1(locationName, formattedTime) => "Your reservation for ${locationName} starts at ${formattedTime}";
+  static m1(locationName, formattedTime) => "Your reservation for ${locationName} starts at ${formattedTime}.";
 
-  static m2(formattedTime) => "Your reservation starts at ${formattedTime}";
+  static m2(formattedTime) => "Your reservation starts at ${formattedTime}.";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
@@ -44,12 +44,12 @@ class MessageLookup extends MessageLookupByLibrary {
     "locationUtilizationSliderTip3" : MessageLookupByLibrary.simpleMessage("All stores are shown, even if utilization is high at the moment"),
     "locationUtilizationSliderTitle" : MessageLookupByLibrary.simpleMessage("Utilization"),
     "mapBottomBarTitle" : MessageLookupByLibrary.simpleMessage("Search"),
-    "reservationReminderNotificationDescription" : MessageLookupByLibrary.simpleMessage("Your reservation begins in 30 minutes."),
-    "reservationReminderNotificationTitle" : m1,
-    "reservationReminderNotificationTitleWithoutLocation" : m2,
+    "reservationReminderNotificationDescription" : m1,
+    "reservationReminderNotificationDescriptionWithoutLocation" : m2,
+    "reservationReminderNotificationTitle" : MessageLookupByLibrary.simpleMessage("Upcoming reservation"),
     "reservationsBottomBarTitle" : MessageLookupByLibrary.simpleMessage("My slots"),
     "reservationsListEmpty" : MessageLookupByLibrary.simpleMessage("You do not have any open reservations at the moment."),
-    "reservationsNavBarTitle" : MessageLookupByLibrary.simpleMessage("My reservations"),
+    "reservationsNavBarTitle" : MessageLookupByLibrary.simpleMessage("My\nreservations"),
     "reservationsNotAvailableOffline" : MessageLookupByLibrary.simpleMessage("Sorry, we do not support offline mode yet."),
     "reserveSlotButtonTitle" : MessageLookupByLibrary.simpleMessage("Reserve Slot")
   };

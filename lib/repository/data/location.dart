@@ -65,6 +65,9 @@ class Location {
   @JsonKey(fromJson: _fillStatusFromInt)
   final FillStatus fillStatus;
 
+  @JsonKey(ignore: true)
+  LocationType locationType;
+
   Location({
     @required this.id,
     @required this.latitude,

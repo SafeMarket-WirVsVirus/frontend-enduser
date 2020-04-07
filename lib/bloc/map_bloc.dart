@@ -87,9 +87,12 @@ class MapLocationsLoaded extends MapState {
 /// BLOC
 
 class MapBloc extends Bloc<MapEvent, MapState> {
+  LocationType get filterSelection => _filterSelection;
+  int get fillStatusPreference => _fillStatusPreference;
+
   final LocationsRepository _locationsRepository;
-  int fillStatusPreference = 3;
-  LocationType filterSelection = LocationType.supermarket;
+  int _fillStatusPreference = 3;
+  LocationType _filterSelection = LocationType.supermarket;
   List<Location> locations = [];
   Map<FillStatus, BitmapDescriptor> markerIcons;
 
@@ -98,12 +101,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   }) : _locationsRepository = locationsRepository {
     //get the saved filter selection
     SharedPreferences.getInstance().then((pref) {
-      //filterSelection = LocationType.;
-      filterSelection = _getLocationTypeFromQueryParameter(
+      _filterSelection = _getLocationTypeFromQueryParameter(
               pref.getString("filter_selection")) ??
-          filterSelection;
-      fillStatusPreference =
-          pref.getInt("fill_status_preference") ?? fillStatusPreference;
+          _filterSelection;
+      _fillStatusPreference =
+          pref.getInt("fill_status_preference") ?? _fillStatusPreference;
     });
   }
 
@@ -120,15 +122,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         locations: locations,
         markerIcons: markerIcons,
       );
-      if (locations.length > 300) {
-        locations = [];
-      }
       final newLocations = await _locationsRepository.getStores(
         position: event.position,
         radius: event.radius,
-        type: filterSelection,
+        type: _filterSelection,
       );
       locations.addAll(newLocations);
+      if (locations.length > 300) {
+        locations.removeRange(0, locations.length - 300);
+      }
 
       yield MapLocationsLoaded(
         locations: _filteredLocations(locations),
@@ -137,12 +139,12 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     } else if (event is MapSettingsChanged) {
       //save the new filter selection
       SharedPreferences.getInstance().then((pref) {
-        pref.setString("filter_selection", filterSelection.asQueryParameter);
-        pref.setInt("fill_status_preference", fillStatusPreference);
+        pref.setString("filter_selection", _filterSelection.asQueryParameter);
+        pref.setInt("fill_status_preference", _fillStatusPreference);
       });
 
-      fillStatusPreference = event.fillStatusPreference;
-      filterSelection = event.filterSelection;
+      _fillStatusPreference = event.fillStatusPreference;
+      _filterSelection = event.filterSelection;
       yield MapLocationsLoaded(
         locations: _filteredLocations(locations),
         markerIcons: markerIcons,
@@ -164,7 +166,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   List<Location> _filteredLocations(List<Location> locations) {
     return locations
-        .where((l) => l != null && l.fillStatus.index < fillStatusPreference)
+        .where((l) =>
+            l != null &&
+            l.fillStatus.index < _fillStatusPreference &&
+            l.locationType == _filterSelection)
         .toList();
   }
 
