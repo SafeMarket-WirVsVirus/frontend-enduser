@@ -17,12 +17,14 @@ class Reservation {
 
   /// List of codewords that serve as an alternative identifier to the qr-code
   /// TODO assign actual values when api support is added
-  final List<String> codeWords = ["Avocado", "Apfel", "Cola"];
+  @JsonKey(ignore: true)
+  final List<String> codeWords;
 
   Reservation({
     @required this.id,
     @required this.location,
     @required this.startTime,
+    this.codeWords,
   });
 
   @override

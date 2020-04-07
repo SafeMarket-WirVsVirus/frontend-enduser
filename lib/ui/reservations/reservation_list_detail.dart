@@ -23,7 +23,7 @@ class ReservationListDetail extends StatelessWidget {
           embeddedImage: AssetImage('assets/AppIcon.png'),
         ),
       ),
-      Padding(
+      if (reservation.codeWords != null && reservation.codeWords.isNotEmpty) Padding(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: Row(
             children: reservation.codeWords.map<Widget>((String word) {
