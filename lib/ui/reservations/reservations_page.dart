@@ -8,27 +8,10 @@ class ReservationsPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-          PopupMenuButton<int>(
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 0,
-                child: Text("About"),
-              ),
-              PopupMenuItem(
-                value: 1,
-                child: Text("Second"),
-              ),
-            ],
-            onSelected: (int value) {
-              print("selected $value");
-
-              switch (value) {
-                case 0:
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => AboutPage()));
-                  break;
-              }
-            },
+          IconButton(
+            icon: Icon(Icons.info_outline),
+            onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AboutPage())),
           )
         ],
         title: Row(
