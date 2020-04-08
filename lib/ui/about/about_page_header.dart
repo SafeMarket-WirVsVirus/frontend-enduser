@@ -32,30 +32,24 @@ class _AboutTheAppSectionState extends State<AboutTheAppSection> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Image.asset(
-              "assets/AppIcon.png",
-              width: 60,
-              height: 60,
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "SafeMarket",
-                  style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  appVersion,
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ],
-            )
-          ],
+        SizedBox(
+          height: 8,
+        ),
+        Image.asset(
+          "assets/AppIcon.png",
+          width: 130,
+          height: 130,
+        ),
+        SizedBox(
+          height: 8,
+        ),
+        Text(
+          "SafeMarket",
+          style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          appVersion,
+          style: Theme.of(context).textTheme.subtitle1,
         ),
         SizedBox(
           height: 16,
