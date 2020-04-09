@@ -5,18 +5,18 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/data/time_slot_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reservation_system_customer/repository/storage.dart';
 
 import 'data/data.dart';
 
-class _PersistenceKeys {
-  static const mapFilterSettings = 'mapFilterSettings';
-}
-
 class LocationsRepository {
   final String baseUrl;
+  final Storage storage;
 
-  LocationsRepository({@required this.baseUrl});
+  LocationsRepository({
+    @required this.baseUrl,
+    @required this.storage,
+  });
 
   Future<Location> getStore(int id) async {
     final uri = Uri.https(baseUrl, '/api/Location/$id');
@@ -81,9 +81,8 @@ class LocationsRepository {
   }
 
   Future<FilterSettings> loadMapFilterSettings() async {
-    final prefs = await SharedPreferences.getInstance();
     try {
-      final s = prefs.getString(_PersistenceKeys.mapFilterSettings);
+      final s = await storage.getString(StorageKey.mapFilterSettings);
       if (s != null) {
         final settings = FilterSettings.fromJson(jsonDecode(s));
         print('Restored $settings');
@@ -96,9 +95,7 @@ class LocationsRepository {
   }
 
   Future<void> saveMapFilterSettings(FilterSettings settings) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString(
-        _PersistenceKeys.mapFilterSettings, jsonEncode(settings.toJson()));
+    return storage.setString(StorageKey.mapFilterSettings, jsonEncode(settings.toJson()));
   }
 }
 

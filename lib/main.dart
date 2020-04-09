@@ -1,5 +1,6 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:reservation_system_customer/repository/storage.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 import 'constants.dart';
@@ -9,10 +10,15 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final userRepository = UserRepository();
+    final storage = Storage();
+    final userRepository = UserRepository(storage: storage);
     final reservationRepository = ReservationsRepository(
       baseUrl: Constants.baseUrl,
       userRepository: userRepository,
+    );
+    final locationsRepository = LocationsRepository(
+      baseUrl: Constants.baseUrl,
+      storage: storage,
     );
     return MaterialApp(
       title: "SafeMarket",
@@ -41,8 +47,7 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => MapBloc(
-              locationsRepository:
-                  LocationsRepository(baseUrl: Constants.baseUrl),
+              locationsRepository: locationsRepository,
             ),
           ),
           Provider(
@@ -50,6 +55,9 @@ class MyApp extends StatelessWidget {
           ),
           Provider(
             create: (context) => reservationRepository,
+          ),
+          Provider(
+            create: (context) => locationsRepository,
           ),
         ],
         child: StartPage(),

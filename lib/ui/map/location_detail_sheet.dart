@@ -1,5 +1,4 @@
 import 'package:provider/provider.dart';
-import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/ui/map/reservation_slot_selection.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
@@ -26,7 +25,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    Future.delayed(Duration(seconds: 0)).then((_) => _fetchData());
   }
 
   @override
@@ -138,9 +137,9 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   }
 
   _fetchData() async {
-    final timeSlotData = await LocationsRepository(
-      baseUrl: Constants.baseUrl,
-    ).getLocationReservations(
+    final timeSlotData =
+        await Provider.of<LocationsRepository>(context, listen: false)
+            .getLocationReservations(
       id: widget.location.id,
       startTime: selectedDate,
     );

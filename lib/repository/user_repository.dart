@@ -1,33 +1,29 @@
+import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:reservation_system_customer/repository/storage.dart';
 import 'package:device_identifier/device_identifier.dart';
 
-class _PersistenceKeys {
-  static const userPositionLatKey = 'positionLat';
-  static const userPositionLngKey = 'positionLng';
-}
-
 class UserRepository {
+  final Storage storage;
   LatLng _userPosition;
   String _deviceId;
 
   LatLng get userPosition => _userPosition;
 
-  UserRepository();
+  UserRepository({
+    @required this.storage,
+  });
 
   Future<void> setUserPosition(LatLng position) async {
     _userPosition = position;
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setDouble(
-        _PersistenceKeys.userPositionLatKey, userPosition?.latitude);
-    prefs.setDouble(
-        _PersistenceKeys.userPositionLngKey, userPosition?.longitude);
+
+    storage.setDouble(StorageKey.lastUserPositionLat, userPosition?.latitude);
+    storage.setDouble(StorageKey.lastUserPositionLon, userPosition?.longitude);
   }
 
   void loadUserPosition() async {
-    final prefs = await SharedPreferences.getInstance();
-    final lat = prefs.getDouble(_PersistenceKeys.userPositionLatKey);
-    final lng = prefs.getDouble(_PersistenceKeys.userPositionLngKey);
+    final lat = await storage.getDouble(StorageKey.lastUserPositionLat);
+    final lng = await storage.getDouble(StorageKey.lastUserPositionLon);
     if (lat != null && lng != null) {
       _userPosition = LatLng(lat, lng);
     }
