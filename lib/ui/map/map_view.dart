@@ -8,9 +8,14 @@ import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
 import 'package:reservation_system_customer/ui/map/filter_settings_theme.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
+import 'package:tutorial_coach_mark/target_position.dart';
+
+import '../../constants.dart';
+import '../tutorial.dart';
 
 class MapView extends StatefulWidget {
   final Map<MarkerId, Marker> markers;
+  final bool tutorialActive = true;
 
   const MapView({
     Key key,
@@ -45,7 +50,6 @@ class MapViewState extends State<MapView> {
 
   @override
   void initState() {
-    super.initState();
     var locationOptions =
         LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
 
@@ -57,6 +61,10 @@ class MapViewState extends State<MapView> {
       Provider.of<UserRepository>(context, listen: false)
           .setUserPosition(userPosition);
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => _postFrameCallBack());
+
+    super.initState();
   }
 
   @override
@@ -71,10 +79,12 @@ class MapViewState extends State<MapView> {
           myLocationEnabled: true,
           mapType: MapType.normal,
           initialCameraPosition: CameraPosition(
-            target: LatLng(
-              userPosition.latitude,
-              userPosition.longitude,
-            ),
+            target: widget.tutorialActive
+                ? Constants.tutorialInitialCameraPositionLatLng
+                : LatLng(
+                    userPosition.latitude,
+                    userPosition.longitude,
+                  ),
             zoom: 15,
           ),
           onMapCreated: (GoogleMapController controller) {
@@ -142,7 +152,14 @@ class MapViewState extends State<MapView> {
       return;
     }
 
-    LatLng location = await _getUserPosition();
+    LatLng location;
+
+    if (!widget.tutorialActive) {
+      location = await _getUserPosition();
+    } else {
+      location = Constants.tutorialInitialCameraPositionLatLng;
+    }
+
     if (!mounted) {
       return;
     }
@@ -224,5 +241,22 @@ class MapViewState extends State<MapView> {
     final region = await controller.getVisibleRegion();
     final distance = await _getDistance(region.northeast, region.southwest);
     return (distance / 2.0).floor();
+  }
+
+  _postFrameCallBack() {
+    if (widget.tutorialActive) {
+      Size screenSize = MediaQuery.of(context).size;
+
+      TargetPosition tutorialMarkerTargetPosition = TargetPosition(
+          Size(80, 80), Offset(screenSize.width / 2, screenSize.height / 2));
+
+      Tutorial.showTutorial(context, [
+        TutorialItem(
+            title: "Reservation",
+            subtitle: "Click on the marker to make your first reservation!",
+            targetPosition: tutorialMarkerTargetPosition,
+            onTap: () {})
+      ]);
+    }
   }
 }
