@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'license.dart';
+import '../../repository/data/license.dart';
 
 class LicenseDetailPage extends StatelessWidget {
   final License license;
@@ -10,11 +10,11 @@ class LicenseDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(license.libName),
+        title: Text(license.resourceName),
       ),
       body: SingleChildScrollView(
           child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Text(license.licenseText),
       )),
     );

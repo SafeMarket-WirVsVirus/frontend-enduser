@@ -29,9 +29,10 @@ class MessageLookup extends MessageLookupByLibrary {
   static _notInlinedMessages(_) => <String, Function> {
     "aboutTheAppDescription1" : MessageLookupByLibrary.simpleMessage("Unser Projekt ist im Rahmen des "),
     "aboutTheAppDescription2" : MessageLookupByLibrary.simpleMessage("#WirVsVirus hackathon"),
-    "aboutTheAppDescription3" : MessageLookupByLibrary.simpleMessage(" enstanden.\n\nSafeMarket ist ein digitaler Reservierungs Dienst der die Infektionsgefahr in Warteschlagen minimiert. Er gibt seinen Benutzern die Möglichkeit, die zukünftig zu erwartende Auslastung zu sehen. Unser erster Anwendungsfall während der Corona Pandemie ist der Besuch eines Geschäfts, zum Beispiel eines Supermarkts, mit möglichst geringem sozialen Kontakt."),
+    "aboutTheAppDescription3" : MessageLookupByLibrary.simpleMessage(" entstanden.\n\nSafeMarket ist ein digitaler Reservierungsdienst der die Infektionsgefahr in Warteschlagen minimiert. Er gibt seinen Benutzern die Möglichkeit, die zukünftig zu erwartende Auslastung zu sehen. Unser erster Anwendungsfall während der Corona Pandemie ist der Besuch eines Geschäfts, zum Beispiel eines Supermarkts, mit möglichst geringem sozialen Kontakt."),
     "aboutTheAppTitle" : MessageLookupByLibrary.simpleMessage("Über die App"),
     "addReminderButtonTitle" : MessageLookupByLibrary.simpleMessage("Erinnern"),
+    "appName" : MessageLookupByLibrary.simpleMessage("SafeMarket"),
     "commonCancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "commonOk" : MessageLookupByLibrary.simpleMessage("OK"),
     "createReservationFailedDialogDescription" : MessageLookupByLibrary.simpleMessage("Deine Reservierung konnte leider nicht erstellt werden."),
@@ -56,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reservationsListEmpty" : MessageLookupByLibrary.simpleMessage("Du hast aktuell keine offenen Reservierungen."),
     "reservationsNavBarTitle" : MessageLookupByLibrary.simpleMessage("Meine\nReservierungen"),
     "reservationsNotAvailableOffline" : MessageLookupByLibrary.simpleMessage("Tut uns leid, im Moment unterstützen wir den Offline-Modus noch nicht."),
-    "reserveSlotButtonTitle" : MessageLookupByLibrary.simpleMessage("Slot reservieren")
+    "reserveSlotButtonTitle" : MessageLookupByLibrary.simpleMessage("Slot reservieren"),
+    "website" : MessageLookupByLibrary.simpleMessage("Website")
   };
 }

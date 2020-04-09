@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:reservation_system_customer/ui/about/license_detail_page.dart';
 import '../../ui_imports.dart';
-import 'license.dart';
+import '../../repository/data/license.dart';
 
 class LicenseListPage extends StatefulWidget {
   @override
@@ -21,7 +21,7 @@ class _LicenseListPageState extends State<LicenseListPage> {
     if (jsonLicenses != null) {
       jsonLicenses.forEach((key, value) {
         tmp.add(License(
-          libName: key,
+          resourceName: key,
           licenseText: value,
         ));
       });
@@ -49,7 +49,7 @@ class _LicenseListPageState extends State<LicenseListPage> {
           itemBuilder: (BuildContext context, int index) {
             License selectedLicense = licenses[index];
             return ListTile(
-              title: Text(selectedLicense.libName),
+              title: Text(selectedLicense.resourceName),
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(

@@ -5,14 +5,7 @@ import 'package:reservation_system_customer/ui_imports.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'about_page_header.dart';
 
-class AboutPage extends StatefulWidget {
-  @override
-  _AboutPageState createState() => _AboutPageState();
-}
-
-class _AboutPageState extends State<AboutPage> {
-  int selectedSectionId = 0;
-
+class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +15,7 @@ class _AboutPageState extends State<AboutPage> {
         body: ListView(
           children: <Widget>[
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(16.0),
               child: AboutTheAppSection(),
             ),
             Card(
@@ -36,7 +29,7 @@ class _AboutPageState extends State<AboutPage> {
             ),
             Card(
               child: ListTile(
-                title: Text("Website"),
+                title: Text(AppLocalizations.of(context).website),
                 onTap: () => launch(Constants.websiteUrl),
               ),
             )

@@ -3,6 +3,9 @@ import 'package:intl/intl.dart';
 import 'app_localizations.dart';
 
 extension SafeMarketStrings on AppLocalizations {
+  String get appName =>
+      Intl.message("SafeMarket", name: 'appName', desc: 'Name of the app');
+
   String get reservationsBottomBarTitle => Intl.message(
         'My slots',
         name: 'reservationsBottomBarTitle',
@@ -190,4 +193,7 @@ extension SafeMarketStrings on AppLocalizations {
       '.\n\nSafeMarket is a digital reservation service which minimizes infections and queues. It allows people visiting a place to see the future, planned occupancy rate. Our first use case during the Corona pandemic is the visit of a store such as a supermarket with minimizing social interactions.',
       name: 'aboutTheAppDescription3',
       desc: 'About the app Description part 3');
+
+  String get website =>
+      Intl.message("Website", name: 'website', desc: 'Website');
 }

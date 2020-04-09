@@ -44,7 +44,7 @@ class _AboutTheAppSectionState extends State<AboutTheAppSection> {
           height: 8,
         ),
         Text(
-          "SafeMarket",
+          AppLocalizations.of(context).appName,
           style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
         ),
         Text(
