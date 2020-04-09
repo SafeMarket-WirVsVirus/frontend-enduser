@@ -4,4 +4,5 @@ class Constants {
   static final minHoursBeforeNowForReservations = 2;
   static final minDurationBeforeNowBeforeExpired = Duration(hours: 1);
   static final durationForNotificationBeforeStartTime = Duration(minutes: 30);
+  static final websiteUrl = "https://instagram.com/safemarket_wirvsvirus";
 }

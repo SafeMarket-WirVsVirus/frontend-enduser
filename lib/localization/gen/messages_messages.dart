@@ -27,7 +27,12 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "aboutTheAppDescription1" : MessageLookupByLibrary.simpleMessage("Our project was created during the "),
+    "aboutTheAppDescription2" : MessageLookupByLibrary.simpleMessage("#WirVsVirus hackathon"),
+    "aboutTheAppDescription3" : MessageLookupByLibrary.simpleMessage(".\n\nSafeMarket is a digital reservation service which minimizes infections and queues. It allows people visiting a place to see the future, planned occupancy rate. Our first use case during the Corona pandemic is the visit of a store such as a supermarket with minimizing social interactions."),
+    "aboutTheAppTitle" : MessageLookupByLibrary.simpleMessage("About the App"),
     "addReminderButtonTitle" : MessageLookupByLibrary.simpleMessage("Notify"),
+    "appName" : MessageLookupByLibrary.simpleMessage("SafeMarket"),
     "commonCancel" : MessageLookupByLibrary.simpleMessage("Cancel"),
     "commonOk" : MessageLookupByLibrary.simpleMessage("OK"),
     "createReservationFailedDialogDescription" : MessageLookupByLibrary.simpleMessage("Your reservation could not be created."),
@@ -44,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "locationUtilizationSliderTip3" : MessageLookupByLibrary.simpleMessage("All stores are shown, even if utilization is high at the moment"),
     "locationUtilizationSliderTitle" : MessageLookupByLibrary.simpleMessage("Utilization"),
     "mapBottomBarTitle" : MessageLookupByLibrary.simpleMessage("Search"),
+    "openSourceLicensesTitle" : MessageLookupByLibrary.simpleMessage("Open Source Licenses"),
     "reservationReminderNotificationDescription" : m1,
     "reservationReminderNotificationDescriptionWithoutLocation" : m2,
     "reservationReminderNotificationTitle" : MessageLookupByLibrary.simpleMessage("Upcoming reservation"),
@@ -51,6 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "reservationsListEmpty" : MessageLookupByLibrary.simpleMessage("You do not have any open reservations at the moment."),
     "reservationsNavBarTitle" : MessageLookupByLibrary.simpleMessage("My\nreservations"),
     "reservationsNotAvailableOffline" : MessageLookupByLibrary.simpleMessage("Sorry, we do not support offline mode yet."),
-    "reserveSlotButtonTitle" : MessageLookupByLibrary.simpleMessage("Reserve Slot")
+    "reserveSlotButtonTitle" : MessageLookupByLibrary.simpleMessage("Reserve Slot"),
+    "website" : MessageLookupByLibrary.simpleMessage("Website")
   };
 }
