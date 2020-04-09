@@ -1,9 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reservation_system_customer/ui/about/license_detail_page.dart';
-
+import '../../ui_imports.dart';
 import 'license.dart';
 
 class LicenseListPage extends StatefulWidget {
@@ -43,7 +42,7 @@ class _LicenseListPageState extends State<LicenseListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Open Source Licenses"),
+        title: Text(AppLocalizations.of(context).openSourceLicensesTitle),
       ),
       body: ListView.builder(
           itemCount: licenses.length,

@@ -167,4 +167,27 @@ extension SafeMarketStrings on AppLocalizations {
         name: 'createReservationFailedDialogDescription',
         desc: 'Dialog description when the reservation could not be created',
       );
+
+  String get aboutTheAppTitle => Intl.message('About the App',
+      name: 'aboutTheAppTitle',
+      desc:
+          'Title shown in about the app page as well as tooltip in the reservation page');
+
+  String get openSourceLicensesTitle => Intl.message('Open Source Licenses',
+      name: 'openSourceLicensesTitle',
+      desc: 'Open source list item title in the about page');
+
+  String get aboutTheAppDescription1 =>
+      Intl.message('Our project was created during the ',
+          name: 'aboutTheAppDescription1',
+          desc: 'About the app Description part 1');
+
+  String get aboutTheAppDescription2 => Intl.message('#WirVsVirus hackathon',
+      name: 'aboutTheAppDescription2',
+      desc: 'About the app Description part 2');
+
+  String get aboutTheAppDescription3 => Intl.message(
+      '.\n\nSafeMarket is a digital reservation service which minimizes infections and queues. It allows people visiting a place to see the future, planned occupancy rate. Our first use case during the Corona pandemic is the visit of a store such as a supermarket with minimizing social interactions.',
+      name: 'aboutTheAppDescription3',
+      desc: 'About the app Description part 3');
 }

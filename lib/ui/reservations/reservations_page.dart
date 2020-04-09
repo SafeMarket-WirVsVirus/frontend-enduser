@@ -10,6 +10,7 @@ class ReservationsPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.info_outline),
+            tooltip:  AppLocalizations.of(context).aboutTheAppTitle,
             onPressed: () => Navigator.push(
                 context, MaterialPageRoute(builder: (context) => AboutPage())),
           )

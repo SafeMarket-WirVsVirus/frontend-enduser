@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../ui_imports.dart';
 
 class AboutTheAppSection extends StatefulWidget {
   @override
@@ -49,7 +49,7 @@ class _AboutTheAppSectionState extends State<AboutTheAppSection> {
         ),
         Text(
           appVersion,
-          style: Theme.of(context).textTheme.subtitle1,
+          style: TextStyle(fontSize: 19, color: Colors.grey[700]),
         ),
         SizedBox(
           height: 16,
@@ -58,11 +58,11 @@ class _AboutTheAppSectionState extends State<AboutTheAppSection> {
           text: new TextSpan(
             children: [
               TextSpan(
-                text: 'Our project was created during the ',
+                text: AppLocalizations.of(context).aboutTheAppDescription1,
                 style: new TextStyle(color: Colors.black, fontSize: 17),
               ),
               TextSpan(
-                text: '#WirVsVirus hackathon',
+                text: AppLocalizations.of(context).aboutTheAppDescription2,
                 style: new TextStyle(color: Colors.blue, fontSize: 17),
                 recognizer: new TapGestureRecognizer()
                   ..onTap = () {
@@ -70,8 +70,7 @@ class _AboutTheAppSectionState extends State<AboutTheAppSection> {
                   },
               ),
               TextSpan(
-                text:
-                    '.\n\nSafeMarket is a digital reservation service which minimizes infections and queues. It allows people visiting a place to see the future, planned occupancy rate. Our first use case during the Corona pandemic is the visit of a store such as a supermarket with minimizing social interactions.',
+                text: AppLocalizations.of(context).aboutTheAppDescription3,
                 style: new TextStyle(color: Colors.black, fontSize: 17),
               ),
             ],

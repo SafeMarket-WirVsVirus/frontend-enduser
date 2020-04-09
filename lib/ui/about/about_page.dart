@@ -15,7 +15,7 @@ class _AboutPageState extends State<AboutPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("About"),
+          title: Text(AppLocalizations.of(context).aboutTheAppTitle),
         ),
         body: ListView(
           children: <Widget>[
@@ -25,7 +25,7 @@ class _AboutPageState extends State<AboutPage> {
             ),
             Card(
               child: ListTile(
-                title: Text("Open Source Licenses"),
+                title: Text(AppLocalizations.of(context).openSourceLicensesTitle),
                 trailing: Icon(Icons.keyboard_arrow_right),
                 onTap: () => Navigator.push(context,
                     MaterialPageRoute(builder: (context) => LicenseListPage())),

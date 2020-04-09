@@ -24,5 +24,10 @@
   "reserveSlotButtonTitle": "Reserve Slot",
   "createReservationSuccessSnackbar": "Slot reserved",
   "createReservationFailedDialogTitle": "Warning",
-  "createReservationFailedDialogDescription": "Your reservation could not be created."
+  "createReservationFailedDialogDescription": "Your reservation could not be created.",
+  "aboutTheAppTitle": "About the App",
+  "openSourceLicensesTitle": "Open Source Licenses",
+  "aboutTheAppDescription1": "Our project was created during the ",
+  "aboutTheAppDescription2": "#WirVsVirus hackathon",
+  "aboutTheAppDescription3": ".\n\nSafeMarket is a digital reservation service which minimizes infections and queues. It allows people visiting a place to see the future, planned occupancy rate. Our first use case during the Corona pandemic is the visit of a store such as a supermarket with minimizing social interactions."
 }

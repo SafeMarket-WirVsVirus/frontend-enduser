@@ -27,6 +27,10 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static _notInlinedMessages(_) => <String, Function> {
+    "aboutTheAppDescription1" : MessageLookupByLibrary.simpleMessage("Unser Projekt ist im Rahmen des "),
+    "aboutTheAppDescription2" : MessageLookupByLibrary.simpleMessage("#WirVsVirus hackathon"),
+    "aboutTheAppDescription3" : MessageLookupByLibrary.simpleMessage(" enstanden.\n\nSafeMarket ist ein digitaler Reservierungs Dienst der die Infektionsgefahr in Warteschlagen minimiert. Er gibt seinen Benutzern die Möglichkeit, die zukünftig zu erwartende Auslastung zu sehen. Unser erster Anwendungsfall während der Corona Pandemie ist der Besuch eines Geschäfts, zum Beispiel eines Supermarkts, mit möglichst geringem sozialen Kontakt."),
+    "aboutTheAppTitle" : MessageLookupByLibrary.simpleMessage("Über die App"),
     "addReminderButtonTitle" : MessageLookupByLibrary.simpleMessage("Erinnern"),
     "commonCancel" : MessageLookupByLibrary.simpleMessage("Abbrechen"),
     "commonOk" : MessageLookupByLibrary.simpleMessage("OK"),
@@ -44,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
     "locationUtilizationSliderTip3" : MessageLookupByLibrary.simpleMessage("Alle Läden werden angezeigt, auch wenn gerade viel los ist"),
     "locationUtilizationSliderTitle" : MessageLookupByLibrary.simpleMessage("Auslastungsniveau"),
     "mapBottomBarTitle" : MessageLookupByLibrary.simpleMessage("Suche"),
+    "openSourceLicensesTitle" : MessageLookupByLibrary.simpleMessage("Open Source Lizenzen"),
     "reservationReminderNotificationDescription" : m1,
     "reservationReminderNotificationDescriptionWithoutLocation" : m2,
     "reservationReminderNotificationTitle" : MessageLookupByLibrary.simpleMessage("Bevorstehende Reservierung"),
