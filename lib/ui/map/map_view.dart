@@ -6,6 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
+import 'package:reservation_system_customer/ui/map/filter_settings_theme.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
 class MapView extends StatefulWidget {
@@ -63,8 +64,7 @@ class MapViewState extends State<MapView> {
     userPosition =
         Provider.of<UserRepository>(context, listen: false).userPosition ??
             defaultPosition;
-    print(
-        'Building map with ${widget.markers.length} marker(s)');
+    print('Building map with ${widget.markers.length} marker(s)');
     return Scaffold(
         body: GoogleMap(
           myLocationButtonEnabled: false,
@@ -102,12 +102,15 @@ class MapViewState extends State<MapView> {
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            FloatingActionButton(
-              mini: true,
-              onPressed: _setFilters,
-              child: Icon(Icons.filter_list),
-              backgroundColor: Theme.of(context).accentColor,
-            ),
+            BlocBuilder<MapBloc, MapState>(builder: (context, state) {
+              return FloatingActionButton(
+                mini: true,
+                onPressed: _setFilters,
+                child: Icon(state.filterSettings?.locationType?.icon(context) ??
+                    Icons.filter_list),
+                backgroundColor: Theme.of(context).accentColor,
+              );
+            }),
             SizedBox(
               height: 10,
             ),
