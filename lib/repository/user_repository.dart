@@ -14,6 +14,16 @@ class UserRepository {
     @required this.storage,
   });
 
+  Future<bool> shouldShowTutorial() async {
+    final finishedTutorial =
+        (await storage.getBool(StorageKey.userFinishedTutorial)) ?? false;
+    return !finishedTutorial;
+  }
+
+  Future<void> saveUserFinishedTutorial() async {
+    storage.setBool(StorageKey.userFinishedTutorial, true);
+  }
+
   Future<void> setUserPosition(LatLng position) async {
     _userPosition = position;
 

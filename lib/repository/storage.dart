@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum StorageKey {
+  userFinishedTutorial,
   mapFilterSettings,
   lastUserPositionLat,
   lastUserPositionLon,
@@ -9,6 +10,8 @@ enum StorageKey {
 extension _StorageKeyIds on StorageKey {
   String get id {
     switch (this) {
+      case StorageKey.userFinishedTutorial:
+        return 'userFinishedTutorial';
       case StorageKey.mapFilterSettings:
         return 'mapFilterSettings';
       case StorageKey.lastUserPositionLat:
@@ -44,5 +47,13 @@ class Storage {
 
   Future<bool> setDouble(StorageKey key, double value) async {
     return (await _prefs).setDouble(key.id, value);
+  }
+
+  Future<bool> getBool(StorageKey key) async {
+    return (await _prefs).getBool(key.id);
+  }
+
+  Future<bool> setBool(StorageKey key, bool value) async {
+    return (await _prefs).setBool(key.id, value);
   }
 }
