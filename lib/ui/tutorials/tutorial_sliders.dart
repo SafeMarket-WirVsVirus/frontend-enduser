@@ -212,7 +212,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
         AlertDialog dialog = AlertDialog(
           title: Text("Location access"),
           content: Text(
-              "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again form the system settings."),
+              "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again from the system settings."),
           actions: [
             FlatButton(
               child: Text(AppLocalizations.of(context).commonOk),
@@ -275,7 +275,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
 
                           Geolocator()
                               .getCurrentPosition(
-                                  desiredAccuracy: LocationAccuracy.high)
+                                  desiredAccuracy: LocationAccuracy.low)
                               .then((value) {
                             print("then: getCurrentPosition $value");
 
