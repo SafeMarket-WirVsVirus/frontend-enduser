@@ -64,7 +64,8 @@ class _TutorialSlidersState extends State<TutorialSliders> {
             print("on access granted");
           },
         ),
-        backgroundColor: Color(0xffFFA500),
+        colorBegin: Colors.blueAccent,
+        colorEnd: Colors.greenAccent,
       ),
     );
 
