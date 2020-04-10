@@ -7,11 +7,12 @@ import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
 import 'package:reservation_system_customer/ui/map/filter_settings_theme.dart';
+import 'package:reservation_system_customer/ui/tutorials/tutorial_sliders.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 import 'package:tutorial_coach_mark/target_position.dart';
 
 import '../../constants.dart';
-import '../tutorial.dart';
+import '../tutorials/tutorial.dart';
 
 class MapView extends StatefulWidget {
   final Map<MarkerId, Marker> markers;
@@ -250,12 +251,29 @@ class MapViewState extends State<MapView> {
       TargetPosition tutorialMarkerTargetPosition = TargetPosition(
           Size(80, 80), Offset(screenSize.width / 2, screenSize.height / 2));
 
-      Tutorial.showTutorial(context, [
+      Tutorial.showCoachMarkTutorial(context, [
         TutorialItem(
             title: "Reservation",
             subtitle: "Click on the marker to make your first reservation!",
             targetPosition: tutorialMarkerTargetPosition,
-            onTap: () {})
+            onTap: () {
+              Marker marker = widget
+                  .markers[MarkerId("${Constants.tutorialFirstTestMarker}")];
+
+              if (marker != null) {
+                print("Opening bottom layout...");
+                marker.onTap();
+              } else {
+                print(
+                    "Could not find that tutorial marker ${Constants.tutorialFirstTestMarker}");
+              }
+
+              //TODO: remove below
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TutorialSliders()),
+              );
+            })
       ]);
     }
   }

@@ -3,9 +3,11 @@ import 'package:tutorial_coach_mark/target_position.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class Tutorial {
-  static showTutorial(BuildContext context, List<TutorialItem> items) {
+  static showCoachMarkTutorial(BuildContext context, List<TutorialItem> items) {
+    final targets = getTargets(items);
+
     TutorialCoachMark(context,
-        targets: getTargets(items),
+        targets: targets,
         // List<TargetFocus>
         colorShadow: Colors.red,
         // DEFAULT Colors.black
@@ -15,7 +17,12 @@ class Tutorial {
         finish: () {
       print("finish");
     }, clickTarget: (target) {
-      print(target);
+      //call the on tap function of that item
+      final int index = target.identify;
+
+      if (items[index].onTap != null) {
+        items[index].onTap();
+      }
     }, clickSkip: () {
       print("skip");
     })
@@ -24,9 +31,11 @@ class Tutorial {
 
   static List getTargets(List<TutorialItem> items) {
     List<TargetFocus> targets = List();
+    int identifier = 0;
 
     items.forEach((element) {
       targets.add(TargetFocus(
+          identify: identifier,
           targetPosition: element.targetPosition,
           keyTarget: element.targetKey,
           contents: [
@@ -55,6 +64,7 @@ class Tutorial {
                   ),
                 ))
           ]));
+      identifier++;
     });
     return targets;
   }
