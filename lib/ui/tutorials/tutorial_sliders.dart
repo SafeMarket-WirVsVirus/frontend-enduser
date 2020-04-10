@@ -41,6 +41,39 @@ class _TutorialSlidersState extends State<TutorialSliders> {
         backgroundColor: Color(0xff9932CC),
       ),
     );
+
+    slides.add(
+
+    new Slide(
+        title: "Location Permission",
+        description:
+            "You are almost ready to use the app. Please give us access to your location so we can search for stores ariund you.",
+        centerWidget: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Icon(
+              Icons.my_location,
+              size: 200,
+              color: Colors.white,
+            ),
+            SizedBox(
+              height: 50,
+            ),
+            FlatButton(
+              color: Colors.blueAccent,
+              child: Text(
+                "Grant location access",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
+              onPressed: () {
+
+              },
+            )
+          ],
+        ),
+        backgroundColor: Color(0xffFFA500),
+      ),
+    );
   }
 
   void onDonePress() {
