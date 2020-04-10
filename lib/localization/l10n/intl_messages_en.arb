@@ -14,6 +14,8 @@
   "reservationReminderNotificationTitle": "Upcoming reservation",
   "reservationReminderNotificationDescriptionWithoutLocation": "Your reservation starts at {formattedTime}.",
   "reservationReminderNotificationDescription": "Your reservation for {locationName} starts at {formattedTime}.",
+  "reservationReminderNotificationChannelName": "Upcoming Reservations",
+  "reservationReminderNotificationChannelDescription": "Notifications for your upcoming reservations.",
   "locationUtilizationSliderTitle": "Utilization",
   "locationUtilizationSliderTip1": "Only stores with low utilization are shown (great for high-risk groups)",
   "locationUtilizationSliderTip2": "Stores with very high utilization are not shown",

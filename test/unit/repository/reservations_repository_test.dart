@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:reservation_system_customer/repository/notification_handler.dart';
 import 'package:reservation_system_customer/repository/storage.dart';
 
 import '../unit_test_helper.dart';
@@ -8,20 +9,25 @@ class MockUserRepository extends Mock implements UserRepository {}
 
 class MockStorage extends Mock implements Storage {}
 
+class MockNotificationHandler extends Mock implements NotificationHandler {}
+
 void main() {
   final String testDeviceId = 'testDeviceId';
 
   ReservationsRepository reservationsRepository;
   MockUserRepository mockUserRepository;
   MockStorage mockStorage;
+  MockNotificationHandler mockNotificationHandler;
 
   setUp(() {
     mockUserRepository = MockUserRepository();
     mockStorage = MockStorage();
+    mockNotificationHandler = MockNotificationHandler();
     reservationsRepository = ReservationsRepository(
       baseUrl: 'a base url',
       storage: mockStorage,
       userRepository: mockUserRepository,
+      notificationHandler: mockNotificationHandler,
     );
 
     when(mockUserRepository.deviceId())

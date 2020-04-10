@@ -1,6 +1,7 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/bloc/map_marker_loader.dart';
+import 'package:reservation_system_customer/repository/notification_handler.dart';
 import 'package:reservation_system_customer/repository/storage.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
       baseUrl: Constants.baseUrl,
       userRepository: userRepository,
       storage: storage,
+      notificationHandler: NotificationHandler(),
     );
     final locationsRepository = LocationsRepository(
       baseUrl: Constants.baseUrl,

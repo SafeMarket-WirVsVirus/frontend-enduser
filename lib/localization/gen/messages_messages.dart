@@ -50,6 +50,8 @@ class MessageLookup extends MessageLookupByLibrary {
     "locationUtilizationSliderTitle" : MessageLookupByLibrary.simpleMessage("Utilization"),
     "mapBottomBarTitle" : MessageLookupByLibrary.simpleMessage("Search"),
     "openSourceLicensesTitle" : MessageLookupByLibrary.simpleMessage("Open Source Licenses"),
+    "reservationReminderNotificationChannelDescription" : MessageLookupByLibrary.simpleMessage("Notifications for your upcoming reservations."),
+    "reservationReminderNotificationChannelName" : MessageLookupByLibrary.simpleMessage("Upcoming Reservations"),
     "reservationReminderNotificationDescription" : m1,
     "reservationReminderNotificationDescriptionWithoutLocation" : m2,
     "reservationReminderNotificationTitle" : MessageLookupByLibrary.simpleMessage("Upcoming reservation"),

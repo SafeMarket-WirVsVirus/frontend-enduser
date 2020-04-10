@@ -14,6 +14,8 @@
   "reservationReminderNotificationTitle": "Bevorstehende Reservierung",
   "reservationReminderNotificationDescriptionWithoutLocation": "Deine Reservierung startet um {formattedTime}.",
   "reservationReminderNotificationDescription": "Deine Reservierung für {locationName} startet um {formattedTime}.",
+  "reservationReminderNotificationChannelName": "Bevorstehende Reservierungen",
+  "reservationReminderNotificationChannelDescription": "Benachrichtigungen für deine bevorstehenden Reservierungen.",
   "locationUtilizationSliderTitle": "Auslastungsniveau",
   "locationUtilizationSliderTip1": "Nur die Läden mit sehr geringer Auslastung werden angezeigt (optimal für besonders gefährdete Personen)",
   "locationUtilizationSliderTip2": "Die Läden mit sehr hoher Auslastung werden nicht angezeigt",

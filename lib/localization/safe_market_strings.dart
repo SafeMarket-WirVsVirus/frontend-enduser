@@ -95,6 +95,19 @@ extension SafeMarketStrings on AppLocalizations {
             'Description of the notification which reminds the user of an upcoming reservation',
       );
 
+  String get reservationReminderNotificationChannelName => Intl.message(
+        'Upcoming Reservations',
+        name: 'reservationReminderNotificationChannelName',
+        desc:
+            'Name of the notification channel for reservation reminders which is displayed to the user in the app settings on Android.',
+      );
+
+  String get reservationReminderNotificationChannelDescription => Intl.message(
+        'Notifications for your upcoming reservations.',
+        name: 'reservationReminderNotificationChannelDescription',
+        desc: 'Description of the notification channel for reservation reminders which is displayed to the user in the app settings on Android.',
+      );
+
   String get locationUtilizationSliderTitle => Intl.message(
         'Utilization',
         name: 'locationUtilizationSliderTitle',

@@ -1,5 +1,5 @@
+import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/constants.dart';
-import 'package:reservation_system_customer/notifications.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -85,13 +85,10 @@ class _NotificationButton extends StatefulWidget {
 
 class __NotificationButtonState extends State<_NotificationButton> {
   bool isNotificationSet = false;
-  NotificationHandler notificationHandler;
 
   @override
   void initState() {
     super.initState();
-    notificationHandler =
-        NotificationHandler(null, widget.reservation, context);
     _updateNotificationState();
   }
 
@@ -122,10 +119,12 @@ class __NotificationButtonState extends State<_NotificationButton> {
                 isNotificationSet = !isNotificationSet;
               });
 
+              final reservationsRepo = Provider.of<ReservationsRepository>(context, listen: false);
+
               if (isNotificationSet) {
-                notificationHandler.setReminder();
+                reservationsRepo.scheduleReservationReminder(widget.reservation, context);
               } else {
-                notificationHandler.cancelReminder();
+                reservationsRepo.cancelReservationReminder(widget.reservation);
               }
             }
           : null,
