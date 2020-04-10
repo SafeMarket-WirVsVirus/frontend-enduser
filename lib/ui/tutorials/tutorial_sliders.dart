@@ -127,7 +127,8 @@ class _TutorialSlidersState extends State<TutorialSliders> {
     slides.add(
       new Slide(
         title: "All Done",
-        description: "You are now ready to use SafeMarket.\nSafe shopping!\n\nP.S.: You can rewatch this tutorial by going to settings -> tutorial :)",
+        description:
+            "You are now ready to use SafeMarket.\nSafe shopping!\n\nP.S.: You can rewatch this tutorial by going to settings -> tutorial :)",
         centerWidget: Icon(
           Icons.done_outline,
           color: Colors.white,
@@ -208,26 +209,11 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
       });
 
       if (showDialogIfFailed && !accessGranted) {
-        // show a alert dialog
-        AlertDialog dialog = AlertDialog(
-          title: Text("Location access"),
-          content: Text(
-              "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again from the system settings."),
-          actions: [
-            FlatButton(
-              child: Text(AppLocalizations.of(context).commonOk),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return dialog;
-          },
-        );
+        _showInfoDialog(
+            context,
+            "Location access",
+            "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again from the system settings.",
+            AppLocalizations.of(context).commonOk);
       }
     });
   }
@@ -266,33 +252,71 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
                   ),
                   onPressed: !enableGrantAccessButton
                       ? null
-                      : () {
-                          setState(() {
-                            loading = true;
-                          });
-
-                          //show location permission prompt
-
-                          Geolocator()
-                              .getCurrentPosition(
-                                  desiredAccuracy: LocationAccuracy.low)
-                              .then((value) {
-                            print("then: getCurrentPosition $value");
-
-                            setState(() {
-                              accessGranted = true;
-                              loading = false;
-                              enableGrantAccessButton = false;
-                            });
-
-                            widget.onAccessGranted();
-                          }).catchError((error, stackTrace) {
-                            _checkPermission(showDialogIfFailed: true);
-                          });
-                        },
+                      : () => _requestLocationPermission(),
                 ),
         )
       ],
     );
   }
+
+  _requestLocationPermission() async {
+    setState(() {
+      loading = true;
+    });
+
+    //show location permission prompt
+
+    bool isLocationEnabled = await Geolocator().isLocationServiceEnabled();
+
+    if (!isLocationEnabled) {
+      setState(() {
+        loading = false;
+      });
+
+      _showInfoDialog(
+          context,
+          "Location service disabled",
+          "Please enable the system location service first to continue,",
+          AppLocalizations.of(context).commonOk);
+      return;
+    }
+
+    Geolocator()
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .then((value) {
+      print("Success: location retrieved  $value");
+
+      setState(() {
+        accessGranted = true;
+        loading = false;
+        enableGrantAccessButton = false;
+      });
+
+      widget.onAccessGranted();
+    }).catchError((error, stackTrace) {
+      print("Error: could not get user location");
+      _checkPermission(showDialogIfFailed: true);
+    });
+  }
+}
+
+_showInfoDialog(BuildContext context, String title, String message, String ok) {
+  AlertDialog dialog = AlertDialog(
+    title: Text(title),
+    content: Text(message),
+    actions: [
+      FlatButton(
+        child: Text(ok),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+    ],
+  );
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return dialog;
+    },
+  );
 }
