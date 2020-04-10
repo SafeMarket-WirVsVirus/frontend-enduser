@@ -267,12 +267,6 @@ class MapViewState extends State<MapView> {
                 print(
                     "Could not find that tutorial marker ${Constants.tutorialFirstTestMarker}");
               }
-
-              //TODO: remove below
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TutorialSliders()),
-              );
             })
       ]);
     }

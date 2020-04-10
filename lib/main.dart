@@ -2,6 +2,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/storage.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
+import 'package:reservation_system_customer/ui/tutorials/tutorial_sliders.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 import 'constants.dart';
 
@@ -60,7 +61,7 @@ class MyApp extends StatelessWidget {
             create: (context) => locationsRepository,
           ),
         ],
-        child: StartPage(),
+        child: TutorialSliders(),
       ),
       supportedLocales: [
         Locale('en', ''),
