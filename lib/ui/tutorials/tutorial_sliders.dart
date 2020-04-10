@@ -156,7 +156,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
     _checkPermission();
   }
 
-  _checkPermission() {
+  _checkPermission({bool showDialogIfFailed = false}) {
     Geolocator().checkGeolocationPermissionStatus().then((geolocationStatus) {
       bool access = false;
       bool enableButton = false;
@@ -175,6 +175,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
         case GeolocationStatus.granted:
           access = true;
           enableButton = false;
+          widget.onAccessGranted();
           break;
         case GeolocationStatus.restricted:
           access = true;
@@ -191,6 +192,29 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
         loading = false;
         enableGrantAccessButton = enableButton;
       });
+
+      if (showDialogIfFailed && !accessGranted) {
+        // show a alert dialog
+        AlertDialog dialog = AlertDialog(
+          title: Text("Location access"),
+          content: Text(
+              "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again form the stystem settings."),
+          actions: [
+            FlatButton(
+              child: Text(AppLocalizations.of(context).commonOk),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return dialog;
+          },
+        );
+      }
     });
   }
 
@@ -254,7 +278,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
 
                               widget.onAccessGranted();
                             }).catchError((error, stackTrace) {
-                              _checkPermission();
+                              _checkPermission(showDialogIfFailed: true);
                             });
                           },
                   ),
