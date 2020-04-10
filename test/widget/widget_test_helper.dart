@@ -10,6 +10,7 @@ export 'package:flutter/foundation.dart';
 export 'package:flutter_test/flutter_test.dart';
 export 'package:provider/provider.dart';
 export 'package:reservation_system_customer/ui_imports.dart';
+export '../data_helper.dart';
 
 class MockAppLocalizations extends Fake implements AppLocalizations {
   @override

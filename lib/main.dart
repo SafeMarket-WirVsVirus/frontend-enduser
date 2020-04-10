@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
     final reservationRepository = ReservationsRepository(
       baseUrl: Constants.baseUrl,
       userRepository: userRepository,
+      storage: storage,
     );
     final locationsRepository = LocationsRepository(
       baseUrl: Constants.baseUrl,

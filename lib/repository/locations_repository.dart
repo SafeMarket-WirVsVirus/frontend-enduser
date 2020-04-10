@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/data/time_slot_data.dart';
+import 'package:reservation_system_customer/repository/data/http_responses/http_responses.dart';
 import 'package:reservation_system_customer/repository/storage.dart';
 
 import 'data/data.dart';
@@ -70,7 +71,7 @@ class LocationsRepository {
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       print('getStores succeeded');
-      var result = Locations.fromJson(json.decode(response.body));
+      var result = LocationsResponse.fromJson(json.decode(response.body));
       print('getStores locations: ${result.locations.length}');
       result.locations.forEach((l) => l.locationType = type);
       return result.locations;
@@ -95,7 +96,8 @@ class LocationsRepository {
   }
 
   Future<void> saveMapFilterSettings(FilterSettings settings) async {
-    return storage.setString(StorageKey.mapFilterSettings, jsonEncode(settings.toJson()));
+    return storage.setString(
+        StorageKey.mapFilterSettings, jsonEncode(settings.toJson()));
   }
 }
 

@@ -8,17 +8,6 @@ class MockReservationsBloc extends Mock implements ReservationsBloc {}
 void main() {
   ReservationsBloc reservationsBloc;
   Widget reservationsPage;
-  Location testLocation = Location(
-    id: 1,
-    latitude: 20,
-    longitude: 50,
-    name: 'My Name',
-    fillStatus: FillStatus.yellow,
-    slotSize: 15,
-    slotDuration: Duration(minutes: 20),
-    address: 'My Address',
-    openingHours: [],
-  );
 
   setUp(() {
     reservationsBloc = MockReservationsBloc();
@@ -79,13 +68,7 @@ void main() {
       mockBlocState(
           reservationsBloc,
           ReservationsLoaded([
-            Reservation(
-              id: 1,
-              location: testLocation,
-              startTime: DateTime.now().add(
-                Duration(hours: 2),
-              ),
-            )
+            ReservationFactory.createReservation(id: 1),
           ]));
 
       await tester.pumpWidget(reservationsPage);

@@ -105,7 +105,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                                       if (success) {
                                         BlocProvider.of<ReservationsBloc>(
                                                 widget.scaffoldContext)
-                                            .add(LoadReservations());
+                                            .add(UpdateReservations());
                                         Navigator.pop(context);
                                         final snackBar = SnackBar(
                                             content: Text(AppLocalizations.of(

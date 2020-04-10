@@ -5,6 +5,7 @@ enum StorageKey {
   mapFilterSettings,
   lastUserPositionLat,
   lastUserPositionLon,
+  reservations,
 }
 
 extension _StorageKeyIds on StorageKey {
@@ -18,6 +19,8 @@ extension _StorageKeyIds on StorageKey {
         return 'lastUserPositionLat';
       case StorageKey.lastUserPositionLon:
         return 'lastUserPositionLon';
+      case StorageKey.reservations:
+        return 'reservations';
     }
     return '';
   }

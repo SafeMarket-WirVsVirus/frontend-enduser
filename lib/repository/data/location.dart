@@ -51,7 +51,7 @@ class Location {
   /// The user friendly location name
   final String name;
 
-  @JsonKey(name: 'openings') //, fromJson: _openingHoursFromMap)
+  @JsonKey(name: 'openings')
   final List<OpeningHours> openingHours;
 
   final String address;

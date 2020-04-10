@@ -1,16 +1,16 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'reservations.dart';
+part of 'locations_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-Reservations _$ReservationsFromJson(Map<String, dynamic> json) {
-  return Reservations(
-    reservations: (json['reservations'] as List)
+LocationsResponse _$LocationsResponseFromJson(Map<String, dynamic> json) {
+  return LocationsResponse(
+    (json['locations'] as List)
         ?.map((e) =>
-            e == null ? null : Reservation.fromJson(e as Map<String, dynamic>))
+            e == null ? null : Location.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }

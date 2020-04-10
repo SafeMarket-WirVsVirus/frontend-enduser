@@ -10,7 +10,11 @@ abstract class ReservationsEvent extends Equatable {
   List<Object> get props => [];
 }
 
+/// Load reservations from persistence and update with new fetched reservations from backend.
 class LoadReservations extends ReservationsEvent {}
+
+/// Update the reservations from backend. This fails when the user has no network.
+class UpdateReservations extends ReservationsEvent {}
 
 /// STATES
 
@@ -50,25 +54,57 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
 
   @override
   Stream<ReservationsState> mapEventToState(ReservationsEvent event) async* {
-    final deviceId = await _userRepository.deviceId();
     if (event is LoadReservations) {
       yield ReservationsLoading();
+      print('Loading reservations ...');
+      final loadedReservations =
+      await _reservationsRepository.loadReservations();
+      if (loadedReservations != null) {
+        print('Loaded persisted reservations: $loadedReservations');
+        yield ReservationsLoaded(loadedReservations);
+      }
+
       try {
-        print('Loading reservations ...');
-        final reservations = await _reservationsRepository
-            .getReservations(
-              deviceId: deviceId,
-            )
-            .timeout(Duration(seconds: 5));
-        reservations?.sort((a, b) {
-          return a.startTime.compareTo(b.startTime);
-        });
-        print('Loaded reservations: $reservations');
-        if (reservations != null) yield ReservationsLoaded(reservations);
+        final reservations = await _fetchReservations(timeoutInSec: 10);
+        print('Loaded fetched reservations: $reservations');
+        if (reservations != null) {
+          yield ReservationsLoaded(reservations ?? loadedReservations ?? []);
+        }
+        _reservationsRepository.saveReservations(reservations ?? []);
       } catch (_) {
-        print('Loading reservations failed');
+        print('Could not retrieve any reservations.');
+        if (loadedReservations?.isEmpty ?? true) {
+          yield ReservationsLoadFail();
+        }
+      }
+    } else if (event is UpdateReservations) {
+      print('Updating reservations ...');
+      yield ReservationsLoading();
+      var reservations = <Reservation>[];
+      try {
+        reservations = await _fetchReservations(timeoutInSec: 5);
+        print('Updated with fetched reservations: $reservations');
+        yield ReservationsLoaded(reservations ?? []);
+        _reservationsRepository.saveReservations(reservations ?? []);
+      } catch (_) {
+        print('Could not retrieve any reservations.');
         yield ReservationsLoadFail();
       }
     }
+  }
+
+  Future<List<Reservation>> _fetchReservations({
+    @required int timeoutInSec,
+  }) async {
+    final deviceId = await _userRepository.deviceId();
+
+    final reservations = await _reservationsRepository
+        .getReservations(
+          deviceId: deviceId,
+        )
+        .timeout(Duration(seconds: timeoutInSec));
+
+    reservations?.sort((a, b) => a.startTime.compareTo(b.startTime));
+    return reservations;
   }
 }
