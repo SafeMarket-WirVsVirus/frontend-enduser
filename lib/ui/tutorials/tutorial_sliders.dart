@@ -243,7 +243,18 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
             );
           },
           child: loading
-              ? CircularProgressIndicator()
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    SizedBox(width: 16),
+                    Text(
+                      "Testing location service",
+                      style: TextStyle(color: Colors.white),
+                    )
+                  ],
+                )
               : FlatButton(
                   color: Colors.blueAccent,
                   child: Text(
