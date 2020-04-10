@@ -113,7 +113,7 @@ class _TutorialSlidersState extends State<TutorialSliders> {
       new Slide(
         title: "Location Permission",
         description:
-            "You are almost ready to use the app. Please give us access to your location so we can search for stores around you.",
+            "Please give us access to your location so we can search for stores around you. You can also leave this option disabled for now if you don't need to see your live location.",
         centerWidget: _LocationPermissionWidget(
           onAccessGranted: () {
             print("on access granted");
@@ -198,7 +198,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
         AlertDialog dialog = AlertDialog(
           title: Text("Location access"),
           content: Text(
-              "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again form the stystem settings."),
+              "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again form the system settings."),
           actions: [
             FlatButton(
               child: Text(AppLocalizations.of(context).commonOk),
@@ -220,71 +220,67 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      //used so the height stays the same after the transition so the decryption text does not move
-      height: 300,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Icon(
-            Icons.my_location,
-            size: 200,
-            color: Colors.white,
-          ),
-          SizedBox(
-            height: 50,
-          ),
-          AnimatedSwitcher(
-            duration: Duration(milliseconds: 200),
-            transitionBuilder: (Widget child, Animation<double> animation) {
-              return FadeTransition(
-                child: child,
-                opacity: animation,
-              );
-            },
-            child: loading
-                ? CircularProgressIndicator()
-                : FlatButton(
-                    color: Colors.blueAccent,
-                    child: Text(
-                      accessGranted
-                          ? "Access granted"
-                          : "Grant location access",
-                      style: Theme.of(context)
-                          .textTheme
-                          .title
-                          .copyWith(color: Colors.white),
-                    ),
-                    onPressed: !enableGrantAccessButton
-                        ? null
-                        : () {
-                            setState(() {
-                              loading = true;
-                            });
-
-                            //show location permission prompt
-
-                            Geolocator()
-                                .getCurrentPosition(
-                                    desiredAccuracy: LocationAccuracy.high)
-                                .then((value) {
-                              print("then: getCurrentPosition $value");
-
-                              setState(() {
-                                accessGranted = true;
-                                loading = false;
-                                enableGrantAccessButton = false;
-                              });
-
-                              widget.onAccessGranted();
-                            }).catchError((error, stackTrace) {
-                              _checkPermission(showDialogIfFailed: true);
-                            });
-                          },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        Icon(
+          Icons.my_location,
+          size: 200,
+          color: Colors.white,
+        ),
+        SizedBox(
+          height: 50,
+        ),
+        AnimatedSwitcher(
+          duration: Duration(milliseconds: 200),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(
+              child: child,
+              opacity: animation,
+            );
+          },
+          child: loading
+              ? CircularProgressIndicator()
+              : FlatButton(
+                  color: Colors.blueAccent,
+                  child: Text(
+                    accessGranted
+                        ? "Access granted"
+                        : "Grant location access",
+                    style: Theme.of(context)
+                        .textTheme
+                        .title
+                        .copyWith(color: Colors.white),
                   ),
-          )
-        ],
-      ),
+                  onPressed: !enableGrantAccessButton
+                      ? null
+                      : () {
+                          setState(() {
+                            loading = true;
+                          });
+
+                          //show location permission prompt
+
+                          Geolocator()
+                              .getCurrentPosition(
+                                  desiredAccuracy: LocationAccuracy.high)
+                              .then((value) {
+                            print("then: getCurrentPosition $value");
+
+                            setState(() {
+                              accessGranted = true;
+                              loading = false;
+                              enableGrantAccessButton = false;
+                            });
+
+                            widget.onAccessGranted();
+                          }).catchError((error, stackTrace) {
+                            _checkPermission(showDialogIfFailed: true);
+                          });
+                        },
+                ),
+        )
+      ],
     );
   }
 }
