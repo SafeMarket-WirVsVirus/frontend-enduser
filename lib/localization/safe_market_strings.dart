@@ -190,7 +190,7 @@ extension SafeMarketStrings on AppLocalizations {
       desc: 'About the app Description part 2');
 
   String get aboutTheAppDescription3 => Intl.message(
-      '.\n\nSafeMarket is a digital reservation service which minimizes infections and queues. It allows people visiting a place to see the future, planned occupancy rate. Our first use case during the Corona pandemic is the visit of a store such as a supermarket with minimizing social interactions.',
+      '.\n\nWith SafeMarket you can reserve time slots for places with limited customer capacities such as grocery stores.',
       name: 'aboutTheAppDescription3',
       desc: 'About the app Description part 3');
 
