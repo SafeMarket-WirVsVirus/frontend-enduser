@@ -28,6 +28,7 @@ dependencies:
   package_info: ^0.4.0+16
   tutorial_coach_mark: ^0.3.0
   intro_slider: ^2.2.9
+  app_settings: ^3.0.1
   flutter_localizations:
     sdk: flutter
 

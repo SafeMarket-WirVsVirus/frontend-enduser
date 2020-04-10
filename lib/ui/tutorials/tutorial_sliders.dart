@@ -1,3 +1,4 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -210,10 +211,12 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
 
       if (showDialogIfFailed && !accessGranted) {
         _showInfoDialog(
-            context,
-            "Location access",
-            "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again from the system settings.",
-            AppLocalizations.of(context).commonOk);
+            context: context,
+            title: "Location access",
+            message:
+                "Please give us access to your location so we can search for stores around you. If you disabled location access for this app you need to manually enable it again from the app's permission settings.",
+            actionText: "APP SETTINGS",
+            onPressed: () => AppSettings.openAppSettings());
       }
     });
   }
@@ -274,10 +277,12 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
       });
 
       _showInfoDialog(
-          context,
-          "Location service disabled",
-          "Please enable the system location service first to continue,",
-          AppLocalizations.of(context).commonOk);
+          context: context,
+          title: "Location service disabled",
+          message:
+              "Please enable the system location service first to continue,",
+          actionText: "LOCATION SERVICE",
+          onPressed: () => AppSettings.openLocationSettings());
       return;
     }
 
@@ -300,14 +305,22 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
   }
 }
 
-_showInfoDialog(BuildContext context, String title, String message, String ok) {
+_showInfoDialog(
+    {@required BuildContext context,
+    @required String title,
+    @required String message,
+    @required String actionText,
+    Function onPressed}) {
   AlertDialog dialog = AlertDialog(
     title: Text(title),
     content: Text(message),
     actions: [
       FlatButton(
-        child: Text(ok),
+        child: Text(actionText),
         onPressed: () {
+          if (onPressed != null) {
+            onPressed();
+          }
           Navigator.of(context).pop();
         },
       ),
