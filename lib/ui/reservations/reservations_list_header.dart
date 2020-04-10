@@ -1,7 +1,5 @@
-import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ReservationListHeader extends StatelessWidget {
   final Reservation reservation;
@@ -71,26 +69,15 @@ class ReservationListHeader extends StatelessWidget {
   }
 }
 
-class _NotificationButton extends StatefulWidget {
+class _NotificationButton extends StatelessWidget {
   final Reservation reservation;
+
+  bool get isNotificationSet => reservation.reminderNotificationId != null;
 
   const _NotificationButton({
     Key key,
     @required this.reservation,
   }) : super(key: key);
-
-  @override
-  __NotificationButtonState createState() => __NotificationButtonState();
-}
-
-class __NotificationButtonState extends State<_NotificationButton> {
-  bool isNotificationSet = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _updateNotificationState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,36 +102,17 @@ class __NotificationButtonState extends State<_NotificationButton> {
       ),
       onPressed: canScheduleNotification
           ? () {
-              setState(() {
-                isNotificationSet = !isNotificationSet;
-              });
-
-              final reservationsRepo = Provider.of<ReservationsRepository>(context, listen: false);
-
-              if (isNotificationSet) {
-                reservationsRepo.scheduleReservationReminder(widget.reservation, context);
-              } else {
-                reservationsRepo.cancelReservationReminder(widget.reservation);
-              }
+              BlocProvider.of<ReservationsBloc>(context).add(
+                ToggleReminderForReservation(
+                    reservationId: reservation.id),
+              );
             }
           : null,
     );
   }
 
   bool _canScheduleNotification() {
-    return widget.reservation.startTime.difference(DateTime.now()) >
+    return reservation.startTime.difference(DateTime.now()) >
         Constants.durationForNotificationBeforeStartTime;
-  }
-
-  void _updateNotificationState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    bool set = prefs.get('${widget.reservation.id}') == null ? false : true;
-
-    if (mounted) {
-      setState(() {
-        isNotificationSet = set;
-      });
-    }
   }
 }

@@ -6,28 +6,23 @@ import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/repository/data/data.dart';
 import 'package:reservation_system_customer/repository/data/http_responses/http_responses.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
-import 'package:reservation_system_customer/repository/notification_handler.dart';
 import 'package:http/http.dart' as http;
 import 'package:reservation_system_customer/repository/storage.dart';
 import 'data/data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'user_repository.dart';
 
 class ReservationsRepository {
   final String _baseUrl;
   final UserRepository _userRepository;
   final Storage _storage;
-  final NotificationHandler _notificationHandler;
 
   ReservationsRepository({
     @required String baseUrl,
     @required UserRepository userRepository,
     @required Storage storage,
-    @required NotificationHandler notificationHandler,
   })  : _baseUrl = baseUrl,
         _userRepository = userRepository,
-        _storage = storage,
-        _notificationHandler = notificationHandler;
+        _storage = storage;
 
   Future<bool> cancelReservation({
     @required int locationId,
@@ -126,29 +121,5 @@ class ReservationsRepository {
     }
     print('getReservations: error ${response.statusCode}');
     return [];
-  }
-
-  Future<void> scheduleReservationReminder(
-    Reservation reservation,
-    BuildContext context,
-  ) async {
-    final notificationId =
-        await _notificationHandler.scheduleReservationReminder(
-      reservation: reservation,
-      context: context,
-    );
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('${reservation.id}', notificationId);
-  }
-
-  Future<void> cancelReservationReminder(Reservation reservation) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    final notificationId = prefs.getInt('${reservation.id}');
-    if (notificationId != null) {
-      _notificationHandler.cancelNotification(notificationId);
-    }
-    // remove the savedId
-    await prefs.remove('${reservation.id}');
   }
 }

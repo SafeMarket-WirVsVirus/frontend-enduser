@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
       baseUrl: Constants.baseUrl,
       userRepository: userRepository,
       storage: storage,
-      notificationHandler: NotificationHandler(),
     );
     final locationsRepository = LocationsRepository(
       baseUrl: Constants.baseUrl,
@@ -47,6 +46,8 @@ class MyApp extends StatelessWidget {
             create: (context) => ReservationsBloc(
               reservationsRepository: reservationRepository,
               userRepository: userRepository,
+              notificationHandler: NotificationHandler(),
+              context: context,
             ),
           ),
           BlocProvider(
