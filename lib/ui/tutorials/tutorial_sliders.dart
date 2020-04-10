@@ -17,29 +17,31 @@ class _TutorialSlidersState extends State<TutorialSliders> {
 
     slides.add(
       new Slide(
-        title: "Location Permission",
-        description: "Please give us acces to your location",
-        pathImage: "assets/AppIcon.png",
-        backgroundColor: Color(0xfff5a623),
-      ),
+          title: "Disclaimer",
+          description:
+              "Aktuell befindet sich diese Applikation noch in der ersten Beta."
+              " Konkret sind deshalb noch keine echten Märkte hinterlegt."
+              " Testmärkte finden Sie aber zum Beispiel"
+              " in Berlin Mitte und Dortmund Innenstadt",
+          //pathImage: "assets/AppIcon.png",
+          colorBegin: Colors.blueAccent,
+          colorEnd: Colors.greenAccent),
     );
     slides.add(
       new Slide(
-        title: "PENCIL",
-        description:
-            "Ye indulgence unreserved connection alteration appearance",
-        pathImage: "assets/AppIcon.png",
-        backgroundColor: Color(0xff203152),
-      ),
-    );
-    slides.add(
-      new Slide(
-        title: "RULER",
-        description:
-            "Much evil soon high in hope do view. Out may few northward believing attempted. Yet timed being songs marry one defer men our. Although finished blessing do of",
-        pathImage: "assets/AppIcon.png",
-        backgroundColor: Color(0xff9932CC),
-      ),
+          title: "Übersicht",
+          widgetDescription: Column(
+            children: <Widget>[
+              Text(
+                  "SafeMarket bietet verschiedene Funktion um Sie beim Einkauf zu unterstützen:"),
+              ListTile(
+                title: Text(String.fromCharCode(0x2022) + " Buchung eines Einkaufslots"),
+              )
+            ],
+          ),
+          pathImage: "assets/AppIcon.png",
+          colorBegin: Colors.blueAccent,
+          colorEnd: Colors.greenAccent),
     );
 
     slides.add(
