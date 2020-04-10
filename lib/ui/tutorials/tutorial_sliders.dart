@@ -141,7 +141,7 @@ class _TutorialSlidersState extends State<TutorialSliders> {
     return IntroSlider(
       slides: slides,
       onDonePress: this.onDonePress,
-      sizeDot: 7.0,
+      sizeDot: 6.0,
       colorActiveDot: Theme.of(context).primaryColor,
       isScrollable: true,
     );
