@@ -9,11 +9,18 @@ class TutorialSliders extends StatefulWidget {
 }
 
 class _TutorialSlidersState extends State<TutorialSliders> {
-  List<Slide> slides = new List();
-
   @override
   void initState() {
     super.initState();
+  }
+
+  void onDonePress() {
+    // Do what you want
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Slide> slides = new List();
 
     slides.add(
       new Slide(
@@ -35,7 +42,8 @@ class _TutorialSlidersState extends State<TutorialSliders> {
               Text(
                   "SafeMarket bietet verschiedene Funktion um Sie beim Einkauf zu unterstützen:"),
               ListTile(
-                title: Text(String.fromCharCode(0x2022) + " Buchung eines Einkaufslots"),
+                title: Text(String.fromCharCode(0x2022) +
+                    " Buchung eines Einkaufslots"),
               )
             ],
           ),
@@ -45,11 +53,10 @@ class _TutorialSlidersState extends State<TutorialSliders> {
     );
 
     slides.add(
-
-    new Slide(
+      new Slide(
         title: "Location Permission",
         description:
-            "You are almost ready to use the app. Please give us access to your location so we can search for stores ariund you.",
+            "You are almost ready to use the app. Please give us access to your location so we can search for stores around you.",
         centerWidget: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -65,27 +72,17 @@ class _TutorialSlidersState extends State<TutorialSliders> {
               color: Colors.blueAccent,
               child: Text(
                 "Grant location access",
-                style: TextStyle(fontSize: 20, color: Colors.white),
               ),
-              onPressed: () {
-
-              },
+              onPressed: () {},
             )
           ],
         ),
         backgroundColor: Color(0xffFFA500),
       ),
     );
-  }
 
-  void onDonePress() {
-    // Do what you want
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return new IntroSlider(
-      slides: this.slides,
+    return IntroSlider(
+      slides: slides,
       onDonePress: this.onDonePress,
     );
   }
