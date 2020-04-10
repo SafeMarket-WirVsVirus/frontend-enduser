@@ -124,6 +124,20 @@ class _TutorialSlidersState extends State<TutorialSliders> {
       ),
     );
 
+    slides.add(
+      new Slide(
+        title: "All Done",
+        description: "You are now ready to use SafeMarket.\nSafe shopping!\n\nP.S.: You can rewatch this tutorial by going to settings -> tutorial :)",
+        centerWidget: Icon(
+          Icons.done_outline,
+          color: Colors.white,
+          size: 200,
+        ),
+        colorBegin: Colors.blueAccent,
+        colorEnd: Colors.greenAccent,
+      ),
+    );
+
     return IntroSlider(
       slides: slides,
       onDonePress: this.onDonePress,
@@ -244,9 +258,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
               : FlatButton(
                   color: Colors.blueAccent,
                   child: Text(
-                    accessGranted
-                        ? "Access granted"
-                        : "Grant location access",
+                    accessGranted ? "Access granted" : "Grant location access",
                     style: Theme.of(context)
                         .textTheme
                         .title
