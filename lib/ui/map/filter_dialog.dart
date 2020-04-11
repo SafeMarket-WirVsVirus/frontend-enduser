@@ -138,7 +138,8 @@ class _CheckboxTile extends StatelessWidget {
           children: [
             Icon(locationType.icon(context), size: 20, color: Colors.grey),
             SizedBox(width: 8),
-            Text(locationType.localized(context)),
+            Text("REMOVED")
+//            Text(locationType.localized(context)),
           ],
         ),
         activeColor: Theme.of(context).accentColor,
@@ -148,16 +149,16 @@ class _CheckboxTile extends StatelessWidget {
   }
 }
 
-extension LocationTypeDescription on LocationType {
-  String localized(context) {
-    switch (this) {
-      case LocationType.supermarket:
-        return AppLocalizations.of(context).locationFilterSupermarketsLabel;
-      case LocationType.bakery:
-        return AppLocalizations.of(context).locationFilterBakeriesLabel;
-      case LocationType.pharmacy:
-        return AppLocalizations.of(context).locationFilterPharmaciesLabel;
-    }
-    return '';
-  }
-}
+//extension LocationTypeDescription on LocationType {
+//    String localized(context) {
+//    switch (this) {
+//      case LocationType.supermarket:
+//        return AppLocalizations.of(context).locationFilterSupermarketsLabel;
+//      case LocationType.bakery:
+//        return AppLocalizations.of(context).locationFilterBakeriesLabel;
+//      case LocationType.pharmacy:
+//        return AppLocalizations.of(context).locationFilterPharmaciesLabel;
+//    }
+//    return '';
+//  }
+//}

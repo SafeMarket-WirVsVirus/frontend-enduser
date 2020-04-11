@@ -30,6 +30,8 @@ class MapViewState extends State<MapView> {
   CameraPosition currentCameraPosition;
   StreamSubscription<Position> positionStream;
 
+  LocationType selectedType = LocationType.supermarket;
+
   @override
   void dispose() {
     super.dispose();
@@ -66,54 +68,94 @@ class MapViewState extends State<MapView> {
             defaultPosition;
     print('Building map with ${widget.markers.length} marker(s)');
     return Scaffold(
-        body: GoogleMap(
-          myLocationButtonEnabled: false,
-          myLocationEnabled: true,
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(
-              userPosition.latitude,
-              userPosition.longitude,
+        body: Stack(
+          children: <Widget>[
+            GoogleMap(
+              myLocationButtonEnabled: false,
+              myLocationEnabled: true,
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                  userPosition.latitude,
+                  userPosition.longitude,
+                ),
+                zoom: 15,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                rootBundle.loadString('assets/map_style.json').then((style) {
+                  controller.setMapStyle(style);
+                });
+
+                _fetchLocations(context, controller);
+              },
+              onCameraMove: (position) {
+                currentCameraPosition = position;
+              },
+              onCameraIdle: () async {
+                if (currentCameraPosition == null ||
+                    currentCameraPosition.target == null ||
+                    BlocProvider.of<MapBloc>(context).state is MapLoading) {
+                  return;
+                }
+
+                _fetchLocationsIfNeeded(currentCameraPosition);
+              },
+              markers: Set<Marker>.of(widget.markers.values),
             ),
-            zoom: 15,
-          ),
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-            rootBundle.loadString('assets/map_style.json').then((style) {
-              controller.setMapStyle(style);
-            });
 
-            _fetchLocations(context, controller);
-          },
-          onCameraMove: (position) {
-            currentCameraPosition = position;
-          },
-          onCameraIdle: () async {
-            if (currentCameraPosition == null ||
-                currentCameraPosition.target == null ||
-                BlocProvider.of<MapBloc>(context).state is MapLoading) {
-              return;
-            }
+//            Try out chips
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children:
+                LocationType.values.map<Widget>((LocationType l) {
+                  return Padding(
+                    padding: EdgeInsets.all(5),
+                    child: ChoiceChip(
+                      label: Text(l.localized(context)),
+                      selected: selectedType == l,
+                      backgroundColor: Colors.white,
+                      selectedColor: Theme.of(context).accentColor,
+                      shadowColor: Colors.black,
+                      elevation: (selectedType == l) ? 10 : 5,
+                      onSelected: (bool selected) {
+                        setState(() {
+                          if (selected) {
+                            selectedType = l;
+                          }
+                        });
+                      },
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          )
 
-            _fetchLocationsIfNeeded(currentCameraPosition);
-          },
-          markers: Set<Marker>.of(widget.markers.values),
+          ],
         ),
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            BlocBuilder<MapBloc, MapState>(builder: (context, state) {
-              return FloatingActionButton(
-                mini: true,
-                onPressed: _setFilters,
-                child: Icon(state.filterSettings?.locationType?.icon(context) ??
-                    Icons.filter_list),
-                backgroundColor: Theme.of(context).accentColor,
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
+
+//            Disabled for the sake of trying out chips to show selected stores
+
+//            BlocBuilder<MapBloc, MapState>(builder: (context, state) {
+//              return FloatingActionButton(
+//                mini: true,
+//                onPressed: _setFilters,
+//                child: Icon(state.filterSettings?.locationType?.icon(context) ??
+//                    Icons.filter_list),
+//                backgroundColor: Theme.of(context).accentColor,
+//              );
+//            }),
+//            SizedBox(
+//              height: 10,
+//            ),
+
             FloatingActionButton(
               onPressed: () => _moveCameraToNewPosition(userPosition),
               child: Icon(Icons.gps_fixed),
@@ -224,5 +266,19 @@ class MapViewState extends State<MapView> {
     final region = await controller.getVisibleRegion();
     final distance = await _getDistance(region.northeast, region.southwest);
     return (distance / 2.0).floor();
+  }
+}
+
+extension LocationTypeDescription on LocationType {
+  String localized(context) {
+    switch (this) {
+      case LocationType.supermarket:
+        return AppLocalizations.of(context).locationFilterSupermarketsLabel;
+      case LocationType.bakery:
+        return AppLocalizations.of(context).locationFilterBakeriesLabel;
+      case LocationType.pharmacy:
+        return AppLocalizations.of(context).locationFilterPharmaciesLabel;
+    }
+    return '';
   }
 }
