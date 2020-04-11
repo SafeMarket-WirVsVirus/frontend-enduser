@@ -1,11 +1,9 @@
-import 'dart:typed_data';
-import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
+import 'package:reservation_system_customer/bloc/map_marker_loader.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 
 import '../repository/data/data.dart';
@@ -39,6 +37,13 @@ class MapSettingsChanged extends MapEvent {
   List<Object> get props => settings.props;
 }
 
+class _MapSettingsLoaded extends MapSettingsChanged {
+  _MapSettingsLoaded(FilterSettings settings) : super(settings);
+
+  @override
+  List<Object> get props => settings.props;
+}
+
 /// STATES
 
 abstract class MapState extends Equatable {
@@ -65,6 +70,9 @@ class MapInitial extends MapState {
           markerIcons: {},
           filterSettings: filterSettings,
         );
+
+  @override
+  String toString() => 'MapInitial with ${filterSettings.toString()}';
 }
 
 class MapLoading extends MapState {
@@ -77,6 +85,10 @@ class MapLoading extends MapState {
           markerIcons: markerIcons,
           filterSettings: filterSettings,
         );
+
+  @override
+  String toString() =>
+      'MapLoading with locations $locations and ${filterSettings.toString()}';
 }
 
 class MapLocationsLoaded extends MapState {
@@ -89,12 +101,17 @@ class MapLocationsLoaded extends MapState {
           markerIcons: markerIcons,
           filterSettings: filterSettings,
         );
+
+  @override
+  String toString() =>
+      'MapLocationsLoaded with locations $locations and ${filterSettings.toString()}';
 }
 
 /// BLOC
 
 class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationsRepository _locationsRepository;
+  final MapMarkerLoader _markerLoader;
   List<Location> locations = [];
   Map<FillStatus, BitmapDescriptor> markerIcons;
 
@@ -102,11 +119,13 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   MapBloc({
     @required LocationsRepository locationsRepository,
-  }) : _locationsRepository = locationsRepository {
+    @required MapMarkerLoader markerLoader,
+  })  : _locationsRepository = locationsRepository,
+        _markerLoader = markerLoader {
     // get the saved filter selection
     locationsRepository.loadMapFilterSettings().then((settings) {
       if (settings != null) {
-        add(MapSettingsChanged(settings));
+        add(_MapSettingsLoaded(settings));
       }
     });
   }
@@ -115,7 +134,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   MapState get initialState => MapInitial(
         filterSettings: FilterSettings(
           locationType: LocationType.supermarket,
-          minFillStatus: FillStatus.green,
+          minFillStatus: FillStatus.red,
         ),
       );
 
@@ -123,10 +142,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Stream<MapState> mapEventToState(MapEvent event) async* {
     if (event is MapLoadLocations) {
       if (markerIcons == null) {
-        markerIcons = await _markerIcons();
+        markerIcons = await _markerLoader.loadMarkerIcons();
       }
       yield MapLoading(
-        locations: locations,
+        locations: _filteredLocations(locations, _filterSettings),
         markerIcons: markerIcons,
         filterSettings: _filterSettings,
       );
@@ -146,8 +165,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         filterSettings: _filterSettings,
       );
     } else if (event is MapSettingsChanged) {
-      // save the new filter selection
-      _locationsRepository.saveMapFilterSettings(event.settings);
+      if (event is! _MapSettingsLoaded) {
+        // save the new filter selection
+        _locationsRepository.saveMapFilterSettings(event.settings);
+      }
       if (state is MapInitial) {
         yield MapInitial(filterSettings: event.settings);
       } else {
@@ -175,37 +196,5 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     print(
         'MapBloc: Filtered Locations from ${locations.length} to ${filteredLocations.length}');
     return filteredLocations;
-  }
-
-  Future<Map<FillStatus, BitmapDescriptor>> _markerIcons() async {
-    final Map<FillStatus, BitmapDescriptor> markerIcons = {};
-    markerIcons[FillStatus.green] = await _icon(FillStatus.green);
-    markerIcons[FillStatus.yellow] = await _icon(FillStatus.yellow);
-    markerIcons[FillStatus.red] = await _icon(FillStatus.red);
-    return markerIcons;
-  }
-
-  Future<BitmapDescriptor> _icon(FillStatus color) async {
-    final size = 90;
-    switch (color) {
-      case FillStatus.green:
-        return _getBytesFromAsset('assets/icon_green.png', size);
-      case FillStatus.red:
-        return _getBytesFromAsset('assets/icon_red.png', size);
-      case FillStatus.yellow:
-        return _getBytesFromAsset('assets/icon_yellow.png', size);
-    }
-    return null;
-  }
-
-  Future<BitmapDescriptor> _getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    final codec = await instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    FrameInfo fi = await codec.getNextFrame();
-    final bytes = (await fi.image.toByteData(format: ImageByteFormat.png))
-        .buffer
-        .asUint8List();
-    return BitmapDescriptor.fromBytes(bytes);
   }
 }

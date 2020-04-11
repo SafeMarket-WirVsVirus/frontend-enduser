@@ -20,7 +20,11 @@ class ReservationLocationFactory {
 }
 
 class LocationFactory {
-  static Location createLocation({@required int id}) => Location(
+  static Location createLocation({
+    @required int id,
+    LocationType locationType,
+  }) =>
+      Location(
         id: id,
         name: null,
         latitude: 10,
@@ -30,5 +34,6 @@ class LocationFactory {
         slotDuration: null,
         slotSize: null,
         address: null,
+        locationType: locationType ?? LocationType.supermarket,
       );
 }

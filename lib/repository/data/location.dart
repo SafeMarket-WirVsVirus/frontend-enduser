@@ -78,6 +78,7 @@ class Location {
     @required this.slotDuration,
     @required this.address,
     @required this.openingHours,
+    this.locationType,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) =>
