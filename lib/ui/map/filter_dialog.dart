@@ -114,6 +114,8 @@ class _FilterDialogState extends State<FilterDialog> {
         return AppLocalizations.of(context).locationUtilizationSliderTip2;
       case FillStatus.green:
         return AppLocalizations.of(context).locationUtilizationSliderTip1;
+      case FillStatus.gray: // should never happen!
+        return AppLocalizations.of(context).locationUtilizationSliderTip1;
     }
     return '';
   }

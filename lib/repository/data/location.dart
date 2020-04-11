@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -8,6 +9,7 @@ enum FillStatus {
   green,
   yellow,
   red,
+  gray,
 }
 
 /// The order of the location type determines also the order in the filter dialog

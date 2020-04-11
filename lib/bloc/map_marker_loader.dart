@@ -10,6 +10,7 @@ class MapMarkerLoader {
     markerIcons[FillStatus.green] = await _icon(FillStatus.green);
     markerIcons[FillStatus.yellow] = await _icon(FillStatus.yellow);
     markerIcons[FillStatus.red] = await _icon(FillStatus.red);
+    markerIcons[FillStatus.gray] = await _icon(FillStatus.gray);
     return markerIcons;
   }
 
@@ -22,6 +23,8 @@ class MapMarkerLoader {
         return _getBytesFromAsset('assets/icon_red.png', size);
       case FillStatus.yellow:
         return _getBytesFromAsset('assets/icon_yellow.png', size);
+      case FillStatus.gray:
+        return _getBytesFromAsset('assets/icon_gray.png', size);
     }
     return null;
   }

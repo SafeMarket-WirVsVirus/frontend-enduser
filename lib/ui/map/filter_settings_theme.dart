@@ -9,6 +9,8 @@ extension FillStatusColor on FillStatus {
         return Colors.orange;
       case FillStatus.red:
         return Colors.red;
+      case FillStatus.gray:
+        return Colors.grey;
     }
     return Theme.of(context).accentColor;
   }

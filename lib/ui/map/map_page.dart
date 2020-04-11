@@ -20,7 +20,7 @@ class MapPage extends StatelessWidget {
                 markerId: MarkerId(id),
                 position: location.position,
                 consumeTapEvents: true,
-                icon: state.markerIcons[location.fillStatus],
+                icon: _locationIcon(state, location),
                 onTap: () {
                   //TODO: Visible area on marker
                   showModalBottomSheet(
@@ -62,5 +62,21 @@ class MapPage extends StatelessWidget {
         },
       ),
     );
+  }
+
+  _locationIcon(MapState state, Location location) {
+    bool open = false;
+    location.openingHours?.forEach((oh) => {
+      if (DateTime.now().isAfter(oh.openingTime)
+          && DateTime.now().isBefore(oh.closingTime)) {
+        open = true
+      }
+    });
+    if (open) {
+      return state.markerIcons[location.fillStatus];
+    }
+    else {
+      return state.markerIcons[FillStatus.gray];
+    }
   }
 }
