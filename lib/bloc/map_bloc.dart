@@ -5,6 +5,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/bloc/map_marker_loader.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
+import 'package:reservation_system_customer/ui_imports.dart';
 
 import '../repository/data/data.dart';
 
@@ -48,7 +49,7 @@ class _MapSettingsLoaded extends MapSettingsChanged {
 
 abstract class MapState extends Equatable {
   final List<Location> locations;
-  final Map<FillStatus, BitmapDescriptor> markerIcons;
+  final Map<int, BitmapDescriptor> markerIcons;
   final FilterSettings filterSettings;
 
   MapState({
@@ -78,7 +79,7 @@ class MapInitial extends MapState {
 class MapLoading extends MapState {
   MapLoading({
     @required List<Location> locations,
-    @required Map<FillStatus, BitmapDescriptor> markerIcons,
+    @required Map<int, BitmapDescriptor> markerIcons,
     @required FilterSettings filterSettings,
   }) : super(
           locations: locations,
@@ -94,7 +95,7 @@ class MapLoading extends MapState {
 class MapLocationsLoaded extends MapState {
   MapLocationsLoaded({
     @required List<Location> locations,
-    @required Map<FillStatus, BitmapDescriptor> markerIcons,
+    @required Map<int, BitmapDescriptor> markerIcons,
     @required FilterSettings filterSettings,
   }) : super(
           locations: locations,
@@ -113,7 +114,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final LocationsRepository _locationsRepository;
   final MapMarkerLoader _markerLoader;
   List<Location> locations = [];
-  Map<FillStatus, BitmapDescriptor> markerIcons;
+  Map<int, BitmapDescriptor> markerIcons;
 
   FilterSettings get _filterSettings => state.filterSettings;
 
@@ -141,11 +142,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   @override
   Stream<MapState> mapEventToState(MapEvent event) async* {
     if (event is MapLoadLocations) {
-      if (markerIcons == null) {
-        markerIcons = await _markerLoader.loadMarkerIcons();
-      }
+      List<Location> list = _filteredLocations(locations, _filterSettings);
       yield MapLoading(
-        locations: _filteredLocations(locations, _filterSettings),
+        locations: list,
         markerIcons: markerIcons,
         filterSettings: _filterSettings,
       );
@@ -158,6 +157,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       if (locations.length > 300) {
         locations.removeRange(0, locations.length - 300);
       }
+
+      //create marker icons
+      markerIcons = await _markerLoader.getMarkerIcons(
+          locations, Size(300, 250));
 
       yield MapLocationsLoaded(
         locations: _filteredLocations(locations, _filterSettings),

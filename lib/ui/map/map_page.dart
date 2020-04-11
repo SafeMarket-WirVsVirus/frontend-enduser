@@ -20,7 +20,7 @@ class MapPage extends StatelessWidget {
                 markerId: MarkerId(id),
                 position: location.position,
                 consumeTapEvents: true,
-                icon: state.markerIcons[location.fillStatus],
+                icon: state.markerIcons[location.id],
                 onTap: () {
                   //TODO: Visible area on marker
                   showModalBottomSheet(
