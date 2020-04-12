@@ -67,67 +67,72 @@ class MapMarkerLoader {
     return completer.future;
   }
 
-  Future<Map<int, BitmapDescriptor>> getMarkerIcons(
-      List<Location> locations, Size size) async {
-    Map<int, BitmapDescriptor> iconMap = {};
-
+  Future<Map<int, BitmapDescriptor>> addNewMarkerIcons(List<Location> locations,
+      Map<int, BitmapDescriptor> iconMap, Size size) async {
     print("before marker creation ran with length ${locations.length}");
+
+    if (iconMap == null) {
+      iconMap = {};
+    }
 
     for (int i = 0; i < locations.length; i++) {
       final location = locations[i];
-      final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
-      final Canvas canvas = Canvas(pictureRecorder);
-      final double imageHeight = 100; /*size.height - textHeight * 2*/
 
-      print("creating marker icon for location id ${location.id}");
+      if (!iconMap.containsKey(location.id)) {
+        final ui.PictureRecorder pictureRecorder = ui.PictureRecorder();
+        final Canvas canvas = Canvas(pictureRecorder);
+        final double imageHeight = 100; /*size.height - textHeight * 2*/
 
-      //manually add line break if need
-      String locationName = location.name;
-      if (locationName.length > 15) {
-        locationName = locationName.substring(0, 14) +
-            "\n" +
-            locationName.substring(14, locationName.length);
+        print("creating marker icon for location id ${location.id}");
+
+        //manually add line break if need
+        String locationName = location.name;
+        if (locationName.length > 15) {
+          locationName = locationName.substring(0, 14) +
+              "\n" +
+              locationName.substring(14, locationName.length);
+        }
+
+        // Add location text
+        TextPainter textPainter = TextPainter(
+            textDirection: TextDirection.ltr, textAlign: TextAlign.center);
+        textPainter.text = TextSpan(
+          text: locationName,
+          style: TextStyle(
+            fontSize: 33,
+            fontWeight: FontWeight.bold,
+            color: Colors.orange,
+          ),
+        );
+
+        textPainter.layout();
+        textPainter.paint(canvas,
+            Offset(size.width / 2 - textPainter.width / 2, imageHeight + 10));
+
+        Rect rect = Rect.fromLTWH(
+            size.width / 2 - imageHeight / 2, 0, imageHeight, imageHeight);
+
+        // Add path for oval image
+        canvas.clipPath(Path()..addRect(rect));
+
+        // Add image
+        ui.Image image = await loadMarkerAsset(location
+            .fillStatus); // Alternatively use your own method to get the image
+        paintImage(
+            canvas: canvas, image: image, rect: rect, fit: BoxFit.fitWidth);
+
+        // Convert canvas to image
+        final ui.Image markerAsImage = await pictureRecorder
+            .endRecording()
+            .toImage(size.width.toInt(), size.height.toInt());
+
+        // Convert image to bytes
+        final ByteData byteData =
+            await markerAsImage.toByteData(format: ui.ImageByteFormat.png);
+        final Uint8List uint8List = byteData.buffer.asUint8List();
+
+        iconMap[location.id] = (BitmapDescriptor.fromBytes(uint8List));
       }
-
-      // Add location text
-      TextPainter textPainter = TextPainter(
-          textDirection: TextDirection.ltr, textAlign: TextAlign.center);
-      textPainter.text = TextSpan(
-        text: locationName,
-        style: TextStyle(
-          fontSize: 33,
-          fontWeight: FontWeight.bold,
-          color: Colors.orange,
-        ),
-      );
-
-      textPainter.layout();
-      textPainter.paint(canvas,
-          Offset(size.width / 2 - textPainter.width / 2, imageHeight + 10));
-
-      Rect rect = Rect.fromLTWH(
-          size.width / 2 - imageHeight / 2, 0, imageHeight, imageHeight);
-
-      // Add path for oval image
-      canvas.clipPath(Path()..addRect(rect));
-
-      // Add image
-      ui.Image image = await loadMarkerAsset(location
-          .fillStatus); // Alternatively use your own method to get the image
-      paintImage(
-          canvas: canvas, image: image, rect: rect, fit: BoxFit.fitWidth);
-
-      // Convert canvas to image
-      final ui.Image markerAsImage = await pictureRecorder
-          .endRecording()
-          .toImage(size.width.toInt(), size.height.toInt());
-
-      // Convert image to bytes
-      final ByteData byteData =
-          await markerAsImage.toByteData(format: ui.ImageByteFormat.png);
-      final Uint8List uint8List = byteData.buffer.asUint8List();
-
-      iconMap[location.id] = (BitmapDescriptor.fromBytes(uint8List));
     }
 
     return iconMap;

@@ -159,8 +159,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       }
 
       //create marker icons
-      markerIcons = await _markerLoader.getMarkerIcons(
-          locations, Size(300, 250));
+      markerIcons = await _markerLoader.addNewMarkerIcons(
+          locations, markerIcons, Size(300, 250));
 
       yield MapLocationsLoaded(
         locations: _filteredLocations(locations, _filterSettings),
