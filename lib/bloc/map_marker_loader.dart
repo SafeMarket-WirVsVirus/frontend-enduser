@@ -68,8 +68,10 @@ class MapMarkerLoader {
   }
 
   Future<Map<int, BitmapDescriptor>> addNewMarkerIcons(List<Location> locations,
-      Map<int, BitmapDescriptor> iconMap, Size size) async {
-    print("before marker creation ran with length ${locations.length}");
+      Map<int, BitmapDescriptor> iconMap) async {
+
+    //size of the icon
+    final size = Size(300, 220);
 
     if (iconMap == null) {
       iconMap = {};
@@ -85,19 +87,14 @@ class MapMarkerLoader {
 
         print("creating marker icon for location id ${location.id}");
 
-        //manually add line break if need
-        String locationName = location.name;
-        if (locationName.length > 15) {
-          locationName = locationName.substring(0, 14) +
-              "\n" +
-              locationName.substring(14, locationName.length);
-        }
-
         // Add location text
         TextPainter textPainter = TextPainter(
-            textDirection: TextDirection.ltr, textAlign: TextAlign.center);
+            maxLines: 3,
+            ellipsis: "\u2026",
+            textDirection: TextDirection.ltr,
+            textAlign: TextAlign.center);
         textPainter.text = TextSpan(
-          text: locationName,
+          text: location.name,
           style: TextStyle(
             fontSize: 33,
             fontWeight: FontWeight.bold,
@@ -105,15 +102,12 @@ class MapMarkerLoader {
           ),
         );
 
-        textPainter.layout();
+        textPainter.layout(maxWidth: size.width);
         textPainter.paint(canvas,
             Offset(size.width / 2 - textPainter.width / 2, imageHeight + 10));
 
         Rect rect = Rect.fromLTWH(
             size.width / 2 - imageHeight / 2, 0, imageHeight, imageHeight);
-
-        // Add path for oval image
-        canvas.clipPath(Path()..addRect(rect));
 
         // Add image
         ui.Image image = await loadMarkerAsset(location
