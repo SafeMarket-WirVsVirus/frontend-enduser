@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fluster/fluster.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -9,8 +10,12 @@ import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
 import 'package:reservation_system_customer/ui/map/filter_settings_theme.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
+import 'map_marker.dart';
+
 class MapView extends StatefulWidget {
-  final Map<MarkerId, Marker> markers;
+  final List<MapMarker> markers;
+  final int minZoom = 0;
+  final int maxZoom = 20;
 
   const MapView({
     Key key,
@@ -29,6 +34,9 @@ class MapViewState extends State<MapView> {
   CameraPosition lastFetchCameraPosition;
   CameraPosition currentCameraPosition;
   StreamSubscription<Position> positionStream;
+  double currentZoom = 15;
+
+  Map<MarkerId, MapMarker> _markerMap = {};
 
   @override
   void dispose() {
@@ -61,10 +69,53 @@ class MapViewState extends State<MapView> {
 
   @override
   Widget build(BuildContext context) {
+    //only add the new markers
+    widget.markers.forEach((item) {
+      if (!_markerMap.containsKey(MarkerId(item.id))) {
+        _markerMap[MarkerId(item.id)] = item;
+      }
+    });
+
     userPosition =
         Provider.of<UserRepository>(context, listen: false).userPosition ??
             defaultPosition;
     print('Building map with ${widget.markers.length} marker(s)');
+
+    final clusterController = Fluster<MapMarker>(
+      minZoom: widget.minZoom,
+      // The min zoom at clusters will show
+      maxZoom: widget.maxZoom,
+      // The max zoom at clusters will show
+      radius: 150,
+      // Cluster radius in pixels
+      extent: 2048,
+      // Tile extent. Radius is calculated with it.
+      nodeSize: 64,
+      // Size of the KD-tree leaf node.
+      points: _markerMap.values.toList(),
+      // The list of markers created before
+      createCluster: (
+        // Create cluster marker
+        BaseCluster cluster,
+        double lng,
+        double lat,
+      ) =>
+          MapMarker(
+        id: cluster.id.toString(),
+        position: LatLng(lat, lng),
+        icon: BlocProvider.of<MapBloc>(context).clusterMarkers[0],
+        isCluster: true,
+        clusterId: cluster.id,
+        pointsSize: cluster.pointsSize,
+        childMarkerId: cluster.childMarkerId,
+      ),
+    );
+
+    final List<Marker> googleMarkers = clusterController
+        .clusters([-180, -85, 180, 85], currentZoom.toInt())
+        .map((cluster) => cluster.toMarker())
+        .toList();
+
     return Scaffold(
         body: GoogleMap(
           myLocationButtonEnabled: false,
@@ -75,7 +126,7 @@ class MapViewState extends State<MapView> {
               userPosition.latitude,
               userPosition.longitude,
             ),
-            zoom: 15,
+            zoom: currentZoom,
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
@@ -87,6 +138,12 @@ class MapViewState extends State<MapView> {
           },
           onCameraMove: (position) {
             currentCameraPosition = position;
+
+            if ((currentZoom - position.zoom).abs() > 0.5) {
+              setState(() {
+                currentZoom = position.zoom;
+              });
+            }
           },
           onCameraIdle: () async {
             if (currentCameraPosition == null ||
@@ -97,7 +154,7 @@ class MapViewState extends State<MapView> {
 
             _fetchLocationsIfNeeded(currentCameraPosition);
           },
-          markers: Set<Marker>.of(widget.markers.values),
+          markers: Set<Marker>.of(googleMarkers),
         ),
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,

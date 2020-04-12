@@ -114,6 +114,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   final MapMarkerLoader _markerLoader;
   List<Location> locations = [];
   Map<FillStatus, BitmapDescriptor> markerIcons;
+  Map<int, BitmapDescriptor> clusterMarkers;
 
   FilterSettings get _filterSettings => state.filterSettings;
 
@@ -141,6 +142,10 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   @override
   Stream<MapState> mapEventToState(MapEvent event) async* {
     if (event is MapLoadLocations) {
+      if (clusterMarkers == null) {
+        clusterMarkers = await _markerLoader.loadClusterIcons();
+      }
+
       if (markerIcons == null) {
         markerIcons = await _markerLoader.loadMarkerIcons();
       }

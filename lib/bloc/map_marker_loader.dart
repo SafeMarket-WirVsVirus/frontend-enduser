@@ -13,6 +13,13 @@ class MapMarkerLoader {
     return markerIcons;
   }
 
+  Future<Map<int, BitmapDescriptor>> loadClusterIcons() async {
+    final Map<int, BitmapDescriptor> markerIcons = {};
+    markerIcons[0] = await _icon(FillStatus.green);
+    return markerIcons;
+  }
+
+
   Future<BitmapDescriptor> _icon(FillStatus color) async {
     final size = 90;
     switch (color) {
