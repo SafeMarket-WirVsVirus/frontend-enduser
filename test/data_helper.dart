@@ -6,10 +6,11 @@ class ReservationFactory {
     @required int id,
     DateTime startTime,
     int reminderNotificationId,
+    ReservationLocation location,
   }) =>
       Reservation(
         id: id,
-        location: ReservationLocationFactory.createLocation(id: 5),
+        location: location,
         startTime: startTime ?? DateTime.now().add(Duration(minutes: id)),
         codeWords: ['Apple', 'Code'],
         reminderNotificationId: reminderNotificationId,

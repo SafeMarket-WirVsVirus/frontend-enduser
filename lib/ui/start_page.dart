@@ -58,6 +58,7 @@ class __HomePageState extends State<_HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: mainScaffoldKey,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() {
@@ -73,7 +74,17 @@ class __HomePageState extends State<_HomePage> {
                 ))
             .toList(),
       ),
-      body: _page(_selectedIndex),
+      body: BlocListener<ModifyReservationBloc, ModifyReservationState>(
+          condition: (_, newState) => newState is! ModifyReservationIdle,
+          listener: (context, state) async {
+            if (state is CreateReservationSuccess) {
+              final snackBar = SnackBar(
+                  content: Text(AppLocalizations.of(context)
+                      .createReservationSuccessSnackbar));
+              Scaffold.of(context).showSnackBar(snackBar);
+            }
+          },
+          child: _page(_selectedIndex)),
     );
   }
 

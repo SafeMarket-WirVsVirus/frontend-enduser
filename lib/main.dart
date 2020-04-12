@@ -23,6 +23,10 @@ class MyApp extends StatelessWidget {
       baseUrl: Constants.baseUrl,
       storage: storage,
     );
+    // ignore: close_sinks
+    final modifyReservationsBloc = ModifyReservationBloc(
+      reservationsRepository: reservationRepository,
+    );
     return MaterialApp(
       title: "SafeMarket",
       theme: ThemeData.light().copyWith(
@@ -44,8 +48,8 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => ReservationsBloc(
+              modifyReservationBloc: modifyReservationsBloc,
               reservationsRepository: reservationRepository,
-              userRepository: userRepository,
               notificationHandler: NotificationHandler(),
               context: context,
             ),
@@ -55,6 +59,9 @@ class MyApp extends StatelessWidget {
               locationsRepository: locationsRepository,
               markerLoader: MapMarkerLoader(),
             ),
+          ),
+          BlocProvider(
+            create: (context) => modifyReservationsBloc,
           ),
           Provider(
             create: (context) => userRepository,

@@ -93,9 +93,8 @@ class ReservationsRepository {
     await _storage.setString(StorageKey.reservations, jsonEncode(reservations));
   }
 
-  Future<List<Reservation>> getReservations({
-    @required String deviceId,
-  }) async {
+  Future<List<Reservation>> getReservations() async {
+    final deviceId = await _userRepository.deviceId();
     var queryParameters = {
       'deviceId': deviceId,
       'minDate': DateTime.now()

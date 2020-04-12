@@ -32,105 +32,99 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
   Widget build(BuildContext context) {
     return Container(
       height: 450,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(5),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(height: 20),
-            _LocationInformation(
-              name: widget.location?.name ?? "",
-              address: widget.location?.address ?? "",
-            ),
-            _ReservationSlotsWithLoading(
-              data: data,
-              slotSize: widget.location.slotSize,
-              selectedSlotChanged: (slot) {
-                setState(() {
-                  selectedTime = slot;
-                });
-              },
-            ),
-            _ChangeDateButton(
-              title: (DateFormat.yMMMMd(
-                      AppLocalizations.of(context).locale.languageCode))
-                  .format(selectedDate),
-              dateChanged: (date) {
-                setState(() {
-                  selectedDate = date;
-                  data = null;
-                });
-                _fetchData();
-              },
-              selectedDate: selectedDate,
-            ),
-            Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
-                    child: SizedBox(
-                        width: 140,
-                        height: 50,
-                        child: AnimatedCrossFade(
-                          crossFadeState: loading
-                              ? CrossFadeState.showSecond
-                              : CrossFadeState.showFirst,
-                          duration: Duration(milliseconds: 300),
-                          firstChild: RaisedButton(
-                            child: Text(AppLocalizations.of(context)
-                                .reserveSlotButtonTitle),
-                            color: Color(0xFF00F2A9),
-                            textColor: Color(0xFF322153),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(20),
-                                side: BorderSide(color: Color(0xFF00F2A9))),
-                            onPressed: selectedTime == null
-                                ? null
-                                : () async {
-                                    if (!loading) {
-                                      setState(() {
-                                        loading = true;
-                                      });
+      child: BlocListener<ModifyReservationBloc, ModifyReservationState>(
+        condition: (_, newState) => newState is! ModifyReservationIdle,
+        listener: (context, state) {
+          if (state is CreateReservationFailure) {
+            setState(() {
+              loading = false;
+            });
+            showDialog<void>(
+              context: context,
+              builder: (BuildContext context) =>
+                  _CreateReservationFailedDialog(),
+            );
+          } else if (state is CreateReservationSuccess){
+            Navigator.of(mainScaffoldKey.currentContext).maybePop();
+          }
+        },
+        child: SingleChildScrollView(
+          padding: EdgeInsets.all(5),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(height: 20),
+              _LocationInformation(
+                name: widget.location?.name ?? "",
+                address: widget.location?.address ?? "",
+              ),
+              _ReservationSlotsWithLoading(
+                data: data,
+                slotSize: widget.location.slotSize,
+                selectedSlotChanged: (slot) {
+                  setState(() {
+                    selectedTime = slot;
+                  });
+                },
+              ),
+              _ChangeDateButton(
+                title: (DateFormat.yMMMMd(
+                        AppLocalizations.of(context).locale.languageCode))
+                    .format(selectedDate),
+                dateChanged: (date) {
+                  setState(() {
+                    selectedDate = date;
+                    data = null;
+                  });
+                  _fetchData();
+                },
+                selectedDate: selectedDate,
+              ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 30, 10),
+                      child: SizedBox(
+                          width: 140,
+                          height: 50,
+                          child: AnimatedCrossFade(
+                            crossFadeState: loading
+                                ? CrossFadeState.showSecond
+                                : CrossFadeState.showFirst,
+                            duration: Duration(milliseconds: 300),
+                            firstChild: RaisedButton(
+                              child: Text(AppLocalizations.of(context)
+                                  .reserveSlotButtonTitle),
+                              color: Color(0xFF00F2A9),
+                              textColor: Color(0xFF322153),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: new BorderRadius.circular(20),
+                                  side: BorderSide(color: Color(0xFF00F2A9))),
+                              onPressed: selectedTime == null
+                                  ? null
+                                  : () {
+                                      if (!loading) {
+                                        setState(() {
+                                          loading = true;
+                                        });
 
-                                      final success = await Provider.of<
-                                                  ReservationsRepository>(
-                                              context,
-                                              listen: false)
-                                          .createReservation(
-                                        locationId: widget.location.id,
-                                        startTime: selectedTime,
-                                      );
-
-                                      if (success) {
-                                        BlocProvider.of<ReservationsBloc>(
-                                                widget.scaffoldContext)
-                                            .add(UpdateReservations());
-                                        Navigator.pop(context);
-                                        final snackBar = SnackBar(
-                                            content: Text(AppLocalizations.of(
-                                                    context)
-                                                .createReservationSuccessSnackbar));
-                                        Scaffold.of(widget.scaffoldContext)
-                                            .showSnackBar(snackBar);
-                                      } else {
-                                        showDialog<void>(
-                                          context: context,
-                                          builder: (BuildContext context) =>
-                                              _CreateReservationFailedDialog(),
+                                        BlocProvider.of<ModifyReservationBloc>(
+                                                context)
+                                            .add(
+                                          CreateReservation(
+                                            location: widget.location,
+                                            startTime: selectedTime,
+                                          ),
                                         );
                                       }
-
-                                      setState(() {
-                                        loading = false;
-                                      });
-                                    }
-                                  },
-                          ),
-                          secondChild:
-                              Center(child: CircularProgressIndicator()),
-                        ))))
-          ],
+                                    },
+                            ),
+                            secondChild:
+                                Center(child: CircularProgressIndicator()),
+                          ))))
+            ],
+          ),
         ),
       ),
     );

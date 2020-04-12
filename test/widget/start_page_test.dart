@@ -13,6 +13,8 @@ class MockReservationsBloc extends Mock implements ReservationsBloc {}
 
 class MockMapBloc extends Mock implements MapBloc {}
 
+class MockModifyReservationBloc extends Mock implements ModifyReservationBloc {}
+
 class MockUserRepository extends Mock implements UserRepository {}
 
 class MockLocationsRepository extends Mock implements LocationsRepository {}
@@ -36,6 +38,7 @@ class MockLocalizationsDelegate extends Fake
 
 void main() {
   ReservationsBloc reservationsBloc;
+  MockModifyReservationBloc mockModifyReservationBloc;
   MapBloc mapBloc;
   UserRepository userRepository;
   Widget startPage;
@@ -43,6 +46,7 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     reservationsBloc = MockReservationsBloc();
+    mockModifyReservationBloc = MockModifyReservationBloc();
     mapBloc = MockMapBloc();
     userRepository = MockUserRepository();
 
@@ -59,8 +63,10 @@ void main() {
       ),
     );
 
+    mockBlocState(mockModifyReservationBloc, ModifyReservationIdle());
+
     startPage = TestApp(
-      blocs: [reservationsBloc, mapBloc],
+      blocs: [reservationsBloc, mapBloc, mockModifyReservationBloc],
       child: Provider.value(
         value: userRepository,
         child: StartPage(),
@@ -70,6 +76,7 @@ void main() {
 
   tearDown(() {
     reservationsBloc.close();
+    mockModifyReservationBloc.close();
     mapBloc.close();
   });
 

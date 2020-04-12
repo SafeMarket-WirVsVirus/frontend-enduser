@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:reservation_system_customer/bloc/modify_reservation_bloc.dart';
 import 'package:reservation_system_customer/repository/notification_handler.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 
@@ -16,7 +19,15 @@ abstract class ReservationsEvent extends Equatable {
 class LoadReservations extends ReservationsEvent {}
 
 /// Update the reservations from backend. This fails when the user has no network.
-class UpdateReservations extends ReservationsEvent {}
+class _UpdateReservations extends ReservationsEvent {
+  final ReservationLocation newReservationLocation;
+  final DateTime newReservationStartTime;
+
+  _UpdateReservations({
+    @required this.newReservationLocation,
+    @required this.newReservationStartTime,
+  });
+}
 
 /// Schedules or cancels a notification and emits the updated reservations.
 class ToggleReminderForReservation extends ReservationsEvent {
@@ -56,20 +67,36 @@ class ReservationsLoaded extends ReservationsState {
 /// BLOC
 
 class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
+  final ModifyReservationBloc _modifyReservationBloc;
   final ReservationsRepository _reservationsRepository;
-  final UserRepository _userRepository;
   final NotificationHandler _notificationHandler;
   final BuildContext _context;
+  StreamSubscription _modifyReservationSubscription;
 
   ReservationsBloc({
+    @required ModifyReservationBloc modifyReservationBloc,
     @required ReservationsRepository reservationsRepository,
-    @required UserRepository userRepository,
     @required NotificationHandler notificationHandler,
     @required BuildContext context,
-  })  : _reservationsRepository = reservationsRepository,
-        _userRepository = userRepository,
+  })  : _modifyReservationBloc = modifyReservationBloc,
+        _reservationsRepository = reservationsRepository,
         _notificationHandler = notificationHandler,
-        _context = context;
+        _context = context {
+    _modifyReservationSubscription = _modifyReservationBloc.listen((state) {
+      if (state is CreateReservationSuccess) {
+        add(_UpdateReservations(
+          newReservationLocation: state.location,
+          newReservationStartTime: state.startTime,
+        ));
+      }
+    });
+  }
+
+  @override
+  Future<void> close() async {
+    await _modifyReservationSubscription.cancel();
+    return super.close();
+  }
 
   @override
   ReservationsState get initialState => ReservationsInitial();
@@ -102,7 +129,7 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
           yield ReservationsLoadFail();
         }
       }
-    } else if (event is UpdateReservations) {
+    } else if (event is _UpdateReservations) {
       print('Updating reservations ...');
       final currentReservations = _currentReservations;
       yield ReservationsLoading();
@@ -113,8 +140,17 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
           timeoutInSec: 5,
         );
         print('Updated with fetched reservations: $reservations');
-        yield ReservationsLoaded(reservations ?? []);
-        _reservationsRepository.saveReservations(reservations ?? []);
+        yield* _updateReservations(
+          reservations: reservations ?? [],
+          where: ((r) =>
+              r.startTime == event.newReservationStartTime &&
+              r.location?.id == null),
+          alwaysSendUpdate: true,
+          updatedReservation: ((r) async {
+            return Reservation.withUpdatedLocation(
+                r, event.newReservationLocation);
+          }),
+        );
       } catch (_) {
         print('Could not retrieve any reservations.');
         yield ReservationsLoadFail();
@@ -122,33 +158,24 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
     } else if (event is ToggleReminderForReservation) {
       if (state is ReservationsLoaded) {
         final reservations = (state as ReservationsLoaded).reservations;
-        final index =
-            reservations.indexWhere((r) => r.id == event.reservationId);
-        if (index != -1) {
-          final reservation = reservations[index];
-          int notificationId;
 
-          if (reservation.reminderNotificationId != null) {
-            _notificationHandler
-                .cancelNotification(reservation.reminderNotificationId);
-          } else {
-            notificationId =
-                await _notificationHandler.scheduleReservationReminder(
-              reservation: reservation,
-              context: _context,
-            );
-          }
-          final Reservation updatedReservation =
-              Reservation.withUpdatedNotificationId(
-                  reservation, notificationId);
-
-          final newReservations = List<Reservation>.from(reservations);
-          newReservations[index] = updatedReservation;
-
-          _reservationsRepository.saveReservations(newReservations);
-
-          yield ReservationsLoaded(newReservations);
-        }
+        yield* _updateReservations(
+          reservations: reservations,
+          where: ((r) => r.id == event.reservationId),
+          updatedReservation: ((r) async {
+            int notificationId;
+            if (r.reminderNotificationId != null) {
+              _notificationHandler.cancelNotification(r.reminderNotificationId);
+            } else {
+              notificationId =
+                  await _notificationHandler.scheduleReservationReminder(
+                reservation: r,
+                context: _context,
+              );
+            }
+            return Reservation.withUpdatedNotificationId(r, notificationId);
+          }),
+        );
       } else {
         print(
             'Not updating reminder. Expected state ReservationsLoaded but was $state.');
@@ -167,23 +194,45 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
     @required List<Reservation> loadedReservations,
     @required int timeoutInSec,
   }) async {
-    final deviceId = await _userRepository.deviceId();
-
     final fetchedReservations = await _reservationsRepository
-        .getReservations(
-          deviceId: deviceId,
-        )
+        .getReservations()
         .timeout(Duration(seconds: timeoutInSec));
 
     fetchedReservations?.sort((a, b) => a.startTime.compareTo(b.startTime));
-    // Update with persisted notification ids
-
+    // Update with persisted data
     return fetchedReservations?.map((r) {
-      final notificationId = loadedReservations
-          .firstWhere((loadedReservation) => loadedReservation.id == r.id,
-              orElse: () => null)
-          ?.reminderNotificationId;
-      return Reservation.withUpdatedNotificationId(r, notificationId);
+      final localReservation = loadedReservations.firstWhere(
+          (loadedReservation) => loadedReservation.id == r.id,
+          orElse: () => null);
+      return Reservation.withLocalData(
+        r,
+        localReservation?.location,
+        localReservation?.reminderNotificationId,
+      );
     })?.toList();
+  }
+
+  Stream<ReservationsState> _updateReservations({
+    @required List<Reservation> reservations,
+    @required bool where(Reservation reservation),
+    bool alwaysSendUpdate = false,
+    @required Future<Reservation> updatedReservation(Reservation reservation),
+  }) async* {
+    final index = reservations.indexWhere(where);
+    if (index != -1) {
+      final reservation = reservations[index];
+
+      final Reservation newReservation = await updatedReservation(reservation);
+
+      final newReservations = List<Reservation>.from(reservations);
+      newReservations[index] = newReservation;
+
+      _reservationsRepository.saveReservations(newReservations);
+      yield ReservationsLoaded(newReservations);
+      return;
+    }
+    if (alwaysSendUpdate) {
+      yield ReservationsLoaded(reservations);
+    }
   }
 }

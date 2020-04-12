@@ -82,9 +82,34 @@ class Reservation extends Equatable {
         reminderNotificationId: reminderNotificationId,
       );
 
+  factory Reservation.withUpdatedLocation(
+    Reservation reservation,
+    ReservationLocation location,
+  ) =>
+      Reservation(
+        id: reservation.id,
+        location: location,
+        startTime: reservation.startTime,
+        codeWords: reservation.codeWords,
+        reminderNotificationId: reservation.reminderNotificationId,
+      );
+
+  factory Reservation.withLocalData(
+    Reservation reservation,
+    ReservationLocation location,
+    int reminderNotificationId,
+  ) =>
+      Reservation(
+        id: reservation.id,
+        location: location,
+        startTime: reservation.startTime,
+        codeWords: reservation.codeWords,
+        reminderNotificationId: reminderNotificationId,
+      );
+
   @override
   String toString() {
-    return 'Reservation $id @$startTime, reminderId: $reminderNotificationId';
+    return 'Reservation $id @$startTime, reminderId: $reminderNotificationId, location: ${location?.id}';
   }
 
   factory Reservation.fromJson(Map<String, dynamic> json) =>
@@ -93,5 +118,5 @@ class Reservation extends Equatable {
   Map<String, dynamic> toJson() => _$ReservationToJson(this);
 
   @override
-  List<Object> get props => [id, reminderNotificationId];
+  List<Object> get props => [id, reminderNotificationId, location?.id];
 }

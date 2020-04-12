@@ -22,6 +22,15 @@ class MapPage extends StatelessWidget {
                 consumeTapEvents: true,
                 icon: state.markerIcons[location.fillStatus],
                 onTap: () {
+                  // only create the bloc providers once prevents issues when disposing the bottom sheet
+                  final blocProviders = [
+                    BlocProvider.value(
+                        value: BlocProvider.of<ModifyReservationBloc>(context)),
+                    Provider(
+                      create: (_) => Provider.of<LocationsRepository>(context,
+                          listen: false),
+                    ),
+                  ];
                   //TODO: Visible area on marker
                   showModalBottomSheet(
                     context: context,
@@ -31,21 +40,7 @@ class MapPage extends StatelessWidget {
                             topLeft: Radius.circular(20.0),
                             topRight: Radius.circular(20.0))),
                     builder: (_) => MultiProvider(
-                      providers: [
-                        BlocProvider(
-                            create: (_) =>
-                                BlocProvider.of<ReservationsBloc>(context)),
-                        Provider(
-                          create: (_) => Provider.of<ReservationsRepository>(
-                              context,
-                              listen: false),
-                        ),
-                        Provider(
-                          create: (_) => Provider.of<LocationsRepository>(
-                              context,
-                              listen: false),
-                        ),
-                      ],
+                      providers: blocProviders,
                       child: LocationDetailSheet(
                         location: location,
                         scaffoldContext: context,
