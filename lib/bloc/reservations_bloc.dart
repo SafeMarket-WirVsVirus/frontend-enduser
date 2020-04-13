@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reservation_system_customer/bloc/modify_reservation_bloc.dart';
 import 'package:reservation_system_customer/repository/notification_handler.dart';
+import 'package:reservation_system_customer/logger.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 
 /// EVENTS
@@ -104,11 +105,11 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
   Stream<ReservationsState> mapEventToState(ReservationsEvent event) async* {
     if (event is LoadReservations) {
       yield ReservationsLoading();
-      print('Loading reservations ...');
+      debug('Loading reservations ...');
       final loadedReservations =
           await _reservationsRepository.loadReservations();
       if (loadedReservations != null) {
-        print('Loaded persisted reservations: $loadedReservations');
+        debug('Loaded persisted reservations: $loadedReservations');
         yield ReservationsLoaded(loadedReservations);
       }
 
@@ -117,19 +118,19 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
           loadedReservations: _currentReservations,
           timeoutInSec: 10,
         );
-        print('Loaded fetched reservations: $reservations');
+        debug('Loaded fetched reservations: $reservations');
         if (reservations != null) {
           yield ReservationsLoaded(reservations ?? loadedReservations ?? []);
         }
         _reservationsRepository.saveReservations(reservations ?? []);
-      } catch (error) {
-        print('Fetching reservations failed with $error');
+      } catch (e) {
+        warning('Fetching reservations failed', error: e);
         if (loadedReservations?.isEmpty ?? true) {
           yield ReservationsLoadFail();
         }
       }
     } else if (event is _UpdateReservations) {
-      print('Updating reservations ...');
+      debug('Updating reservations ...');
       final currentReservations = _currentReservations;
       yield ReservationsLoading();
       var reservations = <Reservation>[];
@@ -138,7 +139,7 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
           loadedReservations: currentReservations,
           timeoutInSec: 5,
         );
-        print('Updated with fetched reservations: $reservations');
+        debug('Updated with fetched reservations: $reservations');
         yield* _updateReservations(
           reservations: reservations ?? [],
           where: ((r) =>
@@ -150,8 +151,8 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
                 r, event.newReservationLocation);
           }),
         );
-      } catch (_) {
-        print('Could not retrieve any reservations.');
+      } catch (e) {
+        error('Could not retrieve any reservations', error: e);
         yield ReservationsLoadFail();
       }
     } else if (event is ToggleReminderForReservation) {
@@ -176,7 +177,7 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
           }),
         );
       } else {
-        print(
+        warning(
             'Not updating reminder. Expected state ReservationsLoaded but was $state.');
       }
     }

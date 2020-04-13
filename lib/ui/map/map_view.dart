@@ -62,7 +62,7 @@ class MapViewState extends State<MapView> {
     positionStream = Geolocator()
         .getPositionStream(locationOptions)
         .listen((Position position) {
-      print("user moved to new location ${position.toString()}");
+      debug("user moved to new location ${position.toString()}");
       userPosition = LatLng(position.latitude, position.longitude);
       Provider.of<UserRepository>(context, listen: false)
           .setUserPosition(userPosition);
@@ -74,7 +74,7 @@ class MapViewState extends State<MapView> {
     userPosition =
         Provider.of<UserRepository>(context, listen: false).userPosition ??
             defaultPosition;
-    print('Building map with ${widget.markers.length} marker(s)');
+    debug('Building map with ${widget.markers.length} marker(s)');
 
     clusterController = MapCluster<MapMarker>(
       clusterMarkers: BlocProvider.of<MapBloc>(context).clusterMarkers,
@@ -231,16 +231,16 @@ class MapViewState extends State<MapView> {
     if (lastFetchCameraPosition != null) {
       double zoomLevel = newPos.zoom;
       if (zoomLevel <= 12) {
-        print('Not updating locations, zoomLevel <= 12: $zoomLevel');
+        debug('Not updating locations, zoomLevel <= 12: $zoomLevel');
         return;
       }
 
       final distance =
           await _getDistance(newPos.target, lastFetchCameraPosition.target);
-      print('Distance: $distance, radius: $radius, zoomLevel: $zoomLevel');
+      debug('Distance: $distance, radius: $radius, zoomLevel: $zoomLevel');
 
       if (distance < radius * 1) {
-        print('Not updating locations, distance < radius');
+        debug('Not updating locations, distance < radius');
         return;
       }
     }
@@ -248,7 +248,7 @@ class MapViewState extends State<MapView> {
     if (!mounted) {
       return;
     }
-    print('Fetching Updates for $newPos and $radius');
+    debug('Fetching Updates for $newPos and $radius');
     lastFetchCameraPosition = newPos;
     BlocProvider.of<MapBloc>(context).add(MapLoadLocations(
         position: lastFetchCameraPosition.target, radius: radius));

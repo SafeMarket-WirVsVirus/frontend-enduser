@@ -2,8 +2,8 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:reservation_system_customer/bloc/bloc.dart';
 import 'package:reservation_system_customer/bloc/map_marker_loader.dart';
+import 'package:reservation_system_customer/logger.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
@@ -213,8 +213,8 @@ class MapBloc extends Bloc<MapEvent, MapState> {
             l.fillStatus.index <= filterSettings.minFillStatus.index &&
             l.locationType == filterSettings.locationType)
         .toList();
-    print(
-        'MapBloc: Filtered Locations from ${locations.length} to ${filteredLocations.length}');
+    debug(
+        'Filtered Locations from ${locations.length} to ${filteredLocations.length}');
     return filteredLocations;
   }
 }

@@ -12,6 +12,8 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    debug('Start App');
+    BlocSupervisor.delegate = _BlocDelegate();
     final storage = Storage();
     final userRepository = UserRepository(storage: storage);
     final reservationRepository = ReservationsRepository(
@@ -94,5 +96,20 @@ class MyApp extends StatelessWidget {
             return supportedLocales.first;
           },
         ));
+  }
+}
+
+
+class _BlocDelegate extends BlocDelegate {
+  @override
+  void onTransition(Bloc bloc, Transition transition) {
+    super.onTransition(bloc, transition);
+    debug('${bloc.runtimeType}.changed: ${transition.currentState} -> ${transition.nextState}', hideCaller: true);
+  }
+
+  @override
+  void onError(Bloc bloc, Object e, StackTrace stacktrace) {
+    super.onError(bloc, e, stacktrace);
+    error('${bloc.runtimeType}.onError', error: e, hideCaller: true);
   }
 }

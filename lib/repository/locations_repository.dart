@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/constants.dart';
+import 'package:reservation_system_customer/logger.dart';
 import 'package:reservation_system_customer/repository/data/time_slot_data.dart';
 import 'package:reservation_system_customer/repository/data/http_responses/http_responses.dart';
 import 'package:reservation_system_customer/repository/storage.dart';
@@ -23,10 +24,10 @@ class LocationsRepository {
     final uri = Uri.https(baseUrl, '/api/Location/$id');
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      print('getStore succeeded');
+      debug('Succeeded');
       return Location.fromJson(json.decode(response.body));
     } else {
-      print('getStore failed with ${response.statusCode}');
+      warning('Failed with ${response.statusCode}');
     }
     return null;
   }
@@ -44,12 +45,12 @@ class LocationsRepository {
         baseUrl, '/api/Location/GetReservationPerSlot', queryParameters);
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      print('getLocationReservations succeeded');
+      debug('Succeeded');
       var locationReservations =
           TimeSlotDataResult.fromJson(json.decode(response.body));
       return locationReservations.timeSlotData;
     } else {
-      print('getLocationReservations failed with ${response.statusCode}');
+      warning('Failed with ${response.statusCode}');
     }
     return [];
   }
@@ -59,7 +60,6 @@ class LocationsRepository {
     @required int radius,
     @required LocationType type,
   }) async {
-    print('getStores for $position, $radius, $type');
     var queryParameters = {
       'type': type.asQueryParameter,
       'longitude': position.longitude.toString(),
@@ -70,13 +70,13 @@ class LocationsRepository {
         Uri.https(baseUrl, '/api/Location/SearchRegistered', queryParameters);
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      print('getStores succeeded');
+      debug('Succeeded');
       var result = LocationsResponse.fromJson(json.decode(response.body));
-      print('getStores locations: ${result.locations.length}');
+      debug('Locations: ${result.locations.length}');
       result.locations.forEach((l) => l.locationType = type);
       return result.locations;
     } else {
-      print('getStores failed with ${response.statusCode}');
+      warning('Failed with ${response.statusCode}');
     }
     return [];
   }
@@ -86,11 +86,11 @@ class LocationsRepository {
       final s = await storage.getString(StorageKey.mapFilterSettings);
       if (s != null) {
         final settings = FilterSettings.fromJson(jsonDecode(s));
-        print('Restored $settings');
+        debug('Restored $settings');
         return settings;
       }
-    } on Object catch (error) {
-      print('Could not load Map FilterSettings: $error');
+    } on Object catch (e) {
+      error('Could not load Map FilterSettings', error: e);
     }
     return null;
   }

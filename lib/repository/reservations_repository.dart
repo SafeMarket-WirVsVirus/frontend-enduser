@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:reservation_system_customer/constants.dart';
+import 'package:reservation_system_customer/logger.dart';
 import 'package:reservation_system_customer/repository/data/data.dart';
 import 'package:reservation_system_customer/repository/data/http_responses/http_responses.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
@@ -41,10 +42,10 @@ class ReservationsRepository {
     );
     final response = await http.delete(uri);
     if (response.statusCode == 200) {
-      print('cancelReservation: success');
+      debug('cancelReservation: success');
       return true;
     }
-    print('cancelReservation: error ${response.statusCode}');
+    warning('cancelReservation: error ${response.statusCode}');
     return false;
   }
 
@@ -66,10 +67,10 @@ class ReservationsRepository {
     final response = await http.post(uri);
 
     if (response.statusCode == 200) {
-      print('createReservation: success');
+      debug('Succeeded');
       return true;
     } else {
-      print('createReservation: error ${response.statusCode}');
+      warning('Failed with ${response.statusCode}');
       return false;
     }
   }
@@ -83,8 +84,8 @@ class ReservationsRepository {
         final Iterable list = jsonDecode(loadedReservations);
         return list?.map((s) => Reservation.fromJson(s))?.toList();
       }
-    } on Object catch (error) {
-      print('loading reservations failed with $error');
+    } on Object catch (e) {
+      error('loading reservations failed', error: e);
     }
     return null;
   }
@@ -109,7 +110,7 @@ class ReservationsRepository {
 
     final response = await http.get(uri);
     if (response.statusCode == 200) {
-      print('getReservations: success');
+      debug('Succeeded');
       var result = ReservationsResponse.fromJson(json.decode(response.body))
               ?.reservations ??
           [];
@@ -118,7 +119,7 @@ class ReservationsRepository {
           result.map((item) => Reservation.fromRawReservation(item)).toList();
       return reservations;
     }
-    print('getReservations: error ${response.statusCode}');
+    warning('Failed with ${response.statusCode}');
     return [];
   }
 }

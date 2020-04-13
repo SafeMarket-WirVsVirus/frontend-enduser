@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:reservation_system_customer/constants.dart';
+import 'package:reservation_system_customer/logger.dart';
 import 'package:reservation_system_customer/localization/localization.dart';
 import 'package:reservation_system_customer/repository/data/reservation.dart';
 
@@ -73,17 +74,17 @@ class NotificationHandler {
   //android
   Future onSelectNotification(String payload) async {
     if (payload != null) {
-      debugPrint('notification payload: ' + payload);
+      debug('notification payload: ' + payload);
     }
 
-    print("clicked push notification (Android)");
+    debug("clicked push notification (Android)");
   }
 
   //iOS
   Future onDidReceiveLocalNotification(
       int id, String title, String body, String payload) async {
     // display a dialog with the notification details, tap ok to go to another page
-    print("clicked push notification (iOS)");
+    debug("clicked push notification (iOS)");
   }
 
   Future<FlutterLocalNotificationsPlugin>

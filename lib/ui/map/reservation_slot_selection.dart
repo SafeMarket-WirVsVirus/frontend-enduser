@@ -84,7 +84,7 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                         selectedBarIndex =
                             touchResponse.spot.touchedBarGroupIndex;
                         var date = widget.data[selectedBarIndex].start;
-                        print('$selectedBarIndex $date');
+                        debug('$selectedBarIndex $date');
                         widget.selectedSlotChanged(date);
                       }
                     }
