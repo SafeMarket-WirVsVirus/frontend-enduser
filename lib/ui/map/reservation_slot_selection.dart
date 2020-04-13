@@ -79,11 +79,14 @@ class _ReservationSlotSelectionState extends State<ReservationSlotSelection> {
                 touchCallback: (BarTouchResponse touchResponse) {
                   setState(() {
                     if (touchResponse.spot != null) {
-                      selectedBarIndex =
-                          touchResponse.spot.touchedBarGroupIndex;
-                      var date = widget.data[selectedBarIndex].start;
-                      print('$selectedBarIndex $date');
-                      widget.selectedSlotChanged(date);
+                      bool slotIsFull = widget.data[touchResponse.spot.touchedBarGroupIndex].registrationCount >= widget.slotSize;
+                      if (!slotIsFull) {
+                        selectedBarIndex =
+                            touchResponse.spot.touchedBarGroupIndex;
+                        var date = widget.data[selectedBarIndex].start;
+                        print('$selectedBarIndex $date');
+                        widget.selectedSlotChanged(date);
+                      }
                     }
                   });
                 },
