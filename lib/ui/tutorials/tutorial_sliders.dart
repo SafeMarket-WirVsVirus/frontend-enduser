@@ -67,7 +67,7 @@ class TutorialSliders extends StatelessWidget {
       description: appLocalizations.tutorialLocationPermissionDescription,
       centerWidget: _LocationPermissionWidget(
         onAccessGranted: () {
-          print("on access granted");
+          debug("on access granted");
         },
       ),
     ));
@@ -127,7 +127,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
       bool access = false;
       bool enableButton = false;
 
-      print(geolocationStatus);
+      debug('$geolocationStatus');
 
       switch (geolocationStatus) {
         case GeolocationStatus.disabled:
@@ -164,8 +164,11 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
         _showInfoDialog(
             context: context,
             title: localizations.tutorialLocationPermissionDeclinedDialogTitle,
-            message: localizations.tutorialLocationPermissionDeclinedDialogDescription,
-            actionText: localizations.tutorialLocationPermissionDeclinedGoToSettingsButton.toUpperCase(),
+            message: localizations
+                .tutorialLocationPermissionDeclinedDialogDescription,
+            actionText: localizations
+                .tutorialLocationPermissionDeclinedGoToSettingsButton
+                .toUpperCase(),
             onPressed: () => AppSettings.openAppSettings());
       }
     });
@@ -209,7 +212,10 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
               : FlatButton(
                   color: Colors.blueAccent,
                   child: Text(
-                    accessGranted ? localizations.tutorialLocationPermissionStatusGranted : localizations.tutorialLocationPermissionStatusNotGranted,
+                    accessGranted
+                        ? localizations.tutorialLocationPermissionStatusGranted
+                        : localizations
+                            .tutorialLocationPermissionStatusNotGranted,
                     style: Theme.of(context)
                         .textTheme
                         .title
@@ -243,8 +249,11 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
       _showInfoDialog(
           context: context,
           title: localizations.tutorialLocationServiceDisabledDialogTitle,
-          message: localizations.tutorialLocationServiceDisabledDialogDescription,
-          actionText: localizations.tutorialLocationServiceDisabledDialogLocationServiceButton.toUpperCase(),
+          message:
+              localizations.tutorialLocationServiceDisabledDialogDescription,
+          actionText: localizations
+              .tutorialLocationServiceDisabledDialogLocationServiceButton
+              .toUpperCase(),
           onPressed: () => AppSettings.openLocationSettings());
       return;
     }
@@ -252,7 +261,7 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
     Geolocator()
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
         .then((value) {
-      print("Success: location retrieved  $value");
+      debug("Success: location retrieved: $value");
 
       setState(() {
         accessGranted = true;
@@ -261,8 +270,8 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
       });
 
       widget.onAccessGranted();
-    }).catchError((error, stackTrace) {
-      print("Error: could not get user location");
+    }).catchError((e, stackTrace) {
+      error("Could not get user location", error: e);
       _checkPermission(showDialogIfFailed: true);
     });
   }

@@ -233,175 +233,242 @@ void main() {
       });
     });
 
-    group('CreateReservationSuccess event', () {
-      blocTest(
-        'emits failed when no persisted items and no internet',
-        build: () async {
-          when(mockReservationsRepository.loadReservations())
-              .thenAnswer((_) => Future.value(null));
-          when(mockReservationsRepository.getReservations())
-              .thenAnswer((_) => Future.error(Exception('no internet')));
-          return bloc;
-        },
-        act: (b) {
-          modifyReservationBlocController.add(CreateReservationSuccess(
-            location: ReservationLocationFactory.createLocation(id: 10),
-            startTime: DateTime.now(),
-          ));
-          return;
-        },
-        expect: [
-          ReservationsLoading(),
-          ReservationsLoadFail(),
-        ],
-      );
+    group('ModifyReservation events', () {
+      group('CreateReservationSuccess event', () {
+        blocTest(
+          'emits failed when no persisted items and no internet',
+          build: () async {
+            when(mockReservationsRepository.loadReservations())
+                .thenAnswer((_) => Future.value(null));
+            when(mockReservationsRepository.getReservations())
+                .thenAnswer((_) => Future.error(Exception('no internet')));
+            return bloc;
+          },
+          act: (b) {
+            modifyReservationBlocController.add(CreateReservationSuccess(
+              location: ReservationLocationFactory.createLocation(id: 10),
+              startTime: DateTime.now(),
+            ));
+            return;
+          },
+          expect: [
+            ReservationsLoading(),
+            ReservationsLoadFail(),
+          ],
+        );
 
-      blocTest(
-        'emits failed when persisted items and no internet',
-        build: () async {
+        blocTest(
+          'emits failed when persisted items and no internet',
+          build: () async {
+            when(mockReservationsRepository.loadReservations()).thenAnswer(
+                (_) => Future.value(
+                    [ReservationFactory.createReservation(id: 30)]));
+            when(mockReservationsRepository.getReservations())
+                .thenAnswer((_) => Future.error(Exception('no internet')));
+            return bloc;
+          },
+          act: (b) {
+            modifyReservationBlocController.add(CreateReservationSuccess(
+              location: ReservationLocationFactory.createLocation(id: 10),
+              startTime: DateTime.now(),
+            ));
+            return;
+          },
+          expect: [
+            ReservationsLoading(),
+            ReservationsLoadFail(),
+          ],
+        );
+
+        blocTest(
+          'emits loaded with new items when internet',
+          build: () async {
+            when(mockReservationsRepository.loadReservations())
+                .thenAnswer((_) => Future.value([
+                      ReservationFactory.createReservation(id: 1),
+                      ReservationFactory.createReservation(
+                          id: 40, reminderNotificationId: 240),
+                    ]));
+            var isFirstEvent = true;
+            when(mockReservationsRepository.getReservations()).thenAnswer((_) {
+              final result = isFirstEvent
+                  ? [
+                      ReservationFactory.createReservation(id: 1),
+                      ReservationFactory.createReservation(id: 40),
+                    ]
+                  : [
+                      ReservationFactory.createReservation(id: 40),
+                      ReservationFactory.createReservation(
+                          id: 50, startTime: testTime),
+                    ];
+              isFirstEvent = false;
+              return Future.value(result);
+            });
+            return bloc;
+          },
+          act: (b) {
+            bloc.add(LoadReservations());
+            modifyReservationBlocController.add(CreateReservationSuccess(
+              location: ReservationLocationFactory.createLocation(id: 50),
+              startTime: testTime,
+            ));
+            return;
+          },
+          expect: [
+            ReservationsLoading(),
+            ReservationsLoaded([
+              ReservationFactory.createReservation(id: 1),
+              ReservationFactory.createReservation(
+                  id: 40, reminderNotificationId: 240),
+            ]),
+            ReservationsLoading(),
+            ReservationsLoaded([
+              ReservationFactory.createReservation(
+                  id: 40, reminderNotificationId: 240),
+              ReservationFactory.createReservation(
+                  id: 50,
+                  startTime: testTime,
+                  location: ReservationLocationFactory.createLocation(id: 50)),
+            ]),
+          ],
+        );
+
+        blocTest(
+          'emits loaded when no persisted items and internet',
+          build: () async {
+            when(mockReservationsRepository.loadReservations())
+                .thenAnswer((_) => Future.value(null));
+            when(mockReservationsRepository.getReservations()).thenAnswer((_) =>
+                Future.value([
+                  ReservationFactory.createReservation(
+                      id: 1, startTime: testTime)
+                ]));
+            return bloc;
+          },
+          act: (b) {
+            modifyReservationBlocController.add(CreateReservationSuccess(
+              location: ReservationLocationFactory.createLocation(id: 10),
+              startTime: testTime,
+            ));
+            return;
+          },
+          expect: [
+            ReservationsLoading(),
+            ReservationsLoaded([
+              ReservationFactory.createReservation(
+                id: 1,
+                startTime: testTime,
+                location: ReservationLocationFactory.createLocation(id: 10),
+              )
+            ]),
+          ],
+        );
+
+        test('does not persist when no internet', () async {
           when(mockReservationsRepository.loadReservations()).thenAnswer((_) =>
               Future.value([ReservationFactory.createReservation(id: 30)]));
           when(mockReservationsRepository.getReservations())
               .thenAnswer((_) => Future.error(Exception('no internet')));
-          return bloc;
-        },
-        act: (b) {
+
           modifyReservationBlocController.add(CreateReservationSuccess(
             location: ReservationLocationFactory.createLocation(id: 10),
             startTime: DateTime.now(),
           ));
-          return;
-        },
-        expect: [
-          ReservationsLoading(),
-          ReservationsLoadFail(),
-        ],
-      );
 
-      blocTest(
-        'emits loaded with new items when internet',
-        build: () async {
-          when(mockReservationsRepository.loadReservations())
-              .thenAnswer((_) => Future.value([
-                    ReservationFactory.createReservation(id: 1),
-                    ReservationFactory.createReservation(
-                        id: 40, reminderNotificationId: 240),
-                  ]));
-          var isFirstEvent = true;
-          when(mockReservationsRepository.getReservations()).thenAnswer((_) {
-            final result = isFirstEvent
-                ? [
-                    ReservationFactory.createReservation(id: 1),
-                    ReservationFactory.createReservation(id: 40),
-                  ]
-                : [
-                    ReservationFactory.createReservation(id: 40),
-                    ReservationFactory.createReservation(
-                        id: 50, startTime: testTime),
-                  ];
-            isFirstEvent = false;
-            return Future.value(result);
-          });
-          return bloc;
-        },
-        act: (b) {
-          bloc.add(LoadReservations());
-          modifyReservationBlocController.add(CreateReservationSuccess(
-            location: ReservationLocationFactory.createLocation(id: 50),
-            startTime: testTime,
-          ));
-          return;
-        },
-        expect: [
-          ReservationsLoading(),
-          ReservationsLoaded([
-            ReservationFactory.createReservation(id: 1),
-            ReservationFactory.createReservation(
-                id: 40, reminderNotificationId: 240),
-          ]),
-          ReservationsLoading(),
-          ReservationsLoaded([
-            ReservationFactory.createReservation(
-                id: 40, reminderNotificationId: 240),
-            ReservationFactory.createReservation(
-                id: 50,
-                startTime: testTime,
-                location: ReservationLocationFactory.createLocation(id: 50)),
-          ]),
-        ],
-      );
+          await bloc.take(3).toList();
 
-      blocTest(
-        'emits loaded when no persisted items and internet',
-        build: () async {
-          when(mockReservationsRepository.loadReservations())
-              .thenAnswer((_) => Future.value(null));
+          verify(mockReservationsRepository.getReservations()).called(1);
+          verifyNoMoreInteractions(mockReservationsRepository);
+        });
+
+        test('persists received notifications when internet', () async {
+          when(mockReservationsRepository.loadReservations()).thenAnswer((_) =>
+              Future.value([ReservationFactory.createReservation(id: 30)]));
           when(mockReservationsRepository.getReservations()).thenAnswer((_) =>
               Future.value([
                 ReservationFactory.createReservation(id: 1, startTime: testTime)
               ]));
-          return bloc;
-        },
-        act: (b) {
+
           modifyReservationBlocController.add(CreateReservationSuccess(
             location: ReservationLocationFactory.createLocation(id: 10),
             startTime: testTime,
           ));
-          return;
-        },
-        expect: [
-          ReservationsLoading(),
-          ReservationsLoaded([
+
+          await bloc.take(3).toList();
+
+          verify(mockReservationsRepository.getReservations()).called(1);
+          verify(mockReservationsRepository.saveReservations([
             ReservationFactory.createReservation(
               id: 1,
               startTime: testTime,
               location: ReservationLocationFactory.createLocation(id: 10),
             )
-          ]),
-        ],
-      );
-
-      test('does not persist when no internet', () async {
-        when(mockReservationsRepository.loadReservations()).thenAnswer((_) =>
-            Future.value([ReservationFactory.createReservation(id: 30)]));
-        when(mockReservationsRepository.getReservations())
-            .thenAnswer((_) => Future.error(Exception('no internet')));
-
-        modifyReservationBlocController.add(CreateReservationSuccess(
-          location: ReservationLocationFactory.createLocation(id: 10),
-          startTime: DateTime.now(),
-        ));
-
-        await bloc.take(3).toList();
-
-        verify(mockReservationsRepository.getReservations()).called(1);
-        verifyNoMoreInteractions(mockReservationsRepository);
+          ])).called(1);
+          verifyNoMoreInteractions(mockReservationsRepository);
+        });
       });
 
-      test('persists received notifications when internet', () async {
-        when(mockReservationsRepository.loadReservations()).thenAnswer((_) =>
-            Future.value([ReservationFactory.createReservation(id: 30)]));
-        when(mockReservationsRepository.getReservations()).thenAnswer((_) =>
-            Future.value([
-              ReservationFactory.createReservation(id: 1, startTime: testTime)
-            ]));
+      group('CancelReservationSuccess', () {
+        blocTest(
+          'emits new fetched reservations',
+          build: () async {
+            when(mockReservationsRepository.getReservations()).thenAnswer((_) =>
+                Future.value([
+                  ReservationFactory.createReservation(
+                      id: 1, startTime: testTime)
+                ]));
+            return bloc;
+          },
+          act: (b) {
+            modifyReservationBlocController.add(CancelReservationSuccess());
+            return;
+          },
+          expect: [
+            ReservationsLoading(),
+            ReservationsLoaded([
+              ReservationFactory.createReservation(
+                id: 1,
+                startTime: testTime,
+              )
+            ]),
+          ],
+        );
 
-        modifyReservationBlocController.add(CreateReservationSuccess(
-          location: ReservationLocationFactory.createLocation(id: 10),
-          startTime: testTime,
-        ));
+        test('fetches new reservations', () async {
+          when(mockReservationsRepository.getReservations()).thenAnswer((_) =>
+              Future.value([
+                ReservationFactory.createReservation(id: 1, startTime: testTime)
+              ]));
 
-        await bloc.take(3).toList();
+          modifyReservationBlocController.add(CancelReservationSuccess());
 
-        verify(mockReservationsRepository.getReservations()).called(1);
-        verify(mockReservationsRepository.saveReservations([
-          ReservationFactory.createReservation(
-            id: 1,
-            startTime: testTime,
-            location: ReservationLocationFactory.createLocation(id: 10),
-          )
-        ])).called(1);
-        verifyNoMoreInteractions(mockReservationsRepository);
+          await bloc.take(3).toList();
+
+          verify(mockReservationsRepository.getReservations()).called(1);
+          verify(mockReservationsRepository.saveReservations([
+            ReservationFactory.createReservation(
+              id: 1,
+              startTime: testTime,
+            )
+          ])).called(1);
+          verifyNoMoreInteractions(mockReservationsRepository);
+        });
+      });
+
+      test('CreateReservationFailure causes no interaction with reservationRepository', () async {
+        modifyReservationBlocController.add(CreateReservationFailure());
+
+        await bloc.close();
+
+        verifyZeroInteractions(mockReservationsRepository);
+      });
+
+      test('CancelReservationFailure causes no interaction with reservationRepository', () async {
+        modifyReservationBlocController.add(CancelReservationFailure());
+
+        await bloc.close();
+
+        verifyZeroInteractions(mockReservationsRepository);
       });
     });
 

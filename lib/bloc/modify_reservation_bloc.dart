@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:reservation_system_customer/logger.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 
 /// EVENTS
@@ -21,6 +22,13 @@ class CreateReservation extends ModifyReservationEvent {
   });
 }
 
+/// Cancels the given reservation
+class CancelReservation extends ModifyReservationEvent {
+  final Reservation reservation;
+
+  CancelReservation(this.reservation);
+}
+
 /// STATES
 
 abstract class ModifyReservationState extends Equatable {
@@ -38,9 +46,16 @@ class CreateReservationSuccess extends ModifyReservationState {
     @required this.location,
     @required this.startTime,
   });
+
+  @override
+  List<Object> get props => [location.id, startTime];
 }
 
 class CreateReservationFailure extends ModifyReservationState {}
+
+class CancelReservationSuccess extends ModifyReservationState {}
+
+class CancelReservationFailure extends ModifyReservationState {}
 
 /// BLOC
 
@@ -70,6 +85,22 @@ class ModifyReservationBloc
         );
       } else {
         yield CreateReservationFailure();
+      }
+    } else if (event is CancelReservation) {
+      if (event.reservation?.id != null &&
+          event.reservation?.location?.id != null) {
+        final success = await _reservationsRepository.cancelReservation(
+            locationId: event.reservation.location.id,
+            reservationId: event.reservation.id);
+        if (success) {
+          yield CancelReservationSuccess();
+        } else {
+          yield CancelReservationFailure();
+        }
+      } else {
+        warning(
+            'Could not cancel reservation because information invalid: reservationId: ${event.reservation?.id}, locationId: ${event.reservation?.location?.id}');
+        yield CancelReservationFailure();
       }
     }
     yield ModifyReservationIdle();

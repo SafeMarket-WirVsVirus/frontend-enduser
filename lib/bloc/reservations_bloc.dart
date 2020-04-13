@@ -21,12 +21,21 @@ class LoadReservations extends ReservationsEvent {}
 
 /// Update the reservations from backend. This fails when the user has no network.
 class _UpdateReservations extends ReservationsEvent {
-  final ReservationLocation newReservationLocation;
-  final DateTime newReservationStartTime;
+  /// Optional reservation data. If not null this data will be added to a reservation with the same startTime.
+  final _NewReservationData newReservationData;
 
   _UpdateReservations({
-    @required this.newReservationLocation,
-    @required this.newReservationStartTime,
+    this.newReservationData,
+  });
+}
+
+class _NewReservationData {
+  final ReservationLocation location;
+  final DateTime startTime;
+
+  _NewReservationData({
+    @required this.location,
+    @required this.startTime,
   });
 }
 
@@ -85,9 +94,10 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
     _modifyReservationSubscription = _modifyReservationBloc.listen((state) {
       if (state is CreateReservationSuccess) {
         add(_UpdateReservations(
-          newReservationLocation: state.location,
-          newReservationStartTime: state.startTime,
-        ));
+            newReservationData: _NewReservationData(
+                location: state.location, startTime: state.startTime)));
+      } else if (state is CancelReservationSuccess) {
+        add(_UpdateReservations());
       }
     });
   }
@@ -140,19 +150,25 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
           timeoutInSec: 5,
         );
         debug('Updated with fetched reservations: $reservations');
-        yield* _updateReservations(
-          reservations: reservations ?? [],
-          where: ((r) =>
-              r.startTime == event.newReservationStartTime &&
-              r.location?.id == null),
-          alwaysSendUpdate: true,
-          updatedReservation: ((r) async {
-            return Reservation.withUpdatedLocation(
-                r, event.newReservationLocation);
-          }),
-        );
+        if (event.newReservationData != null) {
+          yield* _updateReservations(
+            reservations: reservations ?? [],
+            where: ((r) =>
+                r.startTime == event.newReservationData.startTime &&
+                r.location?.id == null),
+            alwaysSendUpdate: true,
+            updatedReservation: ((r) async {
+              return Reservation.withUpdatedLocation(
+                  r, event.newReservationData.location);
+            }),
+          );
+        } else {
+          // No need for an update just save and emit the new state.
+          _reservationsRepository.saveReservations(reservations);
+          yield ReservationsLoaded(reservations);
+        }
       } catch (e) {
-        error('Could not retrieve any reservations', error: e);
+        error('Could not retrieve any reservations.', error: e);
         yield ReservationsLoadFail();
       }
     } else if (event is ToggleReminderForReservation) {

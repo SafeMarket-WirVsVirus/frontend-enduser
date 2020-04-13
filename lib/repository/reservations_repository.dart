@@ -31,9 +31,9 @@ class ReservationsRepository {
   }) async {
     final deviceId = await _userRepository.deviceId();
     var queryParameters = {
-      'deviceId': deviceId,
-      'locationId': locationId,
-      'reservationId': reservationId,
+      'deviceId': '$deviceId',
+      'locationId': '$locationId',
+      'reservationId': '$reservationId',
     };
     final uri = Uri.https(
       _baseUrl,
