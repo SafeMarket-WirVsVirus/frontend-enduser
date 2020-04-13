@@ -32,5 +32,8 @@
   "aboutTheAppDescription1": "Our project was created during the ",
   "aboutTheAppDescription2": "#WirVsVirus hackathon",
   "aboutTheAppDescription3": ".\n\nWith SafeMarket you can reserve time slots for places with limited customer capacities such as grocery stores.",
-  "website": "Website"
+  "website": "Website",
+  "creditsTitle": "Credits",
+  "creditsDesignSectionTitle": "Design",
+  "creditsDesignSectionBody": "Logo by Chris Z.\nIcons designed by Vitaly Gorbachev from Flaticon"
 }

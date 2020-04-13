@@ -105,7 +105,8 @@ extension SafeMarketStrings on AppLocalizations {
   String get reservationReminderNotificationChannelDescription => Intl.message(
         'Notifications for your upcoming reservations.',
         name: 'reservationReminderNotificationChannelDescription',
-        desc: 'Description of the notification channel for reservation reminders which is displayed to the user in the app settings on Android.',
+        desc:
+            'Description of the notification channel for reservation reminders which is displayed to the user in the app settings on Android.',
       );
 
   String get locationUtilizationSliderTitle => Intl.message(
@@ -209,4 +210,22 @@ extension SafeMarketStrings on AppLocalizations {
 
   String get website =>
       Intl.message("Website", name: 'website', desc: 'Website');
+
+  String get creditsTitle => Intl.message(
+        'Credits',
+        name: 'creditsTitle',
+        desc: 'Credits list item title on the about page',
+      );
+
+  String get creditsDesignSectionTitle => Intl.message(
+        'Design',
+        name: 'creditsDesignSectionTitle',
+        desc: 'Section title for design on the credits page',
+      );
+
+  String get creditsDesignSectionBody => Intl.message(
+        'Logo by Chris Z.\nIcons designed by Vitaly Gorbachev from Flaticon',
+        name: 'creditsDesignSectionBody',
+        desc: 'Credits for the design section on the credits page',
+      );
 }
