@@ -89,6 +89,9 @@ class MapViewState extends State<MapView> {
             currentCameraPosition = position;
           },
           onCameraIdle: () async {
+            if (!mounted) {
+              return;
+            }
             if (currentCameraPosition == null ||
                 currentCameraPosition.target == null ||
                 BlocProvider.of<MapBloc>(context).state is MapLoading) {
