@@ -83,6 +83,11 @@ class Location {
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
+
+  @override
+  String toString() {
+    return 'Location $id';
+  }
 }
 
 FillStatus _fillStatusFromInt(int i) {

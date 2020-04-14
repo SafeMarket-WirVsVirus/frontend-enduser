@@ -131,6 +131,104 @@ void main() {
         ],
       );
 
+      blocTest(
+        'caches unique locations',
+        build: () async {
+          var requestCount = -1;
+          when(mockLocationsRepository.getStores(
+            position: testPosition,
+            radius: testRadius,
+            type: LocationType.supermarket,
+          )).thenAnswer((_) {
+            requestCount++;
+            if (requestCount == 0) {
+              return Future.value([
+                LocationFactory.createLocation(id: 1),
+                LocationFactory.createLocation(id: 2),
+                LocationFactory.createLocation(id: 3),
+                LocationFactory.createLocation(id: 4),
+                LocationFactory.createLocation(id: 5),
+              ]);
+            } else if (requestCount == 1) {
+              return Future.value([
+                LocationFactory.createLocation(id: 7),
+                LocationFactory.createLocation(id: 4),
+                LocationFactory.createLocation(id: 6),
+                LocationFactory.createLocation(id: 5),
+                LocationFactory.createLocation(id: 3),
+              ]);
+            }
+            return Future.value([
+              LocationFactory.createLocation(id: 10),
+              LocationFactory.createLocation(id: 6),
+              LocationFactory.createLocation(id: 20),
+              LocationFactory.createLocation(id: 30),
+              LocationFactory.createLocation(id: 0),
+              LocationFactory.createLocation(id: 3),
+            ]);
+          });
+          return bloc;
+        },
+        act: (b) async {
+          b.add(MapLoadLocations(
+            position: testPosition,
+            radius: testRadius,
+          ));
+          await bloc.take(2).toList();
+          b.add(MapLoadLocations(
+            position: testPosition,
+            radius: testRadius,
+          ));
+          await bloc.take(2).toList();
+          b.add(MapLoadLocations(
+            position: testPosition,
+            radius: testRadius,
+          ));
+        },
+        expect: [
+          MapLoading(
+            locations: [],
+            filterSettings: defaultFilterSettings,
+            markerIcons: {},
+          ),
+          MapLocationsLoaded(
+            locations: [1, 2, 3, 4, 5]
+                .map((id) => LocationFactory.createLocation(id: id))
+                .toList(),
+            filterSettings: defaultFilterSettings,
+            markerIcons: {},
+          ),
+          MapLoading(
+            locations: [1, 2, 3, 4, 5]
+                .map((id) => LocationFactory.createLocation(id: id))
+                .toList(),
+            filterSettings: defaultFilterSettings,
+            markerIcons: {},
+          ),
+          MapLocationsLoaded(
+            locations: [1, 2, 7, 4, 6, 5, 3]
+                .map((id) => LocationFactory.createLocation(id: id))
+                .toList(),
+            filterSettings: defaultFilterSettings,
+            markerIcons: {},
+          ),
+          MapLoading(
+            locations: [1, 2, 7, 4, 6, 5, 3]
+                .map((id) => LocationFactory.createLocation(id: id))
+                .toList(),
+            filterSettings: defaultFilterSettings,
+            markerIcons: {},
+          ),
+          MapLocationsLoaded(
+            locations: [1, 2, 7, 4, 5, 10, 6, 20, 30, 0, 3]
+                .map((id) => LocationFactory.createLocation(id: id))
+                .toList(),
+            filterSettings: defaultFilterSettings,
+            markerIcons: {},
+          ),
+        ],
+      );
+
       test('calls reservation repository', () async {
         bloc.add(MapLoadLocations(
           position: testPosition,

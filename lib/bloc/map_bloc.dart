@@ -154,7 +154,19 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         radius: event.radius,
         type: _filterSettings.locationType,
       );
+
+      final cachedLocationIds = locations.map((l) => l.id).toSet();
+      var newLocationsInCache =
+          newLocations.where((l) => cachedLocationIds.contains(l.id));
+      for (var newLocation in newLocationsInCache) {
+        final index = locations.indexWhere((l) => l.id == newLocation.id);
+        if (index != -1) {
+          locations.removeAt(index);
+        }
+      }
+
       locations.addAll(newLocations);
+
       if (locations.length > 300) {
         locations.removeRange(0, locations.length - 300);
       }
