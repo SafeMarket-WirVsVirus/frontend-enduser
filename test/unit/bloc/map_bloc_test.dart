@@ -24,8 +24,6 @@ void main() {
     when(mockLocationsRepository.loadMapFilterSettings())
         .thenAnswer((_) => Future.value(null));
     mockMapMarkerLoader = MockMapMarkerLoader();
-    when(mockMapMarkerLoader.loadMarkerIcons())
-        .thenAnswer((_) => Future.value({}));
 
     bloc = MapBloc(
       locationsRepository: mockLocationsRepository,

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fluster/fluster.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,10 +8,13 @@ import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
 import 'package:reservation_system_customer/ui/map/filter_settings_theme.dart';
+import 'package:reservation_system_customer/ui/map/map_cluster.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
+import 'map_marker.dart';
+
 class MapView extends StatefulWidget {
-  final Map<MarkerId, Marker> markers;
+  final List<MapMarker> markers;
 
   const MapView({
     Key key,
@@ -29,6 +33,12 @@ class MapViewState extends State<MapView> {
   CameraPosition lastFetchCameraPosition;
   CameraPosition currentCameraPosition;
   StreamSubscription<Position> positionStream;
+  double currentZoom = 15;
+
+  //cluster variables
+  MapCluster<MapMarker> clusterController;
+  final int minZoom = 0;
+  final int maxZoom = 18;
 
   @override
   void dispose() {
@@ -65,6 +75,51 @@ class MapViewState extends State<MapView> {
         Provider.of<UserRepository>(context, listen: false).userPosition ??
             defaultPosition;
     print('Building map with ${widget.markers.length} marker(s)');
+
+    clusterController = MapCluster<MapMarker>(
+      clusterMarkers: BlocProvider.of<MapBloc>(context).clusterMarkers,
+
+      // Any zoom value below minZoom will not generate clusters.
+      minZoom: minZoom,
+      // Any zoom value above maxZoom will not generate clusters.
+      maxZoom: maxZoom,
+      // Cluster radius in pixels.
+      radius: 200,
+      // Adjust the extent by powers of 2 (e.g. 512. 1024, ... max 8192) to get the
+      // desired distance between markers where they start to cluster.
+      extent: 2048,
+      // The size of the KD-tree leaf node, which affects performance.
+      nodeSize: 64,
+      // The List to be clustered.
+      points: widget.markers,
+      // A callback to generate clusters of the given input type.
+      createCluster: (
+        // Create cluster marker
+        BaseCluster cluster,
+        double lng,
+        double lat,
+      ) =>
+          MapMarker(
+              id: cluster.id.toString(),
+              position: LatLng(lat, lng),
+              icon: clusterController.getClusterMarker(cluster.id),
+              isCluster: cluster.isCluster,
+              clusterId: cluster.id,
+              pointsSize: cluster.pointsSize,
+              childMarkerId: cluster.childMarkerId,
+              onTap: () {
+                double zoom = currentZoom + 2;
+                if (zoom <= 20) {
+                  _moveCameraToNewPosition(LatLng(lat, lng), zoom: zoom);
+                }
+              }),
+    );
+
+    final List<Marker> clusteredMarkers = clusterController
+        .clusters([-180, -85, 180, 85], currentZoom.toInt())
+        .map((cluster) => (cluster as MapMarker).toMarker())
+        .toList();
+
     return Scaffold(
         body: GoogleMap(
           myLocationButtonEnabled: false,
@@ -75,7 +130,7 @@ class MapViewState extends State<MapView> {
               userPosition.latitude,
               userPosition.longitude,
             ),
-            zoom: 15,
+            zoom: currentZoom,
           ),
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
@@ -87,6 +142,12 @@ class MapViewState extends State<MapView> {
           },
           onCameraMove: (position) {
             currentCameraPosition = position;
+
+            if ((currentZoom - position.zoom).abs() > 0.5) {
+              setState(() {
+                currentZoom = position.zoom;
+              });
+            }
           },
           onCameraIdle: () async {
             if (!mounted) {
@@ -100,7 +161,7 @@ class MapViewState extends State<MapView> {
 
             _fetchLocationsIfNeeded(currentCameraPosition);
           },
-          markers: Set<Marker>.of(widget.markers.values),
+          markers: Set<Marker>.of(clusteredMarkers),
         ),
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
