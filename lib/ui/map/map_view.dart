@@ -5,8 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
-import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
-import 'package:reservation_system_customer/ui/map/filter_settings_theme.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
 class MapView extends StatefulWidget {
@@ -105,57 +103,48 @@ class MapViewState extends State<MapView> {
             ),
 
 //            Try out chips
-          SafeArea(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children:
-                LocationType.values.map<Widget>((LocationType l) {
-                  return Padding(
-                    padding: EdgeInsets.all(5),
-                    child: ChoiceChip(
-                      label: Text(l.localized(context)),
-                      selected: selectedType == l,
-                      backgroundColor: Colors.white,
-                      selectedColor: Theme.of(context).accentColor,
-                      shadowColor: Colors.black,
-                      elevation: (selectedType == l) ? 10 : 5,
-                      onSelected: (bool selected) {
-                        setState(() {
-                          if (selected) {
-                            selectedType = l;
-                          }
-                        });
-                      },
-                    ),
-                  );
-                }).toList(),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: LocationType.values.map<Widget>((LocationType l) {
+                    return Padding(
+                      padding: EdgeInsets.all(5),
+                      child: ChoiceChip(
+                        label: Text(
+                            l.localized(context),
+                            style: TextStyle(
+                              color: selectedType == l ? Colors.white : Colors.black,
+                            )
+                        ),
+                        selected: selectedType == l,
+                        backgroundColor: Colors.white,
+                        selectedColor: Theme.of(context).accentColor,
+                        shadowColor: Colors.black,
+                        elevation: (selectedType == l) ? 10 : 5,
+                        onSelected: (bool selected) {
+                          setState(() {
+                            if (selected) {
+                              selectedType = l;
+                            }
+                            BlocProvider.of<MapBloc>(context).add(
+                                MapSettingsChanged(FilterSettings(
+                                    locationType: l,
+                                    minFillStatus: FillStatus.red))); // TODO remove minFillStatus from FilterSettings
+                          });
+                        },
+                      ),
+                    );
+                  }).toList(),
+                ),
               ),
-            ),
-          )
-
+            )
           ],
         ),
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-
-//            Disabled for the sake of trying out chips to show selected stores
-
-//            BlocBuilder<MapBloc, MapState>(builder: (context, state) {
-//              return FloatingActionButton(
-//                mini: true,
-//                onPressed: _setFilters,
-//                child: Icon(state.filterSettings?.locationType?.icon(context) ??
-//                    Icons.filter_list),
-//                backgroundColor: Theme.of(context).accentColor,
-//              );
-//            }),
-//            SizedBox(
-//              height: 10,
-//            ),
-
             FloatingActionButton(
               onPressed: () => _moveCameraToNewPosition(userPosition),
               child: Icon(Icons.gps_fixed),
@@ -163,14 +152,6 @@ class MapViewState extends State<MapView> {
             ),
           ],
         ));
-  }
-
-  void _setFilters() {
-    showDialog(
-        context: context,
-        builder: (newContext) => FilterDialog(
-              mapBloc: BlocProvider.of<MapBloc>(context),
-            ));
   }
 
   void _moveCameraToNewPosition(LatLng position, {double zoom = 15.0}) async {
