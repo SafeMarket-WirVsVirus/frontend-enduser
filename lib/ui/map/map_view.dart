@@ -206,7 +206,7 @@ class MapViewState extends State<MapView> {
               ),
             )
           ]
-        )
+        ),
 
 
         floatingActionButton: Column(
