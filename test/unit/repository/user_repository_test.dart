@@ -54,10 +54,55 @@ void main() {
     });
 
     group('saveUserFinishedTutorial', () {
-      test('is true when no data persisted', () async {
+      test('calls storage with true', () async {
         await userRepository.saveUserFinishedTutorial();
 
         verify(mockStorage.setBool(StorageKey.userFinishedTutorial, true))
+            .called(1);
+        verifyNoMoreInteractions(mockStorage);
+      });
+    });
+
+    group('shouldShowUsageInstructions', () {
+      test('is true when no data persisted', () async {
+        when(mockStorage.getBool(StorageKey.userReadInstructions))
+            .thenAnswer((_) => Future.value(null));
+
+        var showInstructions = await userRepository.shouldShowUsageInstructions();
+
+        expect(showInstructions, true);
+        verify(mockStorage.getBool(StorageKey.userReadInstructions)).called(1);
+        verifyNoMoreInteractions(mockStorage);
+      });
+
+      test('is true when false persisted', () async {
+        when(mockStorage.getBool(StorageKey.userReadInstructions))
+            .thenAnswer((_) => Future.value(false));
+
+        var showInstructions = await userRepository.shouldShowUsageInstructions();
+
+        expect(showInstructions, true);
+        verify(mockStorage.getBool(StorageKey.userReadInstructions)).called(1);
+        verifyNoMoreInteractions(mockStorage);
+      });
+
+      test('is false when true persisted', () async {
+        when(mockStorage.getBool(StorageKey.userReadInstructions))
+            .thenAnswer((_) => Future.value(true));
+
+        var showInstructions = await userRepository.shouldShowUsageInstructions();
+
+        expect(showInstructions, false);
+        verify(mockStorage.getBool(StorageKey.userReadInstructions)).called(1);
+        verifyNoMoreInteractions(mockStorage);
+      });
+    });
+
+    group('saveUserReadInstructions', () {
+      test('calls storage with true', () async {
+        await userRepository.saveUserReadInstructions();
+
+        verify(mockStorage.setBool(StorageKey.userReadInstructions, true))
             .called(1);
         verifyNoMoreInteractions(mockStorage);
       });

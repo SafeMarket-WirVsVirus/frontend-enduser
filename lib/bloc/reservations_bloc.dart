@@ -32,9 +32,11 @@ class _UpdateReservations extends ReservationsEvent {
 /// Schedules or cancels a notification and emits the updated reservations.
 class ToggleReminderForReservation extends ReservationsEvent {
   final int reservationId;
+  final BuildContext context;
 
   ToggleReminderForReservation({
     @required this.reservationId,
+    @required this.context,
   });
 }
 
@@ -70,18 +72,15 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
   final ModifyReservationBloc _modifyReservationBloc;
   final ReservationsRepository _reservationsRepository;
   final NotificationHandler _notificationHandler;
-  final BuildContext _context;
   StreamSubscription _modifyReservationSubscription;
 
   ReservationsBloc({
     @required ModifyReservationBloc modifyReservationBloc,
     @required ReservationsRepository reservationsRepository,
     @required NotificationHandler notificationHandler,
-    @required BuildContext context,
   })  : _modifyReservationBloc = modifyReservationBloc,
         _reservationsRepository = reservationsRepository,
-        _notificationHandler = notificationHandler,
-        _context = context {
+        _notificationHandler = notificationHandler {
     _modifyReservationSubscription = _modifyReservationBloc.listen((state) {
       if (state is CreateReservationSuccess) {
         add(_UpdateReservations(
@@ -170,7 +169,7 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
               notificationId =
                   await _notificationHandler.scheduleReservationReminder(
                 reservation: r,
-                context: _context,
+                context: event.context,
               );
             }
             return Reservation.withUpdatedNotificationId(r, notificationId);

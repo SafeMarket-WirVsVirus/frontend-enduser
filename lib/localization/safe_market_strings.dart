@@ -228,4 +228,200 @@ extension SafeMarketStrings on AppLocalizations {
         name: 'creditsDesignSectionBody',
         desc: 'Credits for the design section on the credits page',
       );
+
+  String get tutorialTitle => Intl.message(
+        'Tutorial',
+        name: 'tutorialTitle',
+        desc: 'Tutorial Title',
+      );
+
+  String get tutorialWelcomeTitle => Intl.message(
+        'Welcome',
+        name: 'tutorialWelcomeTitle',
+        desc: 'Title of the welcome tutorial slide',
+      );
+
+  String get tutorialWelcomeDescription => Intl.message(
+        'At the moment this app is in an early beta. For this reason there are no real locations yet. You can find test supermarkets for example in the city center of Berlin.',
+        name: 'tutorialWelcomeDescription',
+        desc: 'Description of the welcome tutorial slide',
+      );
+
+  String get tutorialIntroductionTitle => Intl.message(
+        'Overview',
+        name: 'tutorialIntroductionTitle',
+        desc: 'Title of the introduction tutorial slide',
+      );
+
+  String get tutorialIntroductionDescription => Intl.message(
+        'With SafeMarket you can book tickets for your preferred location and verify that you have a valid ticket on-site.',
+        name: 'tutorialIntroductionDescription',
+        desc: 'Description of the introduction tutorial slide',
+      );
+
+  String get tutorialBookTicketTitle => Intl.message(
+        'Book Ticket',
+        name: 'tutorialBookTicketTitle',
+        desc: 'Title of the book ticket tutorial slide',
+      );
+
+  String get tutorialBookTicketDescription => Intl.message(
+        '1. Choose your preferred location.\n2. Select the time.\n3. Confirm your ticket.',
+        name: 'tutorialBookTicketDescription',
+        desc: 'Description of the book ticket tutorial slide',
+      );
+
+  String get tutorialManageTicketsTitle => Intl.message(
+        'Manage Tickets',
+        name: 'tutorialManageTicketsTitle',
+        desc: 'Title of the manage tickets tutorial slide',
+      );
+
+  String get tutorialManageTicketsDescription => Intl.message(
+        'You can enable reminders for your booked tickets as well as cancel your booked tickets.',
+        name: 'tutorialManageTicketsDescription',
+        desc: 'Description of the manage book tickets tutorial slide',
+      );
+
+  String get tutorialCheckInTitle => Intl.message(
+        'On-Site Check-In',
+        name: 'tutorialCheckInTitle',
+        desc: 'Title of the store checkin tutorial slide',
+      );
+
+  String get tutorialCheckInDescription => Intl.message(
+        'To prove that you have a valid ticket:\n\u2022 Present the QR code of your ticket in the app OR\n\u2022 Name the code words that are displayed under your ticket.',
+        name: 'tutorialCheckInDescription',
+        desc: 'Description of the store checkin tutorial slide',
+      );
+
+  String get tutorialLocationPermissionTitle => Intl.message(
+        'Location Permission',
+        name: 'tutorialLocationPermissionTitle',
+        desc: 'Title of the location permission tutorial slide',
+      );
+
+  String get tutorialLocationPermissionDescription => Intl.message(
+        'The location permission is used to search for locations close-by. You can still use the app without it.',
+        name: 'tutorialLocationPermissionDescription',
+        desc: 'Description of the location permission tutorial slide',
+      );
+
+  String get tutorialLocationServiceDisabledDialogTitle => Intl.message(
+        'Location Service Disabled',
+        name: 'tutorialLocationServiceDisabledDialogTitle',
+        desc:
+            'Title of the dialog which notifies the user about the disabled location services on the location permission tutorial slide',
+      );
+
+  String get tutorialLocationServiceDisabledDialogDescription => Intl.message(
+        'Please enable the system location service first to continue.',
+        name: 'tutorialLocationServiceDisabledDialogDescription',
+        desc:
+            'Description of the dialog which notifies the user about the disabled location services on the location permission tutorial slide',
+      );
+
+  String get tutorialLocationServiceDisabledDialogLocationServiceButton =>
+      Intl.message(
+        'Open Location Service',
+        name: 'tutorialLocationServiceDisabledDialogLocationServiceButton',
+        desc: 'Button title which opens the location service',
+      );
+
+  String get tutorialLocationPermissionStatusGranted => Intl.message(
+        'Permission granted',
+        name: 'tutorialLocationPermissionStatusGranted',
+        desc: 'Description for granted location permission in the tutorial',
+      );
+
+  String get tutorialLocationPermissionStatusNotGranted => Intl.message(
+        'Grant Location Permission',
+        name: 'tutorialLocationPermissionStatusNotGranted',
+        desc:
+            'Button title for non-granted location permission in the tutorial',
+      );
+
+  String get tutorialLocationPermissionStatusTesting => Intl.message(
+        'Checking Status',
+        name: 'tutorialLocationPermissionStatusTesting',
+        desc:
+            'Description which is displayed while the location permission status is checked in the tutorial',
+      );
+
+  String get tutorialLocationPermissionDeclinedDialogTitle => Intl.message(
+    'Location Permission',
+    name: 'tutorialLocationPermissionDeclinedDialogTitle',
+    desc:
+    'Title of the dialog which notifies the user that he declined the location permission on the location permission tutorial slide',
+  );
+
+  String get tutorialLocationPermissionDeclinedDialogDescription => Intl.message(
+    'Please enable location permission in the app settings to continue.',
+    name: 'tutorialLocationPermissionDeclinedDialogDescription',
+    desc:
+    'Description of the dialog which notifies the user about the disabled location services on the location permission tutorial slide',
+  );
+
+  String get tutorialLocationPermissionDeclinedGoToSettingsButton => Intl.message(
+        'Open App Settings',
+        name: 'tutorialLocationPermissionDeclinedGoToSettingsButton',
+        desc: 'Button title which will open the app settings in the tutorial',
+      );
+
+  String get tutorialLastSlideTitle => Intl.message(
+        'All Done',
+        name: 'tutorialLastSlideTitle',
+        desc: 'Title of the last tutorial slide',
+      );
+
+  String get tutorialLastSlideDescription => Intl.message(
+        'We are looking forward to your feedback. Please visit our website for contact information.',
+        name: 'tutorialLastSlideDescription',
+        desc: 'Description of the last tutorial slide',
+      );
+
+  String get tutorialSkipButton => Intl.message(
+        'Skip',
+        name: 'tutorialSkipButton',
+        desc: 'Title of the skip button in the tutorial',
+      );
+
+  String get tutorialNextButton => Intl.message(
+        'Next',
+        name: 'tutorialNextButton',
+        desc: 'Title of the next button in the tutorial',
+      );
+
+  String get tutorialDoneButton => Intl.message(
+        'Done',
+        name: 'tutorialDoneButton',
+        desc: 'Title of the done button in the tutorial',
+      );
+
+  String get usageInstructionsFirstTicketTitle => Intl.message(
+        'Congratulations',
+        name: 'usageInstructionsFirstTicketTitle',
+        desc: 'Title of the usage instructions after creating the first ticket',
+      );
+
+  String get usageInstructionsFirstTicketSubtitle => Intl.message(
+        'You just booked your first ticket!',
+        name: 'usageInstructionsFirstTicketSubtitle',
+        desc:
+            'Subtitle of the usage instructions after creating the first ticket',
+      );
+
+  String get usageInstructionsFirstTicketDescription => Intl.message(
+        'Please note the following rules of conduct when visiting a location with SafeMarket:\n\n1. Please arrive at most 5 minutes before your ticket starts.\n2. Your ticket will expire after 10 minutes when you do not enter the location.\n3. Please show your ticket without being prompted.',
+        name: 'usageInstructionsFirstTicketDescription',
+        desc:
+            'Description of the usage instructions after creating the first ticket',
+      );
+
+  String get usageInstructionsOkButton => Intl.message(
+        'OK',
+        name: 'usageInstructionsOkButton',
+        desc:
+            'Button title of the usage instructions after creating the first ticket',
+      );
 }

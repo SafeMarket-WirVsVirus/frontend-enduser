@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:reservation_system_customer/constants.dart';
 import 'package:reservation_system_customer/ui/about/credits_page.dart';
 import 'package:reservation_system_customer/ui/about/license_list_page.dart';
+import 'package:reservation_system_customer/ui/tutorials/tutorial_sliders.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'about_page_header.dart';
@@ -18,6 +19,10 @@ class AboutPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: AboutTheAppSection(),
+            ),
+            _AboutPageListItemOpenPage(
+              title: AppLocalizations.of(context).tutorialTitle,
+              pageBuilder: (_) => TutorialSliders(),
             ),
             _AboutPageListItemOpenPage(
               title: AppLocalizations.of(context).openSourceLicensesTitle,

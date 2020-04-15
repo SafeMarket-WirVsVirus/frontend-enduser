@@ -104,7 +104,9 @@ class _NotificationButton extends StatelessWidget {
           ? () {
               BlocProvider.of<ReservationsBloc>(context).add(
                 ToggleReminderForReservation(
-                    reservationId: reservation.id),
+                  reservationId: reservation.id,
+                  context: context,
+                ),
               );
             }
           : null,

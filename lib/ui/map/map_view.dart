@@ -168,6 +168,7 @@ class MapViewState extends State<MapView> {
           children: <Widget>[
             BlocBuilder<MapBloc, MapState>(builder: (context, state) {
               return FloatingActionButton(
+                heroTag: "filterFab",
                 mini: true,
                 onPressed: _setFilters,
                 child: Icon(state.filterSettings?.locationType?.icon(context) ??
@@ -179,6 +180,7 @@ class MapViewState extends State<MapView> {
               height: 10,
             ),
             FloatingActionButton(
+              heroTag: "locationFab",
               onPressed: () => _moveCameraToNewPosition(userPosition),
               child: Icon(Icons.gps_fixed),
               backgroundColor: Theme.of(context).accentColor,

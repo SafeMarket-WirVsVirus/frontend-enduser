@@ -45,7 +45,7 @@ class _LocationDetailSheetState extends State<LocationDetailSheet> {
                   _CreateReservationFailedDialog(),
             );
           } else if (state is CreateReservationSuccess) {
-            Navigator.of(mainScaffoldKey.currentContext).maybePop();
+            // nothing to do, the modal is dismissed in the [_HomePage].
           }
         },
         child: SingleChildScrollView(

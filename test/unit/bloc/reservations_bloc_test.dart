@@ -34,7 +34,6 @@ void main() {
       modifyReservationBloc: mockModifyReservationBloc,
       reservationsRepository: mockReservationsRepository,
       notificationHandler: mockNotificationHandler,
-      context: null,
     );
   });
 
@@ -421,7 +420,7 @@ void main() {
         },
         act: (b) {
           b.add(LoadReservations());
-          b.add(ToggleReminderForReservation(reservationId: 10));
+          b.add(ToggleReminderForReservation(reservationId: 10, context: null));
           return;
         },
         expect: [
@@ -446,7 +445,7 @@ void main() {
         },
         act: (b) {
           b.add(LoadReservations());
-          b.add(ToggleReminderForReservation(reservationId: 10));
+          b.add(ToggleReminderForReservation(reservationId: 10, context: null));
           return;
         },
         expect: [
@@ -476,7 +475,7 @@ void main() {
         },
         act: (b) {
           b.add(LoadReservations());
-          b.add(ToggleReminderForReservation(reservationId: 20));
+          b.add(ToggleReminderForReservation(reservationId: 20, context: null));
           return;
         },
         expect: [
@@ -504,7 +503,7 @@ void main() {
         )).thenAnswer((_) => Future.value(123));
 
         bloc.add(LoadReservations());
-        bloc.add(ToggleReminderForReservation(reservationId: 20));
+        bloc.add(ToggleReminderForReservation(reservationId: 20, context: null));
 
         await bloc.close();
 
@@ -525,7 +524,7 @@ void main() {
             ]));
 
         bloc.add(LoadReservations());
-        bloc.add(ToggleReminderForReservation(reservationId: 20));
+        bloc.add(ToggleReminderForReservation(reservationId: 20, context: null));
 
         await bloc.close();
 
