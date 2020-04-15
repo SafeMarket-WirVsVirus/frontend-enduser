@@ -22,6 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - uses: axel-op/dart-package-analyzer@v2.0.0
+        id: analysis
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
       - name: Analyzer Output
