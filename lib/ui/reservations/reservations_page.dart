@@ -1,3 +1,4 @@
+import 'package:reservation_system_customer/ui/about/about_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_list.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
@@ -6,6 +7,14 @@ class ReservationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.info_outline),
+            tooltip:  AppLocalizations.of(context).aboutTheAppTitle,
+            onPressed: () => Navigator.push(
+                context, MaterialPageRoute(builder: (context) => AboutPage())),
+          )
+        ],
         title: Row(
           children: <Widget>[
             Image(

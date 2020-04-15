@@ -10,6 +10,7 @@ export 'package:flutter/foundation.dart';
 export 'package:flutter_test/flutter_test.dart';
 export 'package:provider/provider.dart';
 export 'package:reservation_system_customer/ui_imports.dart';
+export '../data_helper.dart';
 
 class MockAppLocalizations extends Fake implements AppLocalizations {
   @override
@@ -55,6 +56,8 @@ class TestApp extends StatelessWidget {
           if (bloc is MapBloc) {
             return BlocProvider.value(value: bloc);
           } else if (bloc is ReservationsBloc) {
+            return BlocProvider.value(value: bloc);
+          } else if (bloc is ModifyReservationBloc) {
             return BlocProvider.value(value: bloc);
           }
           throw Exception(

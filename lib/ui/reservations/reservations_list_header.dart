@@ -1,7 +1,5 @@
 import 'package:reservation_system_customer/constants.dart';
-import 'package:reservation_system_customer/notifications.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ReservationListHeader extends StatelessWidget {
   final Reservation reservation;
@@ -14,7 +12,7 @@ class ReservationListHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+      padding: EdgeInsets.fromLTRB(10, 10, 0, 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
@@ -71,29 +69,15 @@ class ReservationListHeader extends StatelessWidget {
   }
 }
 
-class _NotificationButton extends StatefulWidget {
+class _NotificationButton extends StatelessWidget {
   final Reservation reservation;
+
+  bool get isNotificationSet => reservation.reminderNotificationId != null;
 
   const _NotificationButton({
     Key key,
     @required this.reservation,
   }) : super(key: key);
-
-  @override
-  __NotificationButtonState createState() => __NotificationButtonState();
-}
-
-class __NotificationButtonState extends State<_NotificationButton> {
-  bool isNotificationSet = false;
-  NotificationHandler notificationHandler;
-
-  @override
-  void initState() {
-    super.initState();
-    notificationHandler =
-        NotificationHandler(null, widget.reservation, context);
-    _updateNotificationState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,34 +102,19 @@ class __NotificationButtonState extends State<_NotificationButton> {
       ),
       onPressed: canScheduleNotification
           ? () {
-              setState(() {
-                isNotificationSet = !isNotificationSet;
-              });
-
-              if (isNotificationSet) {
-                notificationHandler.setReminder();
-              } else {
-                notificationHandler.cancelReminder();
-              }
+              BlocProvider.of<ReservationsBloc>(context).add(
+                ToggleReminderForReservation(
+                  reservationId: reservation.id,
+                  context: context,
+                ),
+              );
             }
           : null,
     );
   }
 
   bool _canScheduleNotification() {
-    return widget.reservation.startTime.difference(DateTime.now()) >
+    return reservation.startTime.difference(DateTime.now()) >
         Constants.durationForNotificationBeforeStartTime;
-  }
-
-  void _updateNotificationState() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    bool set = prefs.get('${widget.reservation.id}') == null ? false : true;
-
-    if (mounted) {
-      setState(() {
-        isNotificationSet = set;
-      });
-    }
   }
 }

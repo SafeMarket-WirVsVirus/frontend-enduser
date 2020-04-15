@@ -3,6 +3,8 @@ import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
 import 'package:reservation_system_customer/ui/offline_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_page.dart';
+import 'package:reservation_system_customer/ui/tutorials/tutorial_sliders.dart';
+import 'package:reservation_system_customer/ui/tutorials/usage_instructions.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
 import 'loading_page.dart';
@@ -18,6 +20,19 @@ class _StartPageState extends State<StartPage> {
   @override
   void initState() {
     super.initState();
+    _initStartPage();
+  }
+
+  _initStartPage() async {
+    bool shouldShowTutorial =
+        await Provider.of<UserRepository>(context, listen: false)
+            .shouldShowTutorial();
+
+    if (shouldShowTutorial) {
+      await Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => TutorialSliders()));
+    }
+
     BlocProvider.of<ReservationsBloc>(context).add(LoadReservations());
     Provider.of<UserRepository>(context, listen: false)..loadUserPosition();
   }
@@ -58,6 +73,7 @@ class __HomePageState extends State<_HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: mainScaffoldKey,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() {
@@ -73,7 +89,19 @@ class __HomePageState extends State<_HomePage> {
                 ))
             .toList(),
       ),
-      body: _page(_selectedIndex),
+      body: BlocListener<ModifyReservationBloc, ModifyReservationState>(
+          condition: (_, newState) => newState is! ModifyReservationIdle,
+          listener: (context, state) async {
+            if (state is CreateReservationSuccess) {
+              await Navigator.of(mainScaffoldKey.currentContext).maybePop();
+              final snackBar = SnackBar(
+                  content: Text(AppLocalizations.of(context)
+                      .createReservationSuccessSnackbar));
+              Scaffold.of(context).showSnackBar(snackBar);
+              _showUsageInstructions();
+            }
+          },
+          child: _page(_selectedIndex)),
     );
   }
 
@@ -85,6 +113,18 @@ class __HomePageState extends State<_HomePage> {
         return MapPage();
       default:
         return Container();
+    }
+  }
+
+  _showUsageInstructions() async {
+    bool showInstructions = await Provider.of<UserRepository>(
+        context, listen: false)
+        .shouldShowUsageInstructions();
+    if (showInstructions) {
+      Provider.of<UserRepository>(context, listen: false)
+          .saveUserReadInstructions();
+      await showDialog(context: mainScaffoldKey.currentContext,
+          builder: (context) => UsageInstructions());
     }
   }
 }

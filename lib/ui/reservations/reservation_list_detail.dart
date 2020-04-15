@@ -34,13 +34,15 @@ class ReservationListDetail extends StatelessWidget {
           );
         }).toList()),
       ),
-      Align(
+      reservation.startTime.isAfter(DateTime.now())
+          ? Align(
           alignment: Alignment.topRight,
           child: FlatButton(
               child: Icon(Icons.delete_outline),
               onPressed: () {
                 _deleteDialog(context, reservation);
               }))
+          : SizedBox(height: 20),
     ]);
   }
 }

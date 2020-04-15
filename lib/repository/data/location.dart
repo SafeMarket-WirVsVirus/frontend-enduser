@@ -51,7 +51,7 @@ class Location {
   /// The user friendly location name
   final String name;
 
-  @JsonKey(name: 'openings') //, fromJson: _openingHoursFromMap)
+  @JsonKey(name: 'openings')
   final List<OpeningHours> openingHours;
 
   final String address;
@@ -65,6 +65,9 @@ class Location {
   @JsonKey(fromJson: _fillStatusFromInt)
   final FillStatus fillStatus;
 
+  @JsonKey(ignore: true)
+  LocationType locationType;
+
   Location({
     @required this.id,
     @required this.latitude,
@@ -75,10 +78,16 @@ class Location {
     @required this.slotDuration,
     @required this.address,
     @required this.openingHours,
+    this.locationType,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) =>
       _$LocationFromJson(json);
+
+  @override
+  String toString() {
+    return 'Location $id';
+  }
 }
 
 FillStatus _fillStatusFromInt(int i) {

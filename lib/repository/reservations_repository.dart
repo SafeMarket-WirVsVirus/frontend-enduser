@@ -1,21 +1,28 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:reservation_system_customer/constants.dart';
+import 'package:reservation_system_customer/repository/data/data.dart';
+import 'package:reservation_system_customer/repository/data/http_responses/http_responses.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:http/http.dart' as http;
+import 'package:reservation_system_customer/repository/storage.dart';
 import 'data/data.dart';
 import 'user_repository.dart';
 
 class ReservationsRepository {
   final String _baseUrl;
   final UserRepository _userRepository;
+  final Storage _storage;
 
   ReservationsRepository({
     @required String baseUrl,
     @required UserRepository userRepository,
+    @required Storage storage,
   })  : _baseUrl = baseUrl,
-        _userRepository = userRepository;
+        _userRepository = userRepository,
+        _storage = storage;
 
   Future<bool> cancelReservation({
     @required int locationId,
@@ -67,9 +74,27 @@ class ReservationsRepository {
     }
   }
 
-  Future<List<Reservation>> getReservations({
-    @required String deviceId,
-  }) async {
+  /// Returns the list of loaded reservations or null if no reservations could be restored.
+  Future<List<Reservation>> loadReservations() async {
+    try {
+      final loadedReservations =
+          await _storage.getString(StorageKey.reservations);
+      if (loadedReservations != null) {
+        final Iterable list = jsonDecode(loadedReservations);
+        return list?.map((s) => Reservation.fromJson(s))?.toList();
+      }
+    } on Object catch (error) {
+      print('loading reservations failed with $error');
+    }
+    return null;
+  }
+
+  Future<void> saveReservations(List<Reservation> reservations) async {
+    await _storage.setString(StorageKey.reservations, jsonEncode(reservations));
+  }
+
+  Future<List<Reservation>> getReservations() async {
+    final deviceId = await _userRepository.deviceId();
     var queryParameters = {
       'deviceId': deviceId,
       'minDate': DateTime.now()
@@ -85,9 +110,13 @@ class ReservationsRepository {
     final response = await http.get(uri);
     if (response.statusCode == 200) {
       print('getReservations: success');
-      var result =
-          Reservations.fromJson(json.decode(response.body)).reservations;
-      return result;
+      var result = ReservationsResponse.fromJson(json.decode(response.body))
+              ?.reservations ??
+          [];
+
+      final reservations =
+          result.map((item) => Reservation.fromRawReservation(item)).toList();
+      return reservations;
     }
     print('getReservations: error ${response.statusCode}');
     return [];
