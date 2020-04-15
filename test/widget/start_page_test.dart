@@ -5,6 +5,7 @@ import 'package:reservation_system_customer/ui/map/map_page.dart';
 import 'package:reservation_system_customer/ui/offline_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_page.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
+import 'package:reservation_system_customer/ui/tutorials/tutorial_sliders.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'widget_test_helper.dart';
@@ -12,6 +13,8 @@ import 'widget_test_helper.dart';
 class MockReservationsBloc extends Mock implements ReservationsBloc {}
 
 class MockMapBloc extends Mock implements MapBloc {}
+
+class MockModifyReservationBloc extends Mock implements ModifyReservationBloc {}
 
 class MockUserRepository extends Mock implements UserRepository {}
 
@@ -36,6 +39,7 @@ class MockLocalizationsDelegate extends Fake
 
 void main() {
   ReservationsBloc reservationsBloc;
+  MockModifyReservationBloc mockModifyReservationBloc;
   MapBloc mapBloc;
   UserRepository userRepository;
   Widget startPage;
@@ -43,11 +47,15 @@ void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     reservationsBloc = MockReservationsBloc();
+    mockModifyReservationBloc = MockModifyReservationBloc();
     mapBloc = MockMapBloc();
     userRepository = MockUserRepository();
 
     when(userRepository.loadUserPosition())
         .thenAnswer((_) => Future.value(null));
+
+    when(userRepository.shouldShowTutorial())
+        .thenAnswer((_) => Future.value(false));
 
     mockBlocState(
       mapBloc,
@@ -59,8 +67,10 @@ void main() {
       ),
     );
 
+    mockBlocState(mockModifyReservationBloc, ModifyReservationIdle());
+
     startPage = TestApp(
-      blocs: [reservationsBloc, mapBloc],
+      blocs: [reservationsBloc, mapBloc, mockModifyReservationBloc],
       child: Provider.value(
         value: userRepository,
         child: StartPage(),
@@ -70,6 +80,7 @@ void main() {
 
   tearDown(() {
     reservationsBloc.close();
+    mockModifyReservationBloc.close();
     mapBloc.close();
   });
 
@@ -128,6 +139,23 @@ void main() {
       await tester.pumpWidget(startPage);
 
       expect(find.byType(ReservationsPage), findsOneWidget);
+    });
+
+    testWidgets(
+        'displays [TutorialSliders] when UserRepository.shouldShowTutorial is true',
+        (WidgetTester tester) async {
+      when(userRepository.shouldShowTutorial())
+          .thenAnswer((_) => Future.value(true));
+      _mockBlocState(
+        ReservationsLoaded([
+          ReservationFactory.createReservation(id: 123),
+        ]),
+      );
+
+      await tester.pumpWidget(startPage);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(TutorialSliders), findsOneWidget);
     });
   });
 }

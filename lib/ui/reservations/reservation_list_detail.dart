@@ -1,4 +1,3 @@
-import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
@@ -35,22 +34,22 @@ class ReservationListDetail extends StatelessWidget {
               }).toList()
         ),
       ),
-      Align(
+      reservation.startTime.isAfter(DateTime.now())
+          ? Align(
           alignment: Alignment.topRight,
           child: FlatButton(
               child: Icon(Icons.delete_outline),
               onPressed: () {
                 _deleteDialog(context, reservation);
               }))
+          : SizedBox(height: 20),
     ]);
   }
 }
 
-Future<void> _deleteDialog(BuildContext context, Reservation reservation) {
-  var reservationsRepository =
-      Provider.of<ReservationsRepository>(context, listen: false);
+Future<void> _deleteDialog(BuildContext pageContext, Reservation reservation) {
   return showDialog<void>(
-    context: context,
+    context: pageContext,
     builder: (context) => AlertDialog(
       title: Text(
         reservation.location?.name == null
@@ -67,10 +66,8 @@ Future<void> _deleteDialog(BuildContext context, Reservation reservation) {
         FlatButton(
             child: Text(AppLocalizations.of(context).commonOk),
             onPressed: () {
-              reservationsRepository.cancelReservation(
-                locationId: reservation.location.id,
-                reservationId: reservation.id,
-              );
+              BlocProvider.of<ModifyReservationBloc>(pageContext)
+                  .add(CancelReservation(reservation));
               Navigator.of(context).pop();
             }),
       ],

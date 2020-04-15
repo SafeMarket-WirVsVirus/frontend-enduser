@@ -57,6 +57,8 @@ class TestApp extends StatelessWidget {
             return BlocProvider.value(value: bloc);
           } else if (bloc is ReservationsBloc) {
             return BlocProvider.value(value: bloc);
+          } else if (bloc is ModifyReservationBloc) {
+            return BlocProvider.value(value: bloc);
           }
           throw Exception(
               'Unknown Bloc type. Please cast to the correct bloc.');

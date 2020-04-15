@@ -2,11 +2,18 @@ import 'package:flutter/foundation.dart';
 import 'package:reservation_system_customer/repository/data/data.dart';
 
 class ReservationFactory {
-  static Reservation createReservation({@required int id}) => Reservation(
+  static Reservation createReservation({
+    @required int id,
+    DateTime startTime,
+    int reminderNotificationId,
+    ReservationLocation location,
+  }) =>
+      Reservation(
         id: id,
-        location: ReservationLocationFactory.createLocation(id: 5),
-        startTime: DateTime.now().add(Duration(hours: 2)),
+        location: location,
+        startTime: startTime ?? DateTime.now().add(Duration(minutes: id)),
         codeWords: ['Apple', 'Code'],
+        reminderNotificationId: reminderNotificationId,
       );
 }
 

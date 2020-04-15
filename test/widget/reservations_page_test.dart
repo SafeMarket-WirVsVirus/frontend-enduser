@@ -6,7 +6,7 @@ import 'widget_test_helper.dart';
 class MockReservationsBloc extends Mock implements ReservationsBloc {}
 
 void main() {
-  ReservationsBloc reservationsBloc;
+  MockReservationsBloc reservationsBloc;
   Widget reservationsPage;
 
   setUp(() {
@@ -74,6 +74,44 @@ void main() {
       await tester.pumpWidget(reservationsPage);
 
       expect(find.byType(ReservationsList), findsOneWidget);
+    });
+
+    testWidgets(
+        'displays reminder disabled when reservation less than 30 minutes in the future',
+        (WidgetTester tester) async {
+      mockBlocState(
+          reservationsBloc,
+          ReservationsLoaded([
+            ReservationFactory.createReservation(
+                id: 1, startTime: DateTime.now().add(Duration(minutes: 25))),
+          ]));
+
+      await tester.pumpWidget(reservationsPage);
+
+      expect(find.text('Notify'), findsOneWidget);
+      await tester.tap(find.text('Notify'));
+
+      verifyNever(reservationsBloc.add(ToggleReminderForReservation(reservationId: 2)));
+    });
+
+    testWidgets(
+        'displays reminder enabled when reservation more than 30 minutes in the future',
+        (WidgetTester tester) async {
+      mockBlocState(
+          reservationsBloc,
+          ReservationsLoaded([
+            ReservationFactory.createReservation(
+                id: 2, startTime: DateTime.now().add(Duration(minutes: 35))),
+          ]));
+
+      await tester.pumpWidget(reservationsPage);
+
+      expect(find.text('Notify'), findsOneWidget);
+      await tester.tap(find.text('Notify'));
+
+      verify(reservationsBloc
+              .add(ToggleReminderForReservation(reservationId: 2)))
+          .called(1);
     });
   });
 }

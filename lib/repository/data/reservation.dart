@@ -50,11 +50,15 @@ class Reservation extends Equatable {
   /// List of codewords that serve as an alternative identifier to the qr-code
   final List<String> codeWords;
 
+  /// The id of the scheduled notification or null
+  final int reminderNotificationId;
+
   Reservation({
     @required this.id,
     @required this.location,
     @required this.startTime,
     @required this.codeWords,
+    @required this.reminderNotificationId,
   });
 
   factory Reservation.fromRawReservation(RawReservation reservation) =>
@@ -63,11 +67,49 @@ class Reservation extends Equatable {
         location: ReservationLocation.fromLocation(reservation.location),
         startTime: reservation.startTime,
         codeWords: reservation.codeWords ?? [],
+        reminderNotificationId: null,
+      );
+
+  factory Reservation.withUpdatedNotificationId(
+    Reservation reservation,
+    int reminderNotificationId,
+  ) =>
+      Reservation(
+        id: reservation.id,
+        location: reservation.location,
+        startTime: reservation.startTime,
+        codeWords: reservation.codeWords,
+        reminderNotificationId: reminderNotificationId,
+      );
+
+  factory Reservation.withUpdatedLocation(
+    Reservation reservation,
+    ReservationLocation location,
+  ) =>
+      Reservation(
+        id: reservation.id,
+        location: location,
+        startTime: reservation.startTime,
+        codeWords: reservation.codeWords,
+        reminderNotificationId: reservation.reminderNotificationId,
+      );
+
+  factory Reservation.withLocalData(
+    Reservation reservation,
+    ReservationLocation location,
+    int reminderNotificationId,
+  ) =>
+      Reservation(
+        id: reservation.id,
+        location: location,
+        startTime: reservation.startTime,
+        codeWords: reservation.codeWords,
+        reminderNotificationId: reminderNotificationId,
       );
 
   @override
   String toString() {
-    return 'Reservation $id @$startTime';
+    return 'Reservation $id @$startTime, reminderId: $reminderNotificationId, location: ${location?.id}';
   }
 
   factory Reservation.fromJson(Map<String, dynamic> json) =>
@@ -76,5 +118,5 @@ class Reservation extends Equatable {
   Map<String, dynamic> toJson() => _$ReservationToJson(this);
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [id, reminderNotificationId, location?.id];
 }

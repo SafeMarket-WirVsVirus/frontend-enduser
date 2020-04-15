@@ -2,6 +2,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 enum StorageKey {
   userFinishedTutorial,
+  userReadInstructions,
   mapFilterSettings,
   lastUserPositionLat,
   lastUserPositionLon,
@@ -13,6 +14,8 @@ extension _StorageKeyIds on StorageKey {
     switch (this) {
       case StorageKey.userFinishedTutorial:
         return 'userFinishedTutorial';
+      case StorageKey.userReadInstructions:
+        return 'userReadInstructions';
       case StorageKey.mapFilterSettings:
         return 'mapFilterSettings';
       case StorageKey.lastUserPositionLat:

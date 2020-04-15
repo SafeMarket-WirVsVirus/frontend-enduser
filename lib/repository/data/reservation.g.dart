@@ -33,6 +33,7 @@ Reservation _$ReservationFromJson(Map<String, dynamic> json) {
         ? null
         : DateTime.parse(json['startTime'] as String),
     codeWords: (json['codeWords'] as List)?.map((e) => e as String)?.toList(),
+    reminderNotificationId: json['reminderNotificationId'] as int,
   );
 }
 
@@ -42,4 +43,5 @@ Map<String, dynamic> _$ReservationToJson(Reservation instance) =>
       'location': instance.location,
       'startTime': instance.startTime?.toIso8601String(),
       'codeWords': instance.codeWords,
+      'reminderNotificationId': instance.reminderNotificationId,
     };
