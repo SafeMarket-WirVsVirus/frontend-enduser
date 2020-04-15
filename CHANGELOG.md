@@ -1,3 +1,20 @@
+## 1.1.0
+
+- New, animated tutorial that is automatically shown on the first app launch
+- Cache reservations to enable offline access to the user's tickets
+- New location markers that get clustered when zooming out. Removed google maps default POIs to make more room for our own markers.
+- Added "About The App"-Page including:
+  - A short app description
+  - Currently used Open-Source licenses
+  - Credit Section
+  - A link to the project's website
+  - An option to review the app tutorial
+- Added live location tracking that allows the user to refocus the camera on his own location after he/she moved
+- Save and display a reservation's location name
+- Fixed a bug where the same location could be added multiple times to the repository
+- Code cleanup, removed  numerous unsued imports and methods
+
+
 ## 1.0.2
 - Improved reservation list UI
 - Sort reservation list by dates
