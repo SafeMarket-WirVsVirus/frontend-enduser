@@ -188,6 +188,7 @@ class MapViewState extends State<MapView> {
                         selectedColor: Theme.of(context).accentColor,
                         shadowColor: Colors.black,
                         elevation: (selectedType == l) ? 10 : 5,
+                        avatar: l.getIcon(selectedType == l),
                         onSelected: (bool selected) {
                           setState(() {
                             if (selected) {
@@ -329,5 +330,24 @@ extension LocationTypeDescription on LocationType {
         return AppLocalizations.of(context).locationFilterPharmaciesLabel;
     }
     return '';
+  }
+
+  Icon getIcon(bool selected) {
+    switch (this) {
+      case LocationType.supermarket:
+        return Icon(
+          Icons.local_grocery_store,
+          color: selected ? Colors.white : Colors.black,
+        );
+      case LocationType.bakery:
+        return Icon(
+          Icons.local_cafe,
+          color: selected ? Colors.white : Colors.black,);
+      case LocationType.pharmacy:
+        return Icon(
+          Icons.local_pharmacy,
+          color: selected ? Colors.white : Colors.black,);
+    }
+    return Icon(Icons.location_on);
   }
 }
