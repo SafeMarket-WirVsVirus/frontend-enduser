@@ -1,11 +1,14 @@
 # SafeMarket
 
-![Analyze & Run Tests](https://github.com/SafeMarket-WirVsVirus/frontend-enduser/workflows/Analyze%20&%20Run%20Tests/badge.svg?branch=master)
+![Analyze & Run Tests](https://github.com/SafeMarket-WirVsVirus/frontend-enduser/workflows/Analyze%20&%20Run%20Tests/badge.svg?branch=master)[![Twitter](https://img.shields.io/twitter/follow/safemarket_wvsv?label=Follow%20us&style=social)](https://twitter.com/safemarket_wvsv)
 
 ![Logo](documentation/safemarket_logo.jpg)
 
+
 ## Project
 Our project was created during the [#WirVsVirus hackathon](https://wirvsvirushackathon.devpost.com).
+
+[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="drawing" height="50"/>](https://play.google.com/store/apps/details?id=com.safe_market.reservation_system_customer)
 
 SafeMarket is a digital reservation service which minimizes infections and queues. It allows people visiting a place to see the future, planned occupancy rate. Our first use case during the Corona pandemic is the visit of a store such as a supermarket with minimizing social interactions.
 
@@ -45,6 +48,3 @@ Please check the [ReadMe](reservation_system_customer/README.md) for the feature
 - `bloc`: state management
 - `ui/reservations`: UI elements for reservations tab
 - `ui/map`: UI elements for the map tab
-
-
-
