@@ -53,7 +53,7 @@ class _MapChipsState extends State<MapChips> {
                 widget.mapBloc.add(
                     MapSettingsChanged(FilterSettings(
                         locationType: l,
-                        minFillStatus: FillStatus.red))); // TODO remove minFillStatus from FilterSettings
+                    )));
               });
             },
           ),
