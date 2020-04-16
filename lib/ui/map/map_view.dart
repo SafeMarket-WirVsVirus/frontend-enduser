@@ -39,8 +39,6 @@ class MapViewState extends State<MapView> {
   final int minZoom = 0;
   final int maxZoom = 18;
 
-  LocationType selectedType = LocationType.supermarket;
-
   @override
   void dispose() {
     super.dispose();
@@ -167,12 +165,10 @@ class MapViewState extends State<MapView> {
               markers: Set<Marker>.of(clusteredMarkers),
             ),
 
-
-//            Try out chips
             SafeArea(
               child: Align(
                 alignment: Alignment.topCenter,
-                child: MapChips(mapBloc: BlocProvider.of<MapBloc>(context),)
+                child: MapChips()
               ),
             )
           ]
