@@ -210,7 +210,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
     final filteredLocations = locations
         .where((l) =>
             l != null &&
-            l.fillStatus.index <= filterSettings.minFillStatus.index &&
+            // l.fillStatus.index <= filterSettings.minFillStatus.index && // Fill Status filtering is removed for now
             l.locationType == filterSettings.locationType)
         .toList();
     debug(
