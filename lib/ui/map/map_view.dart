@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
+import 'package:reservation_system_customer/ui/map/map_chips.dart';
 import 'package:reservation_system_customer/ui/map/map_cluster.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
@@ -171,39 +172,7 @@ class MapViewState extends State<MapView> {
             SafeArea(
               child: Align(
                 alignment: Alignment.topCenter,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: LocationType.values.map<Widget>((LocationType l) {
-                    return Padding(
-                      padding: EdgeInsets.all(5),
-                      child: ChoiceChip(
-                        label: Text(
-                            l.localized(context),
-                            style: TextStyle(
-                              color: selectedType == l ? Colors.white : Colors.black,
-                            )
-                        ),
-                        selected: selectedType == l,
-                        backgroundColor: Colors.white,
-                        selectedColor: Theme.of(context).accentColor,
-                        shadowColor: Colors.black,
-                        elevation: (selectedType == l) ? 10 : 5,
-                        avatar: l.getIcon(selectedType == l),
-                        onSelected: (bool selected) {
-                          setState(() {
-                            if (selected) {
-                              selectedType = l;
-                            }
-                            BlocProvider.of<MapBloc>(context).add(
-                                MapSettingsChanged(FilterSettings(
-                                    locationType: l,
-                                    minFillStatus: FillStatus.red))); // TODO remove minFillStatus from FilterSettings
-                          });
-                        },
-                      ),
-                    );
-                  }).toList(),
-                ),
+                child: MapChips(mapBloc: BlocProvider.of<MapBloc>(context),)
               ),
             )
           ]
@@ -319,35 +288,3 @@ class MapViewState extends State<MapView> {
   }
 }
 
-extension LocationTypeDescription on LocationType {
-  String localized(context) {
-    switch (this) {
-      case LocationType.supermarket:
-        return AppLocalizations.of(context).locationFilterSupermarketsLabel;
-      case LocationType.bakery:
-        return AppLocalizations.of(context).locationFilterBakeriesLabel;
-      case LocationType.pharmacy:
-        return AppLocalizations.of(context).locationFilterPharmaciesLabel;
-    }
-    return '';
-  }
-
-  Icon getIcon(bool selected) {
-    switch (this) {
-      case LocationType.supermarket:
-        return Icon(
-          Icons.local_grocery_store,
-          color: selected ? Colors.white : Colors.black,
-        );
-      case LocationType.bakery:
-        return Icon(
-          Icons.local_cafe,
-          color: selected ? Colors.white : Colors.black,);
-      case LocationType.pharmacy:
-        return Icon(
-          Icons.local_pharmacy,
-          color: selected ? Colors.white : Colors.black,);
-    }
-    return Icon(Icons.location_on);
-  }
-}
