@@ -13,14 +13,14 @@ class FilterSettings extends Equatable {
 
   FilterSettings({
     @required this.locationType,
-    @required this.minFillStatus,
+    this.minFillStatus,
   });
 
   @override
-  List<Object> get props => [locationType, minFillStatus];
+  List<Object> get props => [locationType];
 
   @override
-  String toString() => 'FilterSettings: $locationType, $minFillStatus';
+  String toString() => 'FilterSettings: $locationType';
 
   factory FilterSettings.fromJson(Map<String, dynamic> json) =>
       _$FilterSettingsFromJson(json);
