@@ -1,4 +1,5 @@
 import 'package:reservation_system_customer/constants.dart';
+import 'package:reservation_system_customer/ui/reservations/reservation_notification_dialog.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
 class ReservationListHeader extends StatelessWidget {
@@ -100,16 +101,23 @@ class _NotificationButton extends StatelessWidget {
           Text(AppLocalizations.of(context).addReminderButtonTitle),
         ],
       ),
-      onPressed: canScheduleNotification
-          ? () {
-              BlocProvider.of<ReservationsBloc>(context).add(
-                ToggleReminderForReservation(
-                  reservationId: reservation.id,
-                  context: context,
-                ),
-              );
-            }
-          : null,
+      onPressed: () => {
+        showDialog(
+          context: context,
+          builder: (newContext) => ReservationNotificationDialog(
+            reservationsBloc: BlocProvider.of<ReservationsBloc>(context),
+            reservation: reservation,))
+      }
+//      canScheduleNotification
+//          ? () {
+//              BlocProvider.of<ReservationsBloc>(context).add(
+//                ToggleReminderForReservation(
+//                  reservationId: reservation.id,
+//                  context: context,
+//                ),
+//              );
+//            }
+//          : null,
     );
   }
 

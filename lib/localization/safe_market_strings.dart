@@ -424,4 +424,19 @@ extension SafeMarketStrings on AppLocalizations {
         desc:
             'Button title of the usage instructions after creating the first ticket',
       );
+
+  String get reminderDialogTitle => Intl.message(
+      'Set a reminder',
+      name: 'reminderDialogTitle',
+      desc:
+        'Title displayed at the top of the dialog to select a reminder time'
+  );
+
+
+  String get reminderDialogBeforeText => Intl.message(
+      'before',
+      name: 'reminderDialogBeforeText',
+      desc:
+      'Text to indicate that the times in the reminder dialog mean time before a slot'
+  );
 }
