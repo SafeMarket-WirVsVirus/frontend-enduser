@@ -40,12 +40,15 @@ class _NewReservationData {
 }
 
 /// Schedules or cancels a notification and emits the updated reservations.
-class ToggleReminderForReservation extends ReservationsEvent {
+class ChangeReminderForReservation extends ReservationsEvent {
   final int reservationId;
+  // if reminderTime is null, cancel the reminder, otherwise create reminder with given time
+  final Duration reminderTime;
   final BuildContext context;
 
-  ToggleReminderForReservation({
+  ChangeReminderForReservation({
     @required this.reservationId,
+    @required this.reminderTime,
     @required this.context,
   });
 }
@@ -171,7 +174,7 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
         error('Could not retrieve any reservations.', error: e);
         yield ReservationsLoadFail();
       }
-    } else if (event is ToggleReminderForReservation) {
+    } else if (event is ChangeReminderForReservation) {
       if (state is ReservationsLoaded) {
         final reservations = (state as ReservationsLoaded).reservations;
 
@@ -182,11 +185,13 @@ class ReservationsBloc extends Bloc<ReservationsEvent, ReservationsState> {
             int notificationId;
             if (r.reminderNotificationId != null) {
               _notificationHandler.cancelNotification(r.reminderNotificationId);
-            } else {
+            }
+            if (event.reminderTime != null) {
               notificationId =
                   await _notificationHandler.scheduleReservationReminder(
                 reservation: r,
                 context: event.context,
+                reminderTime: event.reminderTime,
               );
             }
             return Reservation.withUpdatedNotificationId(r, notificationId);

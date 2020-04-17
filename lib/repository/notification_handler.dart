@@ -26,6 +26,7 @@ class NotificationHandler {
   Future<int> scheduleReservationReminder({
     @required BuildContext context,
     @required Reservation reservation,
+    @required Duration reminderTime,
   }) async {
     NotificationDetails reservationReminderChannel =
         _reservationReminderChannel(context);
@@ -46,8 +47,7 @@ class NotificationHandler {
     return await _scheduleNotification(
       title: localizations.reservationReminderNotificationTitle,
       description: description,
-      time: reservation.startTime
-          .subtract(Constants.durationForNotificationBeforeStartTime),
+      time: reservation.startTime.subtract(reminderTime),
       channel: reservationReminderChannel,
     );
   }

@@ -101,7 +101,14 @@ class _NotificationButton extends StatelessWidget {
           Text(AppLocalizations.of(context).addReminderButtonTitle),
         ],
       ),
-      onPressed: () => {
+      onPressed: () => isNotificationSet ?
+      {
+        BlocProvider.of<ReservationsBloc>(context).add(ChangeReminderForReservation(
+            context: context,
+            reminderTime: null,
+            reservationId: reservation.id
+        ))
+      } : {
         showDialog(
           context: context,
           builder: (newContext) => ReservationNotificationDialog(
