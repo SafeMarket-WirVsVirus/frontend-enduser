@@ -1,6 +1,8 @@
 PODS:
   - "app_settings (3.0.0+1)":
     - Flutter
+  - device_identifier (0.0.1):
+    - Flutter
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
@@ -37,6 +39,7 @@ PODS:
 
 DEPENDENCIES:
   - app_settings (from `.symlinks/plugins/app_settings/ios`)
+  - device_identifier (from `.symlinks/plugins/device_identifier/ios`)
   - Flutter (from `Flutter`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
@@ -59,6 +62,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   app_settings:
     :path: ".symlinks/plugins/app_settings/ios"
+  device_identifier:
+    :path: ".symlinks/plugins/device_identifier/ios"
   Flutter:
     :path: Flutter
   flutter_local_notifications:
@@ -90,6 +95,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   app_settings: d103828c9f5d515c4df9ee754dabd443f7cedcf3
+  device_identifier: 43ac773f6dba9a146a324e8f5d885607f1c633e5
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
@@ -108,4 +114,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 083258d7f5e80b42ea9bfee905fe93049bc04c64
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.8.4

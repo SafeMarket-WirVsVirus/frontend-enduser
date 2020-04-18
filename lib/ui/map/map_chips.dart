@@ -1,11 +1,12 @@
 import 'package:reservation_system_customer/ui_imports.dart';
 
 class MapChips extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MapBloc, MapState>(
       condition: (oldState, newState) =>
-          oldState.filterSettings != newState.filterSettings,
+        oldState.filterSettings != newState.filterSettings,
       builder: (BuildContext context, state) {
         return Wrap(
           spacing: 10,
@@ -15,66 +16,54 @@ class MapChips extends StatelessWidget {
           children: LocationType.values.map<Widget>((LocationType l) {
             return Padding(
               padding: EdgeInsets.all(0),
-              child: _LocationTypeChip(
-                isSelected: l == state.filterSettings.locationType,
-                locationType: l,
+              child: ChoiceChip(
+                label: state.filterSettings.locationType == l ? Text(
+                    l.localized(context),
+                    style: TextStyle(
+                      color: Colors.black,
+                    )
+                ) : Text(""),
+                selected: state.filterSettings.locationType == l,
+                backgroundColor: Colors.white,
+                selectedColor: Theme
+                    .of(context)
+                    .accentColor,
+                shadowColor: Colors.black,
+                elevation: (state.filterSettings.locationType == l) ? 10 : 5,
+                avatar: Icon(
+                  l.getIcon(),
+                  size: 18,),
+                onSelected: (bool selected) {
+                    BlocProvider.of<MapBloc>(context).add(
+                        MapSettingsChanged(FilterSettings(
+                          locationType: l,
+                        )));
+                },
               ),
             );
           }).toList(),
         );
       },
-    );
-  }
-}
 
-class _LocationTypeChip extends StatelessWidget {
-  final bool isSelected;
-  final LocationType locationType;
-
-  const _LocationTypeChip({
-    Key key,
-    @required this.isSelected,
-    @required this.locationType,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ChoiceChip(
-      label: isSelected
-          ? Text(locationType.localized(context),
-              style: TextStyle(
-                color: Colors.black,
-              ))
-          : Text(''),
-      labelPadding: isSelected ? null : EdgeInsets.all(0),
-      selected: isSelected,
-      backgroundColor: Colors.white,
-      selectedColor: Theme.of(context).accentColor,
-      shadowColor: Colors.black,
-      elevation: isSelected ? 10 : 5,
-      avatar: Icon(
-        locationType.getIcon(),
-        size: 18,
-      ),
-      onSelected: (bool selected) {
-        BlocProvider.of<MapBloc>(context).add(MapSettingsChanged(FilterSettings(
-          locationType: locationType,
-        )));
-      },
     );
   }
 }
 
 extension LocationTypeDescription on LocationType {
   String localized(context) {
-    final localization = AppLocalizations.of(context);
     switch (this) {
       case LocationType.supermarket:
-        return localization.locationFilterSupermarketsLabel;
+        return AppLocalizations
+            .of(context)
+            .locationFilterSupermarketsLabel;
       case LocationType.bakery:
-        return localization.locationFilterBakeriesLabel;
+        return AppLocalizations
+            .of(context)
+            .locationFilterBakeriesLabel;
       case LocationType.pharmacy:
-        return localization.locationFilterPharmaciesLabel;
+        return AppLocalizations
+            .of(context)
+            .locationFilterPharmaciesLabel;
     }
     return '';
   }

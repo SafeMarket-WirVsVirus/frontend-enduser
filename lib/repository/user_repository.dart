@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:reservation_system_customer/repository/storage.dart';
-import 'package:uuid/uuid.dart';
+import 'package:device_identifier/device_identifier.dart';
 
 class UserRepository {
   final Storage storage;
@@ -52,7 +51,7 @@ class UserRepository {
 
   Future<String> deviceId() async {
     if (_deviceId == null) {
-      _deviceId = Uuid().v4();
+      _deviceId = await DeviceIdentifier.deviceId;
     }
     return _deviceId;
   }
