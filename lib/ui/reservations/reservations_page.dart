@@ -46,7 +46,7 @@ class ReservationsPage extends StatelessWidget {
             }
             return ReservationsList(reservations: state.reservations);
           }
-          return Container();
+          return _NoReservations();
         },
       ),
     );

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
-import 'package:reservation_system_customer/ui/offline_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_page.dart';
 import 'package:reservation_system_customer/ui/start_page.dart';
 import 'package:reservation_system_customer/ui/tutorials/tutorial_sliders.dart';
@@ -98,13 +97,13 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('displays warning when ReservationsLoadFail',
+    testWidgets('displays MapPage when ReservationsLoadFail',
         (WidgetTester tester) async {
       _mockBlocState(ReservationsLoadFail());
 
       await tester.pumpWidget(startPage);
 
-      expect(find.byType(OfflinePage), findsOneWidget);
+      expect(find.byType(MapPage), findsOneWidget);
     });
 
     testWidgets(

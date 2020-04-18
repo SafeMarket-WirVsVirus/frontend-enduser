@@ -1,7 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_page.dart';
-import 'package:reservation_system_customer/ui/offline_page.dart';
 import 'package:reservation_system_customer/ui/reservations/reservations_page.dart';
 import 'package:reservation_system_customer/ui/tutorials/tutorial_sliders.dart';
 import 'package:reservation_system_customer/ui/tutorials/usage_instructions.dart';
@@ -41,12 +40,10 @@ class _StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     return BlocBuilder<ReservationsBloc, ReservationsState>(
         builder: (context, state) {
-      if (state is ReservationsLoaded) {
-        return _HomePage();
-      } else if (state is ReservationsLoadFail) {
-        return OfflinePage();
+      if (state is ReservationsInitial || state is ReservationsLoading) {
+        return LoadingPage();
       }
-      return LoadingPage();
+      return _HomePage();
     });
   }
 }
@@ -117,13 +114,14 @@ class __HomePageState extends State<_HomePage> {
   }
 
   _showUsageInstructions() async {
-    bool showInstructions = await Provider.of<UserRepository>(
-        context, listen: false)
-        .shouldShowUsageInstructions();
+    bool showInstructions =
+        await Provider.of<UserRepository>(context, listen: false)
+            .shouldShowUsageInstructions();
     if (showInstructions) {
       Provider.of<UserRepository>(context, listen: false)
           .saveUserReadInstructions();
-      await showDialog(context: mainScaffoldKey.currentContext,
+      await showDialog(
+          context: mainScaffoldKey.currentContext,
           builder: (context) => UsageInstructions());
     }
   }

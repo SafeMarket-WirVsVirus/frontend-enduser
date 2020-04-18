@@ -91,7 +91,8 @@ void main() {
       expect(find.text('Notify'), findsOneWidget);
       await tester.tap(find.text('Notify'));
 
-      verifyNever(reservationsBloc.add(ToggleReminderForReservation(reservationId: 2)));
+      verifyNever(
+          reservationsBloc.add(ToggleReminderForReservation(reservationId: 2)));
     });
 
     testWidgets(
@@ -112,6 +113,16 @@ void main() {
       verify(reservationsBloc
               .add(ToggleReminderForReservation(reservationId: 2)))
           .called(1);
+    });
+
+    testWidgets('displays no reservations when ReservationsLoadFail',
+        (WidgetTester tester) async {
+      mockBlocState(reservationsBloc, ReservationsLoadFail());
+
+      await tester.pumpWidget(reservationsPage);
+
+      expect(find.text('You do not have any open reservations at the moment.'),
+          findsOneWidget);
     });
   });
 }

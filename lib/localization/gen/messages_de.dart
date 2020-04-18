@@ -61,7 +61,6 @@ class MessageLookup extends MessageLookupByLibrary {
     "reservationsBottomBarTitle" : MessageLookupByLibrary.simpleMessage("Meine Tickets"),
     "reservationsListEmpty" : MessageLookupByLibrary.simpleMessage("Keine Tickets gebucht."),
     "reservationsNavBarTitle" : MessageLookupByLibrary.simpleMessage("Meine\nTickets"),
-    "reservationsNotAvailableOffline" : MessageLookupByLibrary.simpleMessage("Tut uns leid, im Moment unterstützen wir den Offline-Modus noch nicht."),
     "reserveSlotButtonTitle" : MessageLookupByLibrary.simpleMessage("Ticket buchen"),
     "tutorialBookTicketDescription" : MessageLookupByLibrary.simpleMessage("1. Wähle Sie Ihren präferierten Ort.\n2. Wählen Sie die gewünschte Zeit.\n3. Bestätigen Sie Ihr Ticket."),
     "tutorialBookTicketTitle" : MessageLookupByLibrary.simpleMessage("Ticket buchen"),

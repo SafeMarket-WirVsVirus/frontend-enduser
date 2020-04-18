@@ -24,13 +24,6 @@ extension SafeMarketStrings on AppLocalizations {
         desc: 'Navigation bar title for reservations tab',
       );
 
-  String get reservationsNotAvailableOffline => Intl.message(
-        'Sorry, we do not support offline mode yet.',
-        name: 'reservationsNotAvailableOffline',
-        desc:
-            'Message which is displayed when the user enters the reservation tab without network connection',
-      );
-
   String get reservationsListEmpty => Intl.message(
         'You do not have any open reservations at the moment.',
         name: 'reservationsListEmpty',
@@ -349,20 +342,22 @@ extension SafeMarketStrings on AppLocalizations {
       );
 
   String get tutorialLocationPermissionDeclinedDialogTitle => Intl.message(
-    'Location Permission',
-    name: 'tutorialLocationPermissionDeclinedDialogTitle',
-    desc:
-    'Title of the dialog which notifies the user that he declined the location permission on the location permission tutorial slide',
-  );
+        'Location Permission',
+        name: 'tutorialLocationPermissionDeclinedDialogTitle',
+        desc:
+            'Title of the dialog which notifies the user that he declined the location permission on the location permission tutorial slide',
+      );
 
-  String get tutorialLocationPermissionDeclinedDialogDescription => Intl.message(
-    'Please enable location permission in the app settings to continue.',
-    name: 'tutorialLocationPermissionDeclinedDialogDescription',
-    desc:
-    'Description of the dialog which notifies the user about the disabled location services on the location permission tutorial slide',
-  );
+  String get tutorialLocationPermissionDeclinedDialogDescription =>
+      Intl.message(
+        'Please enable location permission in the app settings to continue.',
+        name: 'tutorialLocationPermissionDeclinedDialogDescription',
+        desc:
+            'Description of the dialog which notifies the user about the disabled location services on the location permission tutorial slide',
+      );
 
-  String get tutorialLocationPermissionDeclinedGoToSettingsButton => Intl.message(
+  String get tutorialLocationPermissionDeclinedGoToSettingsButton =>
+      Intl.message(
         'Open App Settings',
         name: 'tutorialLocationPermissionDeclinedGoToSettingsButton',
         desc: 'Button title which will open the app settings in the tutorial',
