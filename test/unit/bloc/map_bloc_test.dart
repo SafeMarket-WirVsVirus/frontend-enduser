@@ -265,24 +265,36 @@ void main() {
       blocTest(
         'with state [MapLocationsLoaded] emits new filter settings and filtered locations',
         build: () async {
+          var isFirstRequest = true;
           when(mockLocationsRepository.getStores(
             position: testPosition,
             radius: testRadius,
-            type: LocationType.supermarket,
-          )).thenAnswer((_) => Future.value([
+            type: anyNamed('type'),
+          )).thenAnswer((_) {
+            if (isFirstRequest) {
+              isFirstRequest = false;
+              return Future.value([
                 LocationFactory.createLocation(
                     id: 10, locationType: LocationType.supermarket),
                 LocationFactory.createLocation(
-                    id: 12, locationType: LocationType.pharmacy)
-              ]));
+                    id: 12, locationType: LocationType.pharmacy),
+              ]);
+            }
+            return Future.value([
+              LocationFactory.createLocation(
+                  id: 12, locationType: LocationType.pharmacy),
+              LocationFactory.createLocation(
+                  id: 14, locationType: LocationType.pharmacy),
+            ]);
+          });
           return bloc;
         },
         act: (b) async {
           b.add(MapLoadLocations(position: testPosition, radius: testRadius));
-          await b.take(2).toList();
+          await b.take(3).toList();
 
           b.add(MapSettingsChanged(newFilterSettings));
-          return;
+          await b.take(2).toList();
         },
         expect: [
           MapLoading(
@@ -297,10 +309,20 @@ void main() {
             filterSettings: defaultFilterSettings,
             markerIcons: {},
           ),
-          MapLocationsLoaded(
+          MapLoading(
             locations: [
               LocationFactory.createLocation(
                   id: 12, locationType: LocationType.pharmacy)
+            ],
+            filterSettings: newFilterSettings,
+            markerIcons: {},
+          ),
+          MapLocationsLoaded(
+            locations: [
+              LocationFactory.createLocation(
+                  id: 12, locationType: LocationType.pharmacy),
+              LocationFactory.createLocation(
+                  id: 14, locationType: LocationType.pharmacy)
             ],
             filterSettings: newFilterSettings,
             markerIcons: {},

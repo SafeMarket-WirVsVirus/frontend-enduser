@@ -117,7 +117,11 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   Map<int, BitmapDescriptor> markerIcons;
   Map<FillStatus, BitmapDescriptor> clusterMarkers;
 
-  FilterSettings get _filterSettings => state.filterSettings;
+  FilterSettings _filterSettings = FilterSettings(
+    locationType: LocationType.supermarket,
+    minFillStatus: FillStatus.red,
+  );
+  MapLoadLocations _lastMapLoadLocationsEvent;
 
   MapBloc({
     @required LocationsRepository locationsRepository,
@@ -134,10 +138,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   @override
   MapState get initialState => MapInitial(
-        filterSettings: FilterSettings(
-          locationType: LocationType.supermarket,
-          minFillStatus: FillStatus.red,
-        ),
+        filterSettings: _filterSettings,
       );
 
   @override
@@ -146,6 +147,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       if (clusterMarkers == null) {
         clusterMarkers = await _markerLoader.loadClusterIcons();
       }
+      _lastMapLoadLocationsEvent = event;
 
       List<Location> list = _filteredLocations(locations, _filterSettings);
       yield MapLoading(
@@ -185,6 +187,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
         filterSettings: _filterSettings,
       );
     } else if (event is MapSettingsChanged) {
+      _filterSettings = event.settings;
       if (event is! _MapSettingsLoaded) {
         // save the new filter selection
         _locationsRepository.saveMapFilterSettings(event.settings);
@@ -192,13 +195,15 @@ class MapBloc extends Bloc<MapEvent, MapState> {
       if (state is MapInitial) {
         yield MapInitial(filterSettings: event.settings);
       } else {
-        // TODO: Re-fetch locations if type changed
-        // filter locations according to event
-        yield MapLocationsLoaded(
-          locations: _filteredLocations(locations, event.settings),
-          markerIcons: markerIcons,
-          filterSettings: event.settings,
-        );
+        if (_lastMapLoadLocationsEvent != null) {
+          add(_lastMapLoadLocationsEvent);
+        } else {
+          yield MapLocationsLoaded(
+            locations: [],
+            markerIcons: markerIcons,
+            filterSettings: _filterSettings,
+          );
+        }
       }
     }
   }

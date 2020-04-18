@@ -91,8 +91,10 @@ void main() {
       expect(find.text('Notify'), findsOneWidget);
       await tester.tap(find.text('Notify'));
 
-      verifyNever(
-          reservationsBloc.add(ToggleReminderForReservation(reservationId: 2)));
+      verifyNever(reservationsBloc.add(ToggleReminderForReservation(
+        reservationId: 2,
+        context: null,
+      )));
     });
 
     testWidgets(
@@ -110,9 +112,10 @@ void main() {
       expect(find.text('Notify'), findsOneWidget);
       await tester.tap(find.text('Notify'));
 
-      verify(reservationsBloc
-              .add(ToggleReminderForReservation(reservationId: 2)))
-          .called(1);
+      verify(reservationsBloc.add(ToggleReminderForReservation(
+        reservationId: 2,
+        context: null,
+      ))).called(1);
     });
 
     testWidgets('displays no reservations when ReservationsLoadFail',
