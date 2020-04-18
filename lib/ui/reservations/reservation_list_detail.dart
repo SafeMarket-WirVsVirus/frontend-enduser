@@ -26,12 +26,13 @@ class ReservationListDetail extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: Row(
             children: reservation.codeWords.map<Widget>((String word) {
-          return Expanded(
-            child: Center(
-              child: Text(word, style: TextStyle(fontWeight: FontWeight.bold)),
-            ),
-          );
-        }).toList()),
+              return Expanded(
+                  child: Center(
+                    child: Text(word, style: TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                );
+              }).toList()
+        ),
       ),
       reservation.startTime.isAfter(DateTime.now())
           ? Align(

@@ -6,8 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
-import 'package:reservation_system_customer/ui/map/filter_dialog.dart';
-import 'package:reservation_system_customer/ui/map/filter_settings_theme.dart';
+import 'package:reservation_system_customer/ui/map/map_chips.dart';
 import 'package:reservation_system_customer/ui/map/map_cluster.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
@@ -121,64 +120,64 @@ class MapViewState extends State<MapView> {
         .toList();
 
     return Scaffold(
-        body: GoogleMap(
-          myLocationButtonEnabled: false,
-          myLocationEnabled: true,
-          mapType: MapType.normal,
-          initialCameraPosition: CameraPosition(
-            target: LatLng(
-              userPosition.latitude,
-              userPosition.longitude,
+        body: Stack(
+          children: <Widget>[
+              GoogleMap(
+              myLocationButtonEnabled: false,
+              myLocationEnabled: true,
+              mapType: MapType.normal,
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                  userPosition.latitude,
+                  userPosition.longitude,
+                ),
+                zoom: currentZoom,
+              ),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                rootBundle.loadString('assets/map_style.json').then((style) {
+                  controller.setMapStyle(style);
+                });
+
+                _fetchLocations(context, controller);
+              },
+              onCameraMove: (position) {
+                currentCameraPosition = position;
+
+                if ((currentZoom - position.zoom).abs() > 0.5) {
+                  setState(() {
+                    currentZoom = position.zoom;
+                  });
+                }
+              },
+              onCameraIdle: () async {
+                if (!mounted) {
+                  return;
+                }
+                if (currentCameraPosition == null ||
+                    currentCameraPosition.target == null ||
+                    BlocProvider.of<MapBloc>(context).state is MapLoading) {
+                  return;
+                }
+
+                _fetchLocationsIfNeeded(currentCameraPosition);
+              },
+              markers: Set<Marker>.of(clusteredMarkers),
             ),
-            zoom: currentZoom,
-          ),
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-            rootBundle.loadString('assets/map_style.json').then((style) {
-              controller.setMapStyle(style);
-            });
 
-            _fetchLocations(context, controller);
-          },
-          onCameraMove: (position) {
-            currentCameraPosition = position;
-
-            if ((currentZoom - position.zoom).abs() > 0.5) {
-              setState(() {
-                currentZoom = position.zoom;
-              });
-            }
-          },
-          onCameraIdle: () async {
-            if (!mounted) {
-              return;
-            }
-            if (currentCameraPosition == null ||
-                currentCameraPosition.target == null ||
-                BlocProvider.of<MapBloc>(context).state is MapLoading) {
-              return;
-            }
-
-            _fetchLocationsIfNeeded(currentCameraPosition);
-          },
-          markers: Set<Marker>.of(clusteredMarkers),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: MapChips()
+              ),
+            )
+          ]
         ),
+
+
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            BlocBuilder<MapBloc, MapState>(builder: (context, state) {
-              return FloatingActionButton(
-                heroTag: "filterFab",
-                mini: true,
-                onPressed: _setFilters,
-                child: Icon(state.filterSettings?.locationType?.icon(context) ??
-                    Icons.filter_list),
-                backgroundColor: Theme.of(context).accentColor,
-              );
-            }),
-            SizedBox(
-              height: 10,
-            ),
             FloatingActionButton(
               heroTag: "locationFab",
               onPressed: () => _moveCameraToNewPosition(userPosition),
@@ -187,14 +186,6 @@ class MapViewState extends State<MapView> {
             ),
           ],
         ));
-  }
-
-  void _setFilters() {
-    showDialog(
-        context: context,
-        builder: (newContext) => FilterDialog(
-              mapBloc: BlocProvider.of<MapBloc>(context),
-            ));
   }
 
   void _moveCameraToNewPosition(LatLng position, {double zoom = 15.0}) async {
@@ -292,3 +283,4 @@ class MapViewState extends State<MapView> {
     return (distance / 2.0).floor();
   }
 }
+
