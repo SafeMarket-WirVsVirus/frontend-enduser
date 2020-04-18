@@ -1,3 +1,7 @@
+## 1.1.1
+
+- DeviceId is generated on app start 
+
 ## 1.1.0
 
 - New, animated tutorial that is automatically shown on the first app launch
