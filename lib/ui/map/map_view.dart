@@ -59,7 +59,10 @@ class MapViewState extends State<MapView> {
         LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
 
     positionStream = Geolocator()
-        .getPositionStream(locationOptions)
+        .getPositionStream(
+      locationOptions,
+      GeolocationPermission.locationWhenInUse,
+    )
         .listen((Position position) {
       debug("user moved to new location ${position.toString()}");
       userPosition = LatLng(position.latitude, position.longitude);
@@ -249,15 +252,21 @@ class MapViewState extends State<MapView> {
     LatLng location;
 
     try {
-      Position position =
-          await Geolocator().getCurrentPosition().timeout(positionTimeout);
+      Position position = await Geolocator()
+          .getCurrentPosition(
+            locationPermissionLevel: GeolocationPermission.locationWhenInUse,
+          )
+          .timeout(positionTimeout);
       if (position != null) {
         return LatLng(position.latitude, position.longitude);
       }
     } catch (_) {
       try {
-        Position position =
-            await Geolocator().getLastKnownPosition().timeout(positionTimeout);
+        Position position = await Geolocator()
+            .getLastKnownPosition(
+              locationPermissionLevel: GeolocationPermission.locationWhenInUse,
+            )
+            .timeout(positionTimeout);
         if (position != null) {
           return LatLng(position.latitude, position.longitude);
         }
