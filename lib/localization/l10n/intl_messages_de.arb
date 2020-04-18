@@ -68,4 +68,6 @@
   "usageInstructionsFirstTicketSubtitle": "Sie haben Ihr erstes Ticket gebucht!",
   "usageInstructionsFirstTicketDescription": "Bitte beachten Sie die folgenden Verhaltenshinweise wenn Sie einen Ort mit SafeMarket besuchen:\n\n1. Bitte kommen Sie maximal 5 Minuten vor Ticketbeginn.\n2. Ihr Ticket verfällt nach 10 Minuten, wenn Sie den Laden nicht betreten.\n3. Bitte zeigen Sie Ihr Ticket unaufgefordert vor.",
   "usageInstructionsOkButton": "Verstanden"
+  "reminderDialogTitle": "Erinnerung setzen",
+  "reminderDialogBeforeText": "vorher"
 }

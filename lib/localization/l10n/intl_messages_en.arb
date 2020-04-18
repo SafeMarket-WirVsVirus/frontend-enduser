@@ -68,4 +68,6 @@
   "usageInstructionsFirstTicketSubtitle": "You just booked your first ticket!",
   "usageInstructionsFirstTicketDescription": "Please note the following rules of conduct when visiting a location with SafeMarket:\n\n1. Please arrive at most 5 minutes before your ticket starts.\n2. Your ticket will expire after 10 minutes when you do not enter the location.\n3. Please show your ticket without being prompted.",
   "usageInstructionsOkButton": "OK"
+  "reminderDialogTitle": "Set a reminder",
+  "reminderDialogBeforeText": "before"
 }

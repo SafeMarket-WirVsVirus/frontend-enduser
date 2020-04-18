@@ -41,7 +41,7 @@ class _ReservationNotificationDialogState
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Set reminder",
+                AppLocalizations.of(context).reminderDialogTitle,
                 style: Theme.of(context).textTheme.subhead,
               ),
             ),
@@ -54,8 +54,8 @@ class _ReservationNotificationDialogState
                     : 0.4,
                 child: RadioListTile(
                   title: Text(_formatDuration(
-                          Constants.possibleNotificationTimes[index]) +
-                      " before"),
+                          Constants.possibleNotificationTimes[index]) + ' ' +
+                      AppLocalizations.of(context).reminderDialogBeforeText),
                   value: Constants.possibleNotificationTimes[index],
                   groupValue: reminderTime,
                   onChanged: (duration) {
