@@ -123,7 +123,11 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
   }
 
   _checkPermission({bool showDialogIfFailed = false}) {
-    Geolocator().checkGeolocationPermissionStatus().then((geolocationStatus) {
+    Geolocator()
+        .checkGeolocationPermissionStatus(
+      locationPermission: GeolocationPermission.locationWhenInUse,
+    )
+        .then((geolocationStatus) {
       bool access = false;
       bool enableButton = false;
 
@@ -259,7 +263,10 @@ class __LocationPermissionWidgetState extends State<_LocationPermissionWidget> {
     }
 
     Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+        .getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
+      locationPermissionLevel: GeolocationPermission.locationWhenInUse,
+    )
         .then((value) {
       debug("Success: location retrieved: $value");
 
