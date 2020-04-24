@@ -27,7 +27,7 @@ class MapView extends StatefulWidget {
 class MapViewState extends State<MapView> {
   Completer<GoogleMapController> _controller = Completer();
   final positionTimeout = Duration(seconds: 3);
-  final defaultPosition = LatLng(48.160490, 11.555184);
+  final defaultPosition = LatLng(52.514564, 13.386240);
   LatLng userPosition;
   CameraPosition lastFetchCameraPosition;
   CameraPosition currentCameraPosition;
