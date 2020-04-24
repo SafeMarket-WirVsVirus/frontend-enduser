@@ -55,20 +55,7 @@ class MapViewState extends State<MapView> {
   @override
   void initState() {
     super.initState();
-    var locationOptions =
-        LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
-
-    positionStream = Geolocator()
-        .getPositionStream(
-      locationOptions,
-      GeolocationPermission.locationWhenInUse,
-    )
-        .listen((Position position) {
-      debug("user moved to new location ${position.toString()}");
-      userPosition = LatLng(position.latitude, position.longitude);
-      Provider.of<UserRepository>(context, listen: false)
-          .setUserPosition(userPosition);
-    });
+    _subscribeToLocationUpdates();
   }
 
   @override
@@ -123,61 +110,53 @@ class MapViewState extends State<MapView> {
         .toList();
 
     return Scaffold(
-        body: Stack(
-          children: <Widget>[
-              GoogleMap(
-              myLocationButtonEnabled: false,
-              myLocationEnabled: true,
-              mapType: MapType.normal,
-              initialCameraPosition: CameraPosition(
-                target: LatLng(
-                  userPosition.latitude,
-                  userPosition.longitude,
-                ),
-                zoom: currentZoom,
+        body: Stack(children: <Widget>[
+          GoogleMap(
+            myLocationButtonEnabled: false,
+            myLocationEnabled: true,
+            mapType: MapType.normal,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(
+                userPosition.latitude,
+                userPosition.longitude,
               ),
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                rootBundle.loadString('assets/map_style.json').then((style) {
-                  controller.setMapStyle(style);
-                });
-
-                _fetchLocations(context, controller);
-              },
-              onCameraMove: (position) {
-                currentCameraPosition = position;
-
-                if ((currentZoom - position.zoom).abs() > 0.5) {
-                  setState(() {
-                    currentZoom = position.zoom;
-                  });
-                }
-              },
-              onCameraIdle: () async {
-                if (!mounted) {
-                  return;
-                }
-                if (currentCameraPosition == null ||
-                    currentCameraPosition.target == null ||
-                    BlocProvider.of<MapBloc>(context).state is MapLoading) {
-                  return;
-                }
-
-                _fetchLocationsIfNeeded(currentCameraPosition);
-              },
-              markers: Set<Marker>.of(clusteredMarkers),
+              zoom: currentZoom,
             ),
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+              rootBundle.loadString('assets/map_style.json').then((style) {
+                controller.setMapStyle(style);
+              });
 
-            SafeArea(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: MapChips()
-              ),
-            )
-          ]
-        ),
+              _fetchLocations(context, controller);
+            },
+            onCameraMove: (position) {
+              currentCameraPosition = position;
 
+              if ((currentZoom - position.zoom).abs() > 0.5) {
+                setState(() {
+                  currentZoom = position.zoom;
+                });
+              }
+            },
+            onCameraIdle: () async {
+              if (!mounted) {
+                return;
+              }
+              if (currentCameraPosition == null ||
+                  currentCameraPosition.target == null ||
+                  BlocProvider.of<MapBloc>(context).state is MapLoading) {
+                return;
+              }
 
+              _fetchLocationsIfNeeded(currentCameraPosition);
+            },
+            markers: Set<Marker>.of(clusteredMarkers),
+          ),
+          SafeArea(
+            child: Align(alignment: Alignment.topCenter, child: MapChips()),
+          )
+        ]),
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -249,6 +228,9 @@ class MapViewState extends State<MapView> {
   }
 
   Future<LatLng> _getUserPosition() async {
+    if (!(await _locationPermissionGranted())) {
+      return null;
+    }
     LatLng location;
 
     try {
@@ -291,5 +273,30 @@ class MapViewState extends State<MapView> {
     final distance = await _getDistance(region.northeast, region.southwest);
     return (distance / 2.0).floor();
   }
-}
 
+  Future<bool> _locationPermissionGranted() async {
+    final locationPermission = GeolocationPermission.locationWhenInUse;
+    final permissionStatus = await Geolocator()
+        .checkGeolocationPermissionStatus(
+            locationPermission: locationPermission);
+    return permissionStatus == GeolocationStatus.granted;
+  }
+
+  void _subscribeToLocationUpdates() async {
+    if (!(await _locationPermissionGranted())) {
+      return;
+    }
+
+    final locationOptions =
+        LocationOptions(accuracy: LocationAccuracy.high, distanceFilter: 10);
+    positionStream = Geolocator()
+        .getPositionStream(
+            locationOptions, GeolocationPermission.locationWhenInUse)
+        .listen((Position position) {
+      debug("user moved to new location ${position.toString()}");
+      userPosition = LatLng(position.latitude, position.longitude);
+      Provider.of<UserRepository>(context, listen: false)
+          .setUserPosition(userPosition);
+    });
+  }
+}
