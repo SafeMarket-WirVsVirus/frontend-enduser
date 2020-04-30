@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:reservation_system_customer/repository/repository.dart';
 import 'package:reservation_system_customer/ui/map/map_chips.dart';
 import 'package:reservation_system_customer/ui/map/map_cluster.dart';
+import 'package:reservation_system_customer/ui/map/map_search_bar.dart';
 import 'package:reservation_system_customer/ui_imports.dart';
 
 import 'map_marker.dart';
@@ -171,13 +172,14 @@ class MapViewState extends State<MapView> {
             SafeArea(
               child: Align(
                 alignment: Alignment.topCenter,
-                child: MapChips()
-              ),
-            )
-          ]
-        ),
-
-
+                child: Stack(
+                  children: <Widget>[
+                    MapChips(),
+                    MapSearchBar(),
+                  ],
+                )),
+          )
+        ]),
         floatingActionButton: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -292,4 +294,3 @@ class MapViewState extends State<MapView> {
     return (distance / 2.0).floor();
   }
 }
-

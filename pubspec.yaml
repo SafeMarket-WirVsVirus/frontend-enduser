@@ -29,6 +29,7 @@ dependencies:
   fluster: ^1.1.2
   intro_slider: ^2.2.9
   app_settings: ^3.0.1
+  flutter_google_places: ^0.2.4
   flutter_localizations:
     sdk: flutter
 
